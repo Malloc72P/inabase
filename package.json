@@ -1,0 +1,14 @@
+{
+    "name": "simple-appserver",
+    "version": "1.0.0",
+    "description": "aws 연습용 앱서버 프로젝트",
+    "main": "index.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.19.2"
+    }
+}
