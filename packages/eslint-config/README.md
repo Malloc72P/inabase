@@ -1,3 +1,3 @@
 # `@turbo/eslint-config`
 
-Collection of internal eslint configurations.
+- eslint 설정 모듈

@@ -1,0 +1,11 @@
+{
+  "name": "@repo/dto",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@repo/typescript-config": "workspace:*"
+  }
+}
