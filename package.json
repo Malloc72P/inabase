@@ -1,14 +1,19 @@
 {
-    "name": "simple-appserver",
-    "version": "1.0.0",
-    "description": "aws 연습용 앱서버 프로젝트",
-    "main": "index.js",
-    "scripts": {
-        "start": "node app.js"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "express": "^4.19.2"
-    }
+  "name": "simple-appserver",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "turbo": "^2.3.3",
+    "typescript": "5.5.4"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  }
 }
