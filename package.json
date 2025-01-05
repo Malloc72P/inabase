@@ -5,7 +5,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev:db": "docker compose -f ./apps/backend/docker-compose.yml up -d"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
