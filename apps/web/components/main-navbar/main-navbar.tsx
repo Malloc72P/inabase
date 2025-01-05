@@ -10,8 +10,9 @@ import {
   IconSettings,
   IconSwitchHorizontal,
 } from '@tabler/icons-react';
-import { Code, Group } from '@mantine/core';
+import { Badge, Box, Code, Divider, Flex, Group, Loader, Text } from '@mantine/core';
 import classes from './main-navbar.module.css';
+import { useHealthCheck } from '@hooks/useHealthCheck';
 
 const data = [
   { link: '', label: 'Notifications', icon: IconBellRinging },
@@ -25,6 +26,7 @@ const data = [
 
 export function MainNavbar() {
   const [active, setActive] = useState('Billing');
+  const { health, isHealthLoading } = useHealthCheck();
 
   const links = data.map((item) => (
     <a
@@ -44,6 +46,20 @@ export function MainNavbar() {
 
   return (
     <nav className={classes.navbar}>
+      <Box>
+        <Flex gap="xs" align="center" mb="md" h="25px">
+          <Text fw="bold">API Server: </Text>
+          {isHealthLoading ? (
+            <Loader type="dots" size="sm" />
+          ) : (
+            <Flex gap="xs">
+              <Badge>{health?.serverAddr}</Badge>
+              <Badge color="green">{health?.statusCode}</Badge>
+            </Flex>
+          )}
+        </Flex>
+        <Divider />
+      </Box>
       <div className={classes.navbarMain}>{links}</div>
 
       <div className={classes.footer}>
