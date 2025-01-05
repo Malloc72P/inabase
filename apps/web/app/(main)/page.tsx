@@ -1,49 +1,27 @@
 'use client';
 
-import { useHealthCheck } from '@hooks/useHealthCheck';
-import { HealthCheckResponse } from '@repo/dto';
-import {
-  Badge,
-  Button,
-  Card,
-  Container,
-  Grid,
-  Group,
-  Loader,
-  SimpleGrid,
-  Text,
-} from '@mantine/core';
+import { ShowListItem, ShowListItemSkeleton } from '@components/show-list-item';
+import { useShow } from '@hooks/useShows';
+import { Container, SimpleGrid } from '@mantine/core';
 
 export default function Home() {
+  const { shows, isShowLoading } = useShow();
+
   return (
     <div>
       <Container>
         <SimpleGrid spacing="lg" cols={3}>
-          <ListItem title="Breaking Bed" tags={['Drama']} />
-          <ListItem title="BattleStar Galactica" tags={['Drama']} />
-          <ListItem title="Merlin" tags={['Drama']} />
-          <ListItem title="Better call Saul" tags={['Drama']} />
-          <ListItem title="Caprica" tags={['Drama']} />
+          {isShowLoading ? (
+            <>
+              <ShowListItemSkeleton />
+              <ShowListItemSkeleton />
+              <ShowListItemSkeleton />
+            </>
+          ) : (
+            shows.map((show) => <ShowListItem key={show.id} title={show.title} tags={show.tags} />)
+          )}
         </SimpleGrid>
       </Container>
     </div>
-  );
-}
-
-interface ListItemProps {
-  title: string;
-  tags?: string[];
-}
-
-function ListItem({ title, tags = [] }: ListItemProps) {
-  return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder maw={320}>
-      <Group justify="space-between">
-        <Text fw="bold">{title}</Text>
-        {tags.map((tag) => (
-          <Badge key={tag}>{tag}</Badge>
-        ))}
-      </Group>
-    </Card>
   );
 }

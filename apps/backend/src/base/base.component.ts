@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 
-export class BaseController {
+export class BaseComponent {
   protected logger: Logger;
 
   constructor() {

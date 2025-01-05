@@ -1,4 +1,4 @@
-export interface HealthCheckResponse {
+export interface HealthCheckOutput {
   statusCode: number;
   serverAddr: string;
 }
