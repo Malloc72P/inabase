@@ -1,7 +1,7 @@
 'use client';
 
 import { ShowListItem, ShowListItemSkeleton } from '@components/show-list-item';
-import { useShow } from '@hooks/useShows';
+import { useShow } from '@hooks/use-shows';
 import { Container, SimpleGrid } from '@mantine/core';
 
 export default function Home() {

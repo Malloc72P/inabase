@@ -12,7 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { Badge, Box, Code, Divider, Flex, Group, Loader, Text } from '@mantine/core';
 import classes from './main-navbar.module.css';
-import { useHealthCheck } from '@hooks/useHealthCheck';
+import { useHealthCheck } from '@hooks/use-health-check';
 
 const data = [
   { link: '', label: 'Notifications', icon: IconBellRinging },

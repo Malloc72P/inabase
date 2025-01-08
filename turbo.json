@@ -18,7 +18,8 @@
       "persistent": true
     },
     "seed": {
-      "dependsOn": ["^seed"]
+      "dependsOn": ["^seed"],
+      "cache": false
     }
   }
 }
