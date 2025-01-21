@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './database/database.provider';
 import { ConfigModule } from '@nestjs/config';
 import { appConfig, databaseConfig } from './config/app.config';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { appConfig, databaseConfig } from './config/app.config';
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
     ShowModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -1,2 +1,2 @@
-export * from './findMany';
-export * from './show';
+export * from './findShows.dto';
+export * from './show.dto';

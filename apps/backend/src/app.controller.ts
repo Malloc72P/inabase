@@ -1,10 +1,10 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { HealthCheckOutput } from '@repo/dto';
 import { networkInterfaces } from 'os';
-import { BaseComponent } from '@src/base/base.component';
+import { BaseController } from './base/base.controller';
 
 @Controller('api/v1/health')
-export class AppController extends BaseComponent {
+export class AppController extends BaseController {
   constructor() {
     super();
   }
