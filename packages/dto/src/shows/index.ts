@@ -1,2 +1,2 @@
-export * from './findMany';
+export * from './findShows';
 export * from './show';

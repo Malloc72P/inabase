@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
+import { FindShowsOutput, ShowDto } from '@repo/dto';
+import { plainToInstance } from 'class-transformer';
 import { ShowService } from './show.service';
-import { FindShowsOutput } from '@repo/dto';
 
 @Controller('api/v1/shows')
 export class ShowController {
@@ -8,10 +9,10 @@ export class ShowController {
 
   @Get()
   async shows(): Promise<FindShowsOutput> {
-    const shows = await this.showService.findAll();
+    const { shows } = await this.showService.findAll();
 
     return {
-      shows,
+      shows: shows.map((show) => plainToInstance(ShowDto, show)),
     };
   }
 }
