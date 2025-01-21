@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { ShowDto } from './show';
+import { ShowDto } from './show.dto';
 
 export class FindShowsInput {}
 
