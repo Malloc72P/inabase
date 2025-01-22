@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
+import { Seeder } from 'typeorm-extension';
 import { Show } from './show.entity';
 
 const datas = [

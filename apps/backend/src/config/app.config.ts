@@ -1,4 +1,4 @@
-import { ConfigModule, registerAs } from '@nestjs/config';
+import { registerAs } from '@nestjs/config';
 
 export enum NodeEnv {
   DEVELOPMENT = 'DEVELOPMENT',
@@ -8,6 +8,7 @@ export enum NodeEnv {
 export interface AppConfig {
   nodeEnv: NodeEnv;
   appPort: number;
+  clientUrl: string;
 }
 
 export interface DatabaseConfig {
@@ -25,6 +26,7 @@ export interface DatabaseConfig {
 export const appConfig = registerAs<AppConfig>('app', () => ({
   nodeEnv: process.env.nodeEnv as NodeEnv,
   appPort: +process.env.port,
+  clientUrl: process.env.clientUrl,
 }));
 
 export const databaseConfig = registerAs<DatabaseConfig>('database', () => ({
