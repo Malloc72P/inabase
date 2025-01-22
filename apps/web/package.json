@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "PORT=32000 next start",
-    "dev": "PORT=32000 next dev --turbopack",
+    "start": "PORT=42000 next start",
+    "dev": "PORT=42000 next dev --turbopack",
     "build": "next build",
     "lint": "next lint --max-warnings 0",
     "check-types": "tsc --noEmit"
