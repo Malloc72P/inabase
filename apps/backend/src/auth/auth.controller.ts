@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AccessTokenPayload, ProfileResult, RefreshTokenPayload } from '@repo/dto';
+import { AccessTokenPayload, ProfileResult, RefreshTokenPayload, SignInResult } from '@repo/dto';
 import { BaseConstants } from '@src/base/base.constant';
 import { transformTo } from '@src/util/transformer.util';
 import { Request, Response } from 'express';
@@ -23,7 +23,9 @@ export class AuthController {
 
     this.setCookies(res, tokens);
 
-    res.json(tokens);
+    const result: SignInResult = tokens;
+
+    return res.json(result);
   }
 
   @Post('signout')

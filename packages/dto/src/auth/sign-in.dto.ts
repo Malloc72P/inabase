@@ -1,11 +1,20 @@
+import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class SignInDto {
+export class SignInParam {
   @IsNotEmpty()
   @IsString()
   email: string;
 
   @IsNotEmpty()
   @IsString()
-  pw: string;
+  password: string;
+}
+
+export class SignInResult {
+  @Expose()
+  accessToken: string;
+
+  @Expose()
+  refreshToken: string;
 }

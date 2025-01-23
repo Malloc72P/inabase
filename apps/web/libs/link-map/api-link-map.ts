@@ -1,10 +1,13 @@
 import { Env } from '@libs/env';
 
-export const Api = {
+export const ApiLinkMap = {
   health: {
     check: () => Env.beApiUrl + '/health',
   },
   shows: {
     list: () => Env.beApiUrl + '/shows',
+  },
+  auth: {
+    signin: () => Env.beApiUrl + '/auth/signin',
   },
 };

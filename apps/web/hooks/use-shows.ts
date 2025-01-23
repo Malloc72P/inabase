@@ -1,12 +1,12 @@
 'use client';
 
 import { fetcher } from '@libs/fetcher';
-import { Api } from '@libs/fetcher/api-url';
+import { ApiLinkMap } from '@libs/link-map/api-link-map';
 import { FindShowsOutput } from '@repo/dto';
 import useSWR from 'swr';
 
 export function useShow() {
-  const swrObj = useSWR<FindShowsOutput>(Api.shows.list(), fetcher);
+  const swrObj = useSWR<FindShowsOutput>(ApiLinkMap.shows.list(), fetcher);
 
   return {
     shows: swrObj.data ? swrObj.data.shows : [],

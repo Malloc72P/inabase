@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useHealthCheck } from '@hooks/use-health-check';
+import { useNavigator } from '@hooks/use-navigator';
+import { PageLinkMap } from '@libs/link-map';
+import { Badge, Box, Divider, Flex, Loader, Text } from '@mantine/core';
 import {
   Icon2fa,
   IconBellRinging,
   IconDatabaseImport,
   IconFingerprint,
   IconKey,
+  IconLogin,
   IconLogout,
   IconReceipt2,
   IconSettings,
-  IconSwitchHorizontal,
 } from '@tabler/icons-react';
-import { Badge, Box, Code, Divider, Flex, Group, Loader, Text } from '@mantine/core';
+import Link from 'next/link';
+import { useState } from 'react';
 import classes from './main-navbar.module.css';
-import { useHealthCheck } from '@hooks/use-health-check';
 
 const data = [
   { link: '', label: 'Notifications', icon: IconBellRinging },
@@ -27,6 +30,7 @@ const data = [
 export function MainNavbar() {
   const [active, setActive] = useState('Billing');
   const { health, isHealthLoading } = useHealthCheck();
+  const navigator = useNavigator();
 
   const links = data.map((item) => (
     <a
@@ -63,10 +67,10 @@ export function MainNavbar() {
       <div className={classes.navbarMain}>{links}</div>
 
       <div className={classes.footer}>
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
+        <Link href={PageLinkMap.auth.login()} className={classes.link}>
+          <IconLogin className={classes.linkIcon} stroke={1.5} />
+          <span>Login</span>
+        </Link>
 
         <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
