@@ -13,6 +13,15 @@ export class SignInParam {
 
 export class SignInResult {
   @Expose()
+  id: string;
+
+  @Expose()
+  name: string;
+
+  @Expose()
+  email: string;
+
+  @Expose()
   accessToken: string;
 
   @Expose()

@@ -5,6 +5,8 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { createTheme, ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
+import { SessionProvider } from 'next-auth/react';
+import { AuthSessionProvider } from './providers/auth-session-provider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -36,8 +38,10 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider theme={theme}>
-          <Notifications />
-          {children}
+          <AuthSessionProvider>
+            <Notifications />
+            {children}
+          </AuthSessionProvider>
         </MantineProvider>
       </body>
     </html>

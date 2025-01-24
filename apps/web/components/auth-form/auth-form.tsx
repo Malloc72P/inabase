@@ -18,6 +18,7 @@ import { SignInParam } from '@repo/dto';
 import { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import classes from './auth-form.module.css';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export function AuthForm() {
   const { login } = useAuth();
@@ -29,7 +30,7 @@ export function AuthForm() {
 
     await login(form.getValues());
 
-    navigator.main.landing();
+    // navigator.main.landing();
   };
 
   return (

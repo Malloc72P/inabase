@@ -21,6 +21,7 @@ export interface AuthServiceValidateUserInput {
 }
 
 export interface AuthServiceValidateUserOutput {
+  user: User;
   accessToken: string;
   refreshToken: string;
 }

@@ -1,20 +1,16 @@
 import { fetcher } from '@libs/fetcher';
 import { ApiLinkMap } from '@libs/link-map/api-link-map';
-import { ProfileResult, SignInParam, SignInResult } from '@repo/dto';
-import useSWR from 'swr';
+import { SignInParam } from '@repo/dto';
+import { signIn, signOut } from 'next-auth/react';
 import { notifyError, notifySuccess } from './use-notification';
 
 export const useAuth = () => {
-  const { data: profile, isLoading: isProfileLoading } = useSWR<ProfileResult>(
-    ApiLinkMap.auth.profile(),
-    fetcher
-  );
-
   const login = async (param: SignInParam) => {
     try {
-      await fetcher<SignInParam, SignInResult>(ApiLinkMap.auth.signin(), {
-        method: 'POST',
-        body: param,
+      await signIn('credentials', {
+        ...param,
+        redirect: true,
+        callbackUrl: '/',
       });
 
       notifySuccess({
@@ -30,6 +26,8 @@ export const useAuth = () => {
         method: 'POST',
       });
 
+      await signOut({ redirect: true, callbackUrl: '/login' });
+
       notifySuccess({
         title: 'Success',
         message: '로그아웃 되었습니다.',
@@ -42,5 +40,5 @@ export const useAuth = () => {
     }
   };
 
-  return { login, logout, profile, isProfileLoading, isAuthed: !!profile };
+  return { login, logout };
 };

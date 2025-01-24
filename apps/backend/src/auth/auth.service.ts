@@ -43,7 +43,12 @@ export class AuthService {
       throw new UnauthorizedException('로그인 실패. 이메일 또는 비밀번호를 다시 확인해주세요.');
     }
 
-    return await this.createTokens({ user });
+    const tokens = await this.createTokens({ user });
+
+    return {
+      ...tokens,
+      user,
+    };
   }
 
   async refreshToken({

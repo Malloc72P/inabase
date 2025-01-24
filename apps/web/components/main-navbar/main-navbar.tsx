@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import classes from './main-navbar.module.css';
 import { useAuth } from '@hooks/use-auth';
+import { useSession } from 'next-auth/react';
 
 const data = [
   { link: '', label: 'Notifications', icon: IconBellRinging },
@@ -73,15 +74,16 @@ export function MainNavbar() {
 }
 
 function MainNavbarFooter() {
-  const { logout, isAuthed, profile, isProfileLoading } = useAuth();
+  const { logout } = useAuth();
+  const { data: session, status } = useSession();
 
-  if (isProfileLoading) {
+  if (status === 'loading') {
     return <MainNavbarFooterSkeleton />;
   }
 
   return (
     <div className={classes.footer}>
-      {!isAuthed && (
+      {status === 'unauthenticated' && (
         <>
           <Link href={PageLinkMap.auth.login()} className={classes.link}>
             <IconLogin className={classes.linkIcon} stroke={1.5} />
@@ -90,11 +92,11 @@ function MainNavbarFooter() {
         </>
       )}
 
-      {isAuthed && (
+      {status === 'authenticated' && (
         <>
           <a href="#" className={classes.link}>
             <IconUser className={classes.linkIcon} stroke={1.5} />
-            <span>{profile?.email}</span>
+            <span>{session.email}</span>
           </a>
           <a
             href="#"

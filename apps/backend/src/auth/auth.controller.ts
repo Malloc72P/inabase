@@ -19,11 +19,17 @@ export class AuthController {
   @Post('signin')
   @UseGuards(LocalAuthGuard)
   signIn(@Req() req: Request, @Res() res: Response) {
-    const tokens = req.user as AuthServiceValidateUserOutput;
+    const { user, accessToken, refreshToken } = req.user as AuthServiceValidateUserOutput;
 
-    this.setCookies(res, tokens);
+    this.setCookies(res, { accessToken, refreshToken });
 
-    const result: SignInResult = tokens;
+    const result: SignInResult = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      accessToken,
+      refreshToken,
+    };
 
     return res.json(result);
   }
