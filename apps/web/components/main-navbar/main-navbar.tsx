@@ -1,7 +1,7 @@
 import { useHealthCheck } from '@hooks/use-health-check';
 import { useNavigator } from '@hooks/use-navigator';
 import { PageLinkMap } from '@libs/link-map';
-import { Badge, Box, Divider, Flex, Loader, Text } from '@mantine/core';
+import { Badge, Box, Divider, Flex, Loader, Skeleton, Text } from '@mantine/core';
 import {
   Icon2fa,
   IconBellRinging,
@@ -12,10 +12,12 @@ import {
   IconLogout,
   IconReceipt2,
   IconSettings,
+  IconUser,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import classes from './main-navbar.module.css';
+import { useAuth } from '@hooks/use-auth';
 
 const data = [
   { link: '', label: 'Notifications', icon: IconBellRinging },
@@ -30,7 +32,6 @@ const data = [
 export function MainNavbar() {
   const [active, setActive] = useState('Billing');
   const { health, isHealthLoading } = useHealthCheck();
-  const navigator = useNavigator();
 
   const links = data.map((item) => (
     <a
@@ -66,17 +67,58 @@ export function MainNavbar() {
       </Box>
       <div className={classes.navbarMain}>{links}</div>
 
-      <div className={classes.footer}>
-        <Link href={PageLinkMap.auth.login()} className={classes.link}>
-          <IconLogin className={classes.linkIcon} stroke={1.5} />
-          <span>Login</span>
-        </Link>
-
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
-        </a>
-      </div>
+      <MainNavbarFooter />
     </nav>
+  );
+}
+
+function MainNavbarFooter() {
+  const { logout, isAuthed, profile, isProfileLoading } = useAuth();
+
+  if (isProfileLoading) {
+    return <MainNavbarFooterSkeleton />;
+  }
+
+  return (
+    <div className={classes.footer}>
+      {!isAuthed && (
+        <>
+          <Link href={PageLinkMap.auth.login()} className={classes.link}>
+            <IconLogin className={classes.linkIcon} stroke={1.5} />
+            <span>Login</span>
+          </Link>
+        </>
+      )}
+
+      {isAuthed && (
+        <>
+          <a href="#" className={classes.link}>
+            <IconUser className={classes.linkIcon} stroke={1.5} />
+            <span>{profile?.email}</span>
+          </a>
+          <a
+            href="#"
+            className={classes.link}
+            onClick={(event) => {
+              event.preventDefault();
+              logout();
+            }}
+          >
+            <IconLogout className={classes.linkIcon} stroke={1.5} />
+            <span>Logout</span>
+          </a>
+        </>
+      )}
+    </div>
+  );
+}
+
+function MainNavbarFooterSkeleton() {
+  return (
+    <Flex direction="column" gap="xs">
+      <Skeleton w="20%" h={30}></Skeleton>
+      <Skeleton w="100%" h={30}></Skeleton>
+      <Skeleton w="100%" h={30}></Skeleton>
+    </Flex>
   );
 }
