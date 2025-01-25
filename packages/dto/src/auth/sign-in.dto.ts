@@ -26,4 +26,10 @@ export class SignInResult {
 
   @Expose()
   refreshToken: string;
+
+  @Expose()
+  issuedAt: number;
+
+  @Expose()
+  expiredAt: number;
 }

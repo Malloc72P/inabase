@@ -1,27 +1,36 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AccessTokenPayload, ProfileResult, RefreshTokenPayload, SignInResult } from '@repo/dto';
+import {
+  AccessTokenPayload,
+  ProfileResult,
+  RefreshTokenPayload,
+  RefreshTokenResult,
+  SignInResult,
+} from '@repo/dto';
 import { BaseConstants } from '@src/base/base.constant';
+import { BaseController } from '@src/base/base.controller';
 import { transformTo } from '@src/util/transformer.util';
 import { Request, Response } from 'express';
 import { JwtAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';
 import { createCookieOption } from './cookie.util';
+import * as ms from 'ms';
 
 @Controller('api/v1/auth')
-export class AuthController {
+export class AuthController extends BaseController {
   constructor(
-    private _configService: ConfigService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private configService: ConfigService
+  ) {
+    super();
+  }
 
   @Post('signin')
   @UseGuards(LocalAuthGuard)
   signIn(@Req() req: Request, @Res() res: Response) {
     const { user, accessToken, refreshToken } = req.user as AuthServiceValidateUserOutput;
-
-    this.setCookies(res, { accessToken, refreshToken });
+    const expireInfo = this.calcExpireInfo();
 
     const result: SignInResult = {
       id: user.id,
@@ -29,6 +38,7 @@ export class AuthController {
       email: user.email,
       accessToken,
       refreshToken,
+      ...expireInfo,
     };
 
     return res.json(result);
@@ -47,12 +57,16 @@ export class AuthController {
   @UseGuards(RefreshAuthGuard)
   async refresh(@Req() req: Request, @Res() res: Response) {
     const refreshToken = req.user as RefreshTokenPayload;
-
     const tokens = await this.authService.refreshToken(refreshToken);
 
-    this.setCookies(res, tokens);
+    const expireInfo = this.calcExpireInfo();
 
-    res.json({ okay: true });
+    const result: RefreshTokenResult = {
+      ...tokens,
+      ...expireInfo,
+    };
+
+    res.json(result);
   }
 
   @Get('profile')
@@ -65,16 +79,13 @@ export class AuthController {
     });
   }
 
-  private setCookies(res: Response, tokens: { accessToken: string; refreshToken: string }) {
-    res.cookie(
-      BaseConstants.token.accessTokenKey,
-      tokens.accessToken,
-      createCookieOption(this._configService)
-    );
-    res.cookie(
-      BaseConstants.token.refreshTokenKey,
-      tokens.refreshToken,
-      createCookieOption(this._configService)
-    );
+  private calcExpireInfo() {
+    const now = new Date().getTime();
+    const expireInString = this.configService.get('authExpireIn') as ms.StringValue;
+
+    return {
+      issuedAt: now,
+      expiredAt: now + ms(expireInString),
+    };
   }
 }

@@ -1,8 +1,7 @@
-//-------------------------------------------------------------------------
-// signAccessToken
-
 import { AccessTokenPayload, RefreshTokenPayload } from '@repo/dto';
 
+//-------------------------------------------------------------------------
+// signAccessToken
 //-------------------------------------------------------------------------
 export interface TokenServiceSignAccessTokenInput {
   id: string;
@@ -28,12 +27,19 @@ export interface TokenServiceSignRefreshTokenOutput {
 //-------------------------------------------------------------------------
 // decodeAccessToken
 //-------------------------------------------------------------------------
+export interface DecodedTokenInfo {
+  id: string;
+  email: string;
+  iat: number;
+  exp: number;
+}
+
 export interface TokenServiceDecodeAccessTokenInput {
   token: string;
 }
 
 export interface TokenServiceDecodeAccessTokenOutput {
-  accessTokenPayload: AccessTokenPayload;
+  accessTokenPayload: DecodedTokenInfo;
 }
 
 //-------------------------------------------------------------------------
@@ -43,6 +49,6 @@ export interface TokenServiceDecodeRefreshTokenInput {
   token: string;
 }
 
-export interface TokenServiceDecodeRefreshTokenutput {
-  refreshTokenPayload: RefreshTokenPayload;
+export interface TokenServiceDecodeRefreshTokenOutput {
+  refreshTokenPayload: DecodedTokenInfo;
 }

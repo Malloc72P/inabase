@@ -9,7 +9,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { BaseConstants } from '@src/base/base.constant';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
@@ -22,7 +21,7 @@ export class RefreshPassportStrategy extends PassportStrategy(Strategy, 'refresh
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {
-          return req.cookies[BaseConstants.token.refreshTokenKey];
+          return req.headers['refreshtoken'] as string;
         },
       ]),
       ignoreExpiration: false,

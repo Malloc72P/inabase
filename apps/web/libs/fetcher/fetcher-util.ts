@@ -1,7 +1,8 @@
 import { FetchApiOptions } from './fetcher-interface';
 
 export function resolveFetchOption(options: FetchApiOptions | undefined): RequestInit {
-  const { body, headers, method, ...rest } = options || {};
+  const { body, headers, method, accessToken, refreshToken, ...rest } = options || {};
+
   const isFormData = body instanceof FormData;
   const processedHeaders = { ...headers };
   const processedBody =
@@ -9,6 +10,14 @@ export function resolveFetchOption(options: FetchApiOptions | undefined): Reques
 
   if (!isFormData) {
     Reflect.set(processedHeaders, 'Content-Type', 'application/json; charset=utf-8');
+  }
+
+  if (accessToken) {
+    Reflect.set(processedHeaders, 'Authorization', `bearer ${accessToken}`);
+  }
+
+  if (refreshToken) {
+    Reflect.set(processedHeaders, 'RefreshToken', `${refreshToken}`);
   }
 
   return {

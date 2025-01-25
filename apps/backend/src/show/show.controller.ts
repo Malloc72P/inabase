@@ -1,8 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
-import { FindShowsOutput, ShowDto } from '@repo/dto';
+import { Body, Controller, Get, UseGuards } from '@nestjs/common';
+import { FindShowsInput, FindShowsOutput, ShowDto } from '@repo/dto';
 import { BaseController } from '@src/base/base.controller';
 import { transformTo } from '@src/util/transformer.util';
 import { ShowService } from './show.service';
+import { JwtAuthGuard } from '@src/auth/auth.guard';
 
 @Controller('api/v1/shows')
 export class ShowController extends BaseController {
@@ -11,7 +12,8 @@ export class ShowController extends BaseController {
   }
 
   @Get()
-  async shows(): Promise<FindShowsOutput> {
+  @UseGuards(JwtAuthGuard)
+  async shows(@Body() param: FindShowsInput): Promise<FindShowsOutput> {
     const { shows } = await this.showService.findAll();
 
     return {

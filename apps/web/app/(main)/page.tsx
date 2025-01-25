@@ -1,27 +1,50 @@
-'use client';
-
-import { ShowListItem, ShowListItemSkeleton } from '@components/show-list-item';
-import { useShow } from '@hooks/use-shows';
+import { ShowListItemSkeleton } from '@components/show-list-item';
+import { findShows } from '@libs/api/show';
 import { Container, SimpleGrid } from '@mantine/core';
+import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
+import { getServerSession, Session } from 'next-auth';
+import { Suspense } from 'react';
+import { MainPageBody } from './main-page-body';
 
-export default function Home() {
-  const { shows, isShowLoading } = useShow();
+export default async function MainPage() {
+  const session = await getServerSession(nextAuthOption);
+
+  if (!session) {
+    return;
+  }
 
   return (
     <div>
       <Container>
         <SimpleGrid spacing="lg" cols={3}>
-          {isShowLoading ? (
-            <>
-              <ShowListItemSkeleton />
-              <ShowListItemSkeleton />
-              <ShowListItemSkeleton />
-            </>
-          ) : (
-            shows.map((show) => <ShowListItem key={show.id} title={show.title} tags={show.tags} />)
-          )}
+          <Suspense fallback={<MainPageBodyLoading />}>
+            <Shows session={session} />
+          </Suspense>
         </SimpleGrid>
       </Container>
     </div>
+  );
+}
+
+async function Shows({ session }: { session: Session }) {
+  const { shows } = await findShows({}, { accessToken: session.backendTokens.accessToken });
+
+  return (
+    <Suspense fallback={<MainPageBodyLoading />}>
+      <MainPageBody shows={shows} />
+    </Suspense>
+  );
+}
+
+export function MainPageBodyLoading() {
+  return (
+    <>
+      <ShowListItemSkeleton />
+      <ShowListItemSkeleton />
+      <ShowListItemSkeleton />
+      <ShowListItemSkeleton />
+      <ShowListItemSkeleton />
+      <ShowListItemSkeleton />
+    </>
   );
 }

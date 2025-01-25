@@ -1,10 +1,11 @@
+import { refreshToken } from '@libs/api/auth';
 import { fetcher } from '@libs/fetcher';
 import { ApiLinkMap } from '@libs/link-map';
 import { SignInParam, SignInResult } from '@repo/dto';
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 
-const handler = NextAuth({
+export const nextAuthOption: NextAuthOptions = {
   providers: [
     CredentialProvider({
       name: 'local',
@@ -19,45 +20,46 @@ const handler = NextAuth({
 
         const { email, password } = credentials;
 
-        const { accessToken, refreshToken, ...profile } = await fetcher<SignInParam, SignInResult>(
-          ApiLinkMap.auth.signin(),
-          {
-            method: 'POST',
-            body: {
-              email,
-              password,
-            },
-          }
-        );
+        const profile = await fetcher<SignInParam, SignInResult>(ApiLinkMap.auth.signin(), {
+          method: 'POST',
+          body: {
+            email,
+            password,
+          },
+        });
 
-        return {
-          id: profile.id,
-          name: profile.name,
-          email: profile.email,
-          image: '',
-          accessToken,
-          refreshToken,
-        };
+        return profile;
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
+      /**
+       * 로그인 후 첫 호출되는 경우, user 객체에 authorize의 리턴값이 넘어온다.
+       */
       if (user) {
-        const signInUser = user as SignInResult;
-
-        return {
-          id: signInUser.id,
-          name: signInUser.name,
-          email: signInUser.email,
-          backendTokens: {
-            accessToken: signInUser.accessToken,
-            refreshToken: signInUser.refreshToken,
-          },
-        };
+        return toToken(user as SignInResult);
       }
 
-      return token;
+      /**
+       * 두번째 호출부터는 토큰 만료를 검사한다.
+       */
+      const now = new Date().getTime();
+      if (now < token.backendTokens.expiredAt) {
+        return token;
+      }
+
+      /**
+       * 토큰이 만료된 경우 토큰을 리프래시한다.
+       */
+      const newTokenInfo = await refreshToken({
+        refreshToken: token.backendTokens.refreshToken,
+      });
+
+      return {
+        ...token,
+        backendTokens: newTokenInfo,
+      };
     },
     async session({ session, token }) {
       session.id = token.id;
@@ -68,6 +70,22 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
+
+function toToken(user: SignInResult) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    backendTokens: {
+      accessToken: user.accessToken,
+      refreshToken: user.refreshToken,
+      issuedAt: user.issuedAt,
+      expiredAt: user.expiredAt,
+    },
+  };
+}
+
+const handler = NextAuth(nextAuthOption);
 
 export { handler as GET, handler as POST };

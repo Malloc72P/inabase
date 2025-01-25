@@ -19,6 +19,7 @@ import { useState } from 'react';
 import classes from './main-navbar.module.css';
 import { useAuth } from '@hooks/use-auth';
 import { useSession } from 'next-auth/react';
+import { HealthCheckOutput } from '@repo/dto';
 
 const data = [
   { link: '', label: 'Notifications', icon: IconBellRinging },
@@ -117,10 +118,12 @@ function MainNavbarFooter() {
 
 function MainNavbarFooterSkeleton() {
   return (
-    <Flex direction="column" gap="xs">
-      <Skeleton w="20%" h={30}></Skeleton>
-      <Skeleton w="100%" h={30}></Skeleton>
-      <Skeleton w="100%" h={30}></Skeleton>
-    </Flex>
+    <Box h={107}>
+      <Divider />
+      <Flex direction="column" gap="xs" pt="md">
+        <Skeleton w="100%" h={35} p="xs"></Skeleton>
+        <Skeleton w="100%" h={35} p="xs"></Skeleton>
+      </Flex>
+    </Box>
   );
 }
