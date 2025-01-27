@@ -2,7 +2,7 @@
 
 import { MainHeader } from '@components/main-header';
 import { MainNavbar } from '@components/main-navbar';
-import { AppShell, Burger } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { PropsWithChildren } from 'react';
 
