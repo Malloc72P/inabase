@@ -1,11 +1,14 @@
 import { refreshToken } from '@libs/api/auth';
 import { fetcher } from '@libs/fetcher';
-import { ApiLinkMap } from '@libs/link-map';
+import { ApiLinkMap, PageLinkMap } from '@libs/link-map';
 import { SignInParam, SignInResult } from '@repo/dto';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 
 export const nextAuthOption: NextAuthOptions = {
+  pages: {
+    signIn: PageLinkMap.auth.login(),
+  },
   providers: [
     CredentialProvider({
       name: 'local',

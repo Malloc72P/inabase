@@ -23,14 +23,11 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 export function AuthForm() {
   const { login } = useAuth();
   const form = useForm<SignInParam>();
-  const navigator = useNavigator();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     await login(form.getValues());
-
-    // navigator.main.landing();
   };
 
   return (

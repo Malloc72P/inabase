@@ -3,6 +3,7 @@ import { ApiLinkMap } from '@libs/link-map/api-link-map';
 import { SignInParam } from '@repo/dto';
 import { signIn, signOut } from 'next-auth/react';
 import { notifyError, notifySuccess } from './use-notification';
+import { PageLinkMap } from '@libs/link-map';
 
 export const useAuth = () => {
   const login = async (param: SignInParam) => {
@@ -10,7 +11,7 @@ export const useAuth = () => {
       await signIn('credentials', {
         ...param,
         redirect: true,
-        callbackUrl: '/',
+        callbackUrl: PageLinkMap.protected.main(),
       });
 
       notifySuccess({
@@ -22,10 +23,6 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
-      await fetcher(ApiLinkMap.auth.signout(), {
-        method: 'POST',
-      });
-
       await signOut({ redirect: true, callbackUrl: '/login' });
 
       notifySuccess({

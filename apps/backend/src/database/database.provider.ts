@@ -1,6 +1,6 @@
 import { ConfigModule } from '@nestjs/config';
 import { BaseConstants } from '@src/base/base.constant';
-import { AppConfig, DatabaseConfig, databaseConfig, NodeEnv } from '@src/config/app.config';
+import { AppConfig, DatabaseConfig, NodeEnv } from '@src/config/app.config';
 import { DataSource } from 'typeorm';
 
 const appEnv = process.env as unknown as AppConfig;

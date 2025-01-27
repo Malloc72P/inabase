@@ -9,12 +9,13 @@ import {
   TokenServiceSignRefreshTokenInput,
   TokenServiceSignRefreshTokenOutput,
 } from './token.service.dto';
+import { TokenConfig } from '@src/config/app.config';
 
 @Injectable()
 export class TokenService {
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService<TokenConfig>
   ) {}
 
   async signAccessToken(

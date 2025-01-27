@@ -1,7 +1,10 @@
+'use client';
+
 import { Burger, Container, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Dispatch, SetStateAction, useState } from 'react';
 import classes from './main-header.module.css';
+import { cn } from '@libs/ui';
 
 export interface HeaderLinkModel {
   link: string;
@@ -20,7 +23,7 @@ export function MainHeader() {
   const [active, setActive] = useState<string>(links[0].link);
 
   return (
-    <header className={classes.header}>
+    <header className={cn('main-header', classes.header)}>
       <Container size="md" className={classes.inner}>
         <div className={classes.logo}>💎 InaBase</div>
         <Group gap={5} visibleFrom="xs">
@@ -45,7 +48,7 @@ function HeaderLink({ link, active, setActive }: HeaderLinkProps) {
   return (
     <a
       href={link.link}
-      className={classes.link}
+      className={cn('header-link', classes.link)}
       data-active={active === link.link || undefined}
       onClick={(event) => {
         event.preventDefault();

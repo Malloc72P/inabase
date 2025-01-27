@@ -14,7 +14,6 @@ import { Request, Response } from 'express';
 import { JwtAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';
-import { createCookieOption } from './cookie.util';
 import * as ms from 'ms';
 
 @Controller('api/v1/auth')
@@ -42,15 +41,6 @@ export class AuthController extends BaseController {
     };
 
     return res.json(result);
-  }
-
-  @Post('signout')
-  @UseGuards(JwtAuthGuard)
-  logout(@Res() res: Response) {
-    res.clearCookie(BaseConstants.token.accessTokenKey);
-    res.clearCookie(BaseConstants.token.refreshTokenKey);
-
-    res.json({ okay: true });
   }
 
   @Post('refresh')

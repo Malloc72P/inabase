@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
-import { appConfig, databaseConfig } from './config/app.config';
 import { AppDataSource } from './database/database.provider';
 import { HasherModule } from './hasher/hasher.module';
 import { ShowModule } from './show/show.module';
@@ -13,7 +12,6 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig, databaseConfig],
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(AppDataSource.options),

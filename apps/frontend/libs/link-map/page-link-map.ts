@@ -2,7 +2,10 @@ export const PageLinkMap = {
   auth: {
     login: () => '/login',
   },
-  main: {
+  protected: {
+    main: () => '/main',
+  },
+  unprotected: {
     landing: () => '/',
   },
 } as const;

@@ -1,6 +1,9 @@
+'use client';
+
+import { useAuth } from '@hooks/use-auth';
 import { useHealthCheck } from '@hooks/use-health-check';
-import { useNavigator } from '@hooks/use-navigator';
 import { PageLinkMap } from '@libs/link-map';
+import { cn } from '@libs/ui';
 import { Badge, Box, Divider, Flex, Loader, Skeleton, Text } from '@mantine/core';
 import {
   Icon2fa,
@@ -14,12 +17,10 @@ import {
   IconSettings,
   IconUser,
 } from '@tabler/icons-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import classes from './main-navbar.module.css';
-import { useAuth } from '@hooks/use-auth';
-import { useSession } from 'next-auth/react';
-import { HealthCheckOutput } from '@repo/dto';
 
 const data = [
   { link: '', label: 'Notifications', icon: IconBellRinging },
@@ -52,7 +53,7 @@ export function MainNavbar() {
   ));
 
   return (
-    <nav className={classes.navbar}>
+    <nav className={cn('main-nav', classes.navbar)}>
       <Box>
         <Flex gap="xs" align="center" mb="md" h="25px">
           <Text fw="bold">API Server: </Text>

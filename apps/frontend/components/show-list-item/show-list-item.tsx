@@ -9,7 +9,14 @@ const SHOW_LIST_ITEM_WIDTH = 320;
 
 export function ShowListItemSkeleton() {
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder maw={SHOW_LIST_ITEM_WIDTH}>
+    <Card
+      className="show-list-item-skeleton"
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      maw={SHOW_LIST_ITEM_WIDTH}
+    >
       <Group justify="space-between">
         <Skeleton w={SHOW_LIST_ITEM_WIDTH} h={20} />
 
@@ -21,7 +28,14 @@ export function ShowListItemSkeleton() {
 
 export function ShowListItem({ title, tags = [] }: ShowListItemProps) {
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder maw={SHOW_LIST_ITEM_WIDTH}>
+    <Card
+      className="show-list-item"
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      maw={SHOW_LIST_ITEM_WIDTH}
+    >
       <Group justify="space-between">
         <Text fw="bold">{title}</Text>
         {tags.map((tag) => (
