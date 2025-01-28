@@ -1,25 +1,10 @@
 'use client';
 
-import {
-  IconBook,
-  IconChartPie3,
-  IconChevronDown,
-  IconCode,
-  IconCoin,
-  IconFingerprint,
-  IconHeart,
-  IconLogout,
-  IconMessage,
-  IconNotification,
-  IconPlayerPause,
-  IconSettings,
-  IconStar,
-  IconSwitchHorizontal,
-  IconTrash,
-} from '@tabler/icons-react';
+import { Logo } from '@components/logo';
+import { UserMenu } from '@components/user-menu';
+import { useNavigator } from '@hooks/use-navigator';
 import {
   Anchor,
-  Avatar,
   Box,
   Burger,
   Button,
@@ -29,7 +14,6 @@ import {
   Drawer,
   Group,
   HoverCard,
-  Menu,
   ScrollArea,
   SimpleGrid,
   Skeleton,
@@ -39,14 +23,17 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import classes from './main-header-2.module.css';
-import { Logo } from '@components/logo';
-import { useAuth } from '@hooks/use-auth';
-import { useNavigator } from '@hooks/use-navigator';
+import {
+  IconBook,
+  IconChartPie3,
+  IconChevronDown,
+  IconCode,
+  IconCoin,
+  IconFingerprint,
+  IconNotification,
+} from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { Session } from 'next-auth';
-import cx from 'clsx';
+import classes from './main-header-2.module.css';
 
 const mockdata = [
   {
@@ -85,6 +72,16 @@ export function MainHeader2() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const theme = useMantineTheme();
+  const navigator = useNavigator();
+  const { status: sessionStatus } = useSession();
+
+  const onHomeClick = () => {
+    if (sessionStatus === 'authenticated') {
+      navigator.moveTo.protected.main();
+    } else {
+      navigator.moveTo.public.landing();
+    }
+  };
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
@@ -107,11 +104,11 @@ export function MainHeader2() {
   return (
     <Box pb={120}>
       <header className={classes.header}>
-        <Group justify="space-between" h="100%">
+        <Group justify="start" h="100%">
           <Logo />
 
-          <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="#" className={classes.link}>
+          <Group h="100%" gap={0} visibleFrom="sm" ml={100}>
+            <a href="#" className={classes.link} onClick={onHomeClick}>
               Home
             </a>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
@@ -162,6 +159,8 @@ export function MainHeader2() {
               Academy
             </a>
           </Group>
+
+          <Box style={{ flexGrow: 1 }} />
 
           <HeaderAuthGroup />
 
@@ -241,79 +240,6 @@ function HeaderAuthGroup() {
         </>
       )}
     </Group>
-  );
-}
-
-interface UserMenuProps {
-  session: Session;
-}
-
-function UserMenu({ session }: UserMenuProps) {
-  const { logout } = useAuth();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const theme = useMantineTheme();
-  const navigator = useNavigator();
-
-  const onChangeAccountClick = () => {
-    navigator.moveTo.auth.login();
-  };
-
-  const onLogoutClick = async () => {
-    try {
-      setLoading(true);
-      await logout();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(true);
-    }
-  };
-
-  return (
-    <Menu
-      width={260}
-      position="bottom-end"
-      transitionProps={{ transition: 'pop-top-right' }}
-      onClose={() => setUserMenuOpened(false)}
-      onOpen={() => setUserMenuOpened(true)}
-      withinPortal
-    >
-      <Menu.Target>
-        <UnstyledButton className={cx(classes.user, classes.userActive)}>
-          <Group gap={7}>
-            {/* <Avatar src={user.image} alt={user.name} radius="xl" size={20} /> */}
-            <Text fw={500} size="sm" lh={1} mr={3}>
-              {session.name}
-            </Text>
-            <IconChevronDown size={12} stroke={1.5} />
-          </Group>
-        </UnstyledButton>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Label>Settings</Menu.Label>
-        <Menu.Item leftSection={<IconSettings size={16} stroke={1.5} />}>
-          Account settings
-        </Menu.Item>
-        <Menu.Item
-          onClick={onChangeAccountClick}
-          leftSection={<IconSwitchHorizontal size={16} stroke={1.5} />}
-        >
-          Change account
-        </Menu.Item>
-        <Menu.Item onClick={onLogoutClick} leftSection={<IconLogout size={16} stroke={1.5} />}>
-          Logout
-        </Menu.Item>
-
-        <Menu.Divider />
-
-        <Menu.Label>Danger zone</Menu.Label>
-
-        <Menu.Item color="red" leftSection={<IconTrash size={16} stroke={1.5} />}>
-          Delete account
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
   );
 }
 
