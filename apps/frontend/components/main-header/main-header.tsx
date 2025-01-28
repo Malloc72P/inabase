@@ -5,6 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Dispatch, SetStateAction, useState } from 'react';
 import classes from './main-header.module.css';
 import { cn } from '@libs/ui';
+import { Logo } from '@components/logo/logo';
 
 export interface HeaderLinkModel {
   link: string;
@@ -25,7 +26,7 @@ export function MainHeader() {
   return (
     <header className={cn('main-header', classes.header)}>
       <Container size="md" className={classes.inner}>
-        <div className={classes.logo}>💎 InaBase</div>
+        <Logo />
         <Group gap={5} visibleFrom="xs">
           {links.map((link) => (
             <HeaderLink key={link.label} link={link} active={active} setActive={setActive} />

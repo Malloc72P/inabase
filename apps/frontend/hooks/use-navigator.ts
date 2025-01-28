@@ -5,11 +5,16 @@ export const useNavigator = () => {
   const router = useRouter();
 
   return {
-    main: {
-      landing: () => router.push(PageLinkMap.protected.main()),
-    },
-    auth: {
-      login: () => router.push(PageLinkMap.protected.main()),
+    moveTo: {
+      auth: {
+        login: () => router.push(PageLinkMap.auth.login()),
+      },
+      public: {
+        landing: () => router.push(PageLinkMap.public.landing()),
+      },
+      protected: {
+        main: () => router.push(PageLinkMap.protected.main()),
+      },
     },
   };
 };

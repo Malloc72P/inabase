@@ -70,7 +70,7 @@ export function MainNavbar() {
       </Box>
       <div className={classes.navbarMain}>{links}</div>
 
-      <MainNavbarFooter />
+      {/* <MainNavbarFooter /> */}
     </nav>
   );
 }

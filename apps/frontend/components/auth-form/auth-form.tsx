@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from '@hooks/use-auth';
-import { useNavigator } from '@hooks/use-navigator';
 import {
   Anchor,
   Button,

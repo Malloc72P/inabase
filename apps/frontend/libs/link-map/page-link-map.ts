@@ -5,7 +5,7 @@ export const PageLinkMap = {
   protected: {
     main: () => '/main',
   },
-  unprotected: {
+  public: {
     landing: () => '/',
   },
 } as const;

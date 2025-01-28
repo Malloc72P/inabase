@@ -3,7 +3,7 @@ import { Box } from '@mantine/core';
 
 export default function LoginPage() {
   return (
-    <Box pt="20%">
+    <Box mt="15%">
       <AuthForm />
     </Box>
   );

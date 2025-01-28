@@ -1,6 +1,6 @@
 'use client';
 
-import { MainHeader } from '@components/main-header';
+import { MainHeader, MainHeader2 } from '@components/main-header';
 import { MainNavbar } from '@components/main-navbar';
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -20,7 +20,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
       padding="md"
     >
       <AppShell.Header>
-        <MainHeader />
+        <MainHeader2 />
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
