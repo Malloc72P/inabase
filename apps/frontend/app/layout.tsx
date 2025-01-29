@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import './globals.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { createTheme, ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import { SessionProvider } from 'next-auth/react';
-import { AuthSessionProvider } from './providers/auth-session-provider';
+import './globals.css';
+import { PageProgressBar } from '@components/navigation-progress-bar';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -38,10 +37,9 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider theme={theme}>
-          <AuthSessionProvider>
-            <Notifications />
-            {children}
-          </AuthSessionProvider>
+          {children}
+          <Notifications />
+          <PageProgressBar />
         </MantineProvider>
       </body>
     </html>

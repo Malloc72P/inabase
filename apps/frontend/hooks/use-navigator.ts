@@ -1,5 +1,5 @@
 import { PageLinkMap } from '@libs/link-map';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next-nprogress-bar';
 
 export const useNavigator = () => {
   const router = useRouter();

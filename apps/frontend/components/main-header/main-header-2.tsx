@@ -34,6 +34,9 @@ import {
 } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import classes from './main-header-2.module.css';
+import { ProtectedAuthGroup, PublicAuthGroup } from './header-auth-group';
+import { cn } from '@libs/ui';
+import { MouseEventHandler } from 'react';
 
 const mockdata = [
   {
@@ -68,19 +71,26 @@ const mockdata = [
   },
 ];
 
-export function MainHeader2() {
+export type MainHeader2Mode = 'public' | 'protected';
+
+export interface MainHeader2Props {
+  mode?: MainHeader2Mode;
+}
+
+export function MainHeader2({ mode = 'public' }: MainHeader2Props) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const theme = useMantineTheme();
   const navigator = useNavigator();
-  const { status: sessionStatus } = useSession();
 
-  const onHomeClick = () => {
-    if (sessionStatus === 'authenticated') {
-      navigator.moveTo.protected.main();
-    } else {
-      navigator.moveTo.public.landing();
-    }
+  const onHomeClick: MouseEventHandler = (e) => {
+    e.preventDefault();
+    navigator.moveTo.public.landing();
+  };
+
+  const onMainClick: MouseEventHandler = (e) => {
+    e.preventDefault();
+    navigator.moveTo.protected.main();
   };
 
   const links = mockdata.map((item) => (
@@ -110,6 +120,9 @@ export function MainHeader2() {
           <Group h="100%" gap={0} visibleFrom="sm" ml={100}>
             <a href="#" className={classes.link} onClick={onHomeClick}>
               Home
+            </a>
+            <a href="#" className={classes.link} onClick={onMainClick}>
+              Main
             </a>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               <HoverCard.Target>
@@ -162,7 +175,7 @@ export function MainHeader2() {
 
           <Box style={{ flexGrow: 1 }} />
 
-          <HeaderAuthGroup />
+          {mode === 'protected' ? <ProtectedAuthGroup /> : <PublicAuthGroup />}
 
           <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
         </Group>
@@ -208,46 +221,5 @@ export function MainHeader2() {
         </ScrollArea>
       </Drawer>
     </Box>
-  );
-}
-
-function HeaderAuthGroup() {
-  const navigator = useNavigator();
-  const { data: session, status: sessionStatus } = useSession();
-
-  const onLoginBtnClick = () => {
-    navigator.moveTo.auth.login();
-  };
-
-  const onSignUpBtnClick = () => {};
-
-  if (sessionStatus === 'loading') {
-    return <HeaderAuthGroupLoading />;
-  }
-
-  return (
-    <Group visibleFrom="sm" w={200} justify="end">
-      {session ? (
-        <>
-          <UserMenu session={session} />
-        </>
-      ) : (
-        <>
-          <Button variant="default" onClick={onLoginBtnClick}>
-            Log in
-          </Button>
-          <Button onClick={onSignUpBtnClick}>Sign up</Button>
-        </>
-      )}
-    </Group>
-  );
-}
-
-function HeaderAuthGroupLoading() {
-  return (
-    <Group gap="md" w={200}>
-      <Skeleton w={76} h={35}></Skeleton>
-      <Skeleton w={86} h={35}></Skeleton>
-    </Group>
   );
 }

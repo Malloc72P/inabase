@@ -1,33 +1,15 @@
-'use client';
-
-import { MainHeader, MainHeader2 } from '@components/main-header';
-import { MainNavbar } from '@components/main-navbar';
-import { AppShell } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
+import { AuthSessionProvider } from 'app/providers/auth-session-provider';
+import { getServerSession } from 'next-auth';
 import { PropsWithChildren } from 'react';
+import ProtectedClientLayout from './client-layout';
 
-export default function MainLayout({ children }: PropsWithChildren) {
-  const [opened, { toggle }] = useDisclosure();
+export default async function MainLayout({ children }: PropsWithChildren) {
+  const session = await getServerSession(nextAuthOption);
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{
-        width: 300,
-        breakpoint: 'sm',
-        collapsed: { mobile: !opened },
-      }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <MainHeader2 />
-      </AppShell.Header>
-
-      <AppShell.Navbar p="md">
-        <MainNavbar />
-      </AppShell.Navbar>
-
-      <AppShell.Main>{children}</AppShell.Main>
-    </AppShell>
+    <AuthSessionProvider session={session}>
+      <ProtectedClientLayout>{children}</ProtectedClientLayout>
+    </AuthSessionProvider>
   );
 }
