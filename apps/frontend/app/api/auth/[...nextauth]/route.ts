@@ -1,4 +1,4 @@
-import { refreshToken } from '@libs/api/auth';
+import { refreshToken } from '@libs/server-actions/auth';
 import { fetcher } from '@libs/fetcher';
 import { ApiLinkMap, PageLinkMap } from '@libs/link-map';
 import { SignInParam, SignInResult } from '@repo/dto';

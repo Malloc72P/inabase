@@ -17,6 +17,5 @@ export async function findShows(
     console.log('fetch error! >>> ', (error as any).info);
 
     return { shows: [] };
-    // throw new Error('fetch error');
   }
 }

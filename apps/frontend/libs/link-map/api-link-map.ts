@@ -9,6 +9,7 @@ export const ApiLinkMap = {
   },
   auth: {
     signin: () => Env.beApiUrl + '/auth/signin',
+    signup: () => Env.beApiUrl + '/auth/signup',
     signout: () => Env.beApiUrl + '/auth/signout',
     profile: () => Env.beApiUrl + '/auth/profile',
     refresh: () => Env.beApiUrl + '/auth/refresh',

@@ -1,7 +1,7 @@
 'use client';
 
-import { MainHeader2 } from '@components/main-header';
-import { AppShell } from '@mantine/core';
+import { MainHeader } from '@components/main-header';
+import { AppShell, Box } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { PropsWithChildren } from 'react';
 
@@ -11,10 +11,12 @@ export default function AuthLayout({ children }: PropsWithChildren) {
   return (
     <AppShell header={{ height: 60 }} padding="md">
       <AppShell.Header>
-        <MainHeader2 />
+        <MainHeader />
       </AppShell.Header>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <Box mt="15%">{children}</Box>
+      </AppShell.Main>
     </AppShell>
   );
 }

@@ -1,5 +1,5 @@
 import { ShowListItemSkeleton } from '@components/show-list-item';
-import { findShows } from '@libs/api/show';
+import { findShows } from '@libs/server-actions/show';
 import { Container, SimpleGrid } from '@mantine/core';
 import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
 import { getServerSession, Session } from 'next-auth';

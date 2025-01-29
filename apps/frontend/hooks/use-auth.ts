@@ -1,6 +1,6 @@
 import { fetcher } from '@libs/fetcher';
 import { ApiLinkMap } from '@libs/link-map/api-link-map';
-import { SignInParam } from '@repo/dto';
+import { SignInParam, SignUpParam } from '@repo/dto';
 import { signIn, signOut } from 'next-auth/react';
 import { notifyError, notifySuccess } from './use-notification';
 import { PageLinkMap } from '@libs/link-map';
@@ -37,5 +37,12 @@ export const useAuth = () => {
     }
   };
 
-  return { login, logout };
+  const signup = async (dto: SignUpParam) => {
+    await fetcher(ApiLinkMap.auth.signup(), {
+      method: 'POST',
+      body: dto,
+    });
+  };
+
+  return { login, logout, signup };
 };

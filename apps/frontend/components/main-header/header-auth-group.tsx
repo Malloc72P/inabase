@@ -48,7 +48,11 @@ export function LoginButton() {
 export function SignUpButton() {
   const navigator = useNavigator();
 
-  return <Button h={34}>Sign up</Button>;
+  return (
+    <Button h={34} onClick={navigator.moveTo.auth.signup}>
+      Sign up
+    </Button>
+  );
 }
 
 export function HeaderAuthGroupLoading() {

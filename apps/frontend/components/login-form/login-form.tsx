@@ -16,17 +16,22 @@ import {
 import { SignInParam } from '@repo/dto';
 import { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
-import classes from './auth-form.module.css';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import classes from './login-form.module.css';
+import { useNavigator } from '@hooks/use-navigator';
 
-export function AuthForm() {
+export function LoginForm() {
   const { login } = useAuth();
   const form = useForm<SignInParam>();
+  const navigator = useNavigator();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     await login(form.getValues());
+  };
+
+  const onCreateAccountClick = () => {
+    navigator.moveTo.auth.signup();
   };
 
   return (
@@ -36,7 +41,7 @@ export function AuthForm() {
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Do not have an account yet?{' '}
-        <Anchor size="sm" component="button">
+        <Anchor size="sm" component="button" onClick={onCreateAccountClick}>
           Create account
         </Anchor>
       </Text>

@@ -205,6 +205,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@repo/exceptions':
+        specifier: workspace:*
+        version: link:../../packages/exceptions
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
