@@ -5,6 +5,7 @@ import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
 import { getServerSession, Session } from 'next-auth';
 import { Suspense } from 'react';
 import { MainPageBody } from './main-page-body';
+import { sleep } from '@libs/debug';
 
 export default async function MainPage() {
   const session = await getServerSession(nextAuthOption);
