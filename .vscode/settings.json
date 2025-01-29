@@ -7,14 +7,14 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.exclude": {},
-  "cssVariables.languages": ["scss", "postcss", "less", "css", "html", "source.css.styled"],
+  "cssVariables.languages": ["css"],
   "cssVariables.lookupFiles": [
     "**/*.module.css",
     "**/*.css",
     "**/*.scss",
     "**/*.sass",
     "**/*.less",
-    "apps/web/node_modules/@mantine/core/styles.css"
+    "apps/frontend/node_modules/@mantine/core/styles.css"
   ],
   "files.associations": {
     "*.css": "postcss"
