@@ -31,9 +31,9 @@ export function HeroWithImage() {
 
             <Text className={classes.description} mt={30}>
               Typescript를 주력 언어로 사용하는 FullStack 개발자 Malloc72P라고 합니다. <br />
-              본 포트폴리오는 NextJS와 nestJS로 개발했습니다. <br />
+              본 포트폴리오는 NextJS와 NestJS로 개발했습니다. <br />
               Decorator와 강력한 모듈 기능으로 직관적이고 확장에 열려있지만, <br />
-              변경에는 닫혀있는 강력한 백엔드 도구인 NestJS와 <br />
+              변경에는 닫혀있는 강력한 백엔드 프레임워크인 NestJS와 <br />
               Server Component와 Server Action으로 생산성 및 보안이라는 두마리 토끼를 <br />
               잡은 Full Stack 포트폴리오입니다.
             </Text>

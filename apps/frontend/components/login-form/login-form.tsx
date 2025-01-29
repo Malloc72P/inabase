@@ -37,33 +37,27 @@ export function LoginForm() {
   return (
     <Container size={420} my={40}>
       <Title ta="center" className={classes.title}>
-        Welcome back!
+        환영합니다!
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        Do not have an account yet?{' '}
+        아직 계정이 없으신가요?{' '}
         <Anchor size="sm" component="button" onClick={onCreateAccountClick}>
-          Create account
+          회원가입 하기
         </Anchor>
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={onSubmit}>
-          <TextInput label="Email" required {...form.register('email')} />
-          <PasswordInput
-            label="Password"
-            placeholder="Your password"
-            required
-            mt="md"
-            {...form.register('password')}
-          />
+          <TextInput label="이메일" required {...form.register('email')} />
+          <PasswordInput label="비밀번호" required mt="md" {...form.register('password')} />
           <Group justify="space-between" mt="lg">
-            <Checkbox label="Remember me" />
+            {/* <Checkbox label="Remember me" /> */}
             <Anchor component="button" size="sm">
-              Forgot password?
+              비밀번호를 잊으셨나요?
             </Anchor>
           </Group>
           <Button fullWidth mt="xl" type="submit">
-            Sign in
+            로그인
           </Button>
         </form>
       </Paper>
