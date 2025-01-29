@@ -4,6 +4,7 @@ import { Logo } from '@components/logo';
 import { UserMenu } from '@components/user-menu';
 import { useNavigator } from '@hooks/use-navigator';
 import {
+  ActionIcon,
   Anchor,
   Box,
   Burger,
@@ -31,12 +32,14 @@ import {
   IconCoin,
   IconFingerprint,
   IconNotification,
+  IconSun,
 } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import classes from './main-header-2.module.css';
 import { ProtectedAuthGroup, PublicAuthGroup } from './header-auth-group';
 import { cn } from '@libs/ui';
 import { MouseEventHandler } from 'react';
+import { ThemeToggler } from '@components/theme-toggler';
 
 const mockdata = [
   {
@@ -175,7 +178,10 @@ export function MainHeader2({ mode = 'public' }: MainHeader2Props) {
 
           <Box style={{ flexGrow: 1 }} />
 
-          {mode === 'protected' ? <ProtectedAuthGroup /> : <PublicAuthGroup />}
+          <Group>
+            <ThemeToggler />
+            {mode === 'protected' ? <ProtectedAuthGroup /> : <PublicAuthGroup />}
+          </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
         </Group>
