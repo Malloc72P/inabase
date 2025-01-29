@@ -96,6 +96,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@repo/exceptions':
+        specifier: workspace:*
+        version: link:../../packages/exceptions
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
@@ -275,6 +278,22 @@ importers:
       typescript-eslint:
         specifier: ^8.15.0
         version: 8.15.0(eslint@9.15.0(jiti@2.4.2))(typescript@5.5.4)
+
+  packages/exceptions:
+    dependencies:
+      class-transformer:
+        specifier: ^0.5.1
+        version: 0.5.1
+      class-validator:
+        specifier: ^0.14.1
+        version: 0.14.1
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.3.3
+        version: 5.5.4
 
   packages/typescript-config: {}
 

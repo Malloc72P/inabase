@@ -8,12 +8,13 @@ import { TokenService } from 'src/token/token.service';
 import { UserService } from 'src/user/user.service';
 import {
   AuthServiceCreateAccessTokenInput,
-  AuthServiceCreateRefreshTokenOnput,
+  AuthServiceCreateRefreshTokenOutput,
   AuthServiceRefreshTokenInput,
   AuthServiceRefreshTokenOutput,
   AuthServiceValidateUserInput,
   AuthServiceValidateUserOutput,
 } from './auth.service.dto';
+import { EmailAlreadyInUse } from '@src/exceptions/already-exist-user.exception';
 
 export interface TargetArtifect {
   ownerId: number;
@@ -35,7 +36,7 @@ export class AuthService {
     email,
     password,
   }: AuthServiceValidateUserInput): Promise<AuthServiceValidateUserOutput> {
-    const { user } = await this.userService.findByEmail({ email: email });
+    const { user } = await this.userService.findByEmailOrThrow({ email: email });
 
     const isVerified = await this.hasherService.verifyPassword(user.password, password);
 
@@ -54,14 +55,14 @@ export class AuthService {
   async refreshToken({
     email,
   }: AuthServiceRefreshTokenInput): Promise<AuthServiceRefreshTokenOutput> {
-    const { user } = await this.userService.findByEmail({ email });
+    const { user } = await this.userService.findByEmailOrThrow({ email });
 
     return await this.createTokens({ user });
   }
 
   private async createTokens({
     user,
-  }: AuthServiceCreateAccessTokenInput): Promise<AuthServiceCreateRefreshTokenOnput> {
+  }: AuthServiceCreateAccessTokenInput): Promise<AuthServiceCreateRefreshTokenOutput> {
     const accessTokenPayload: TokenServiceSignAccessTokenInput = {
       id: user.id,
       email: user.email,

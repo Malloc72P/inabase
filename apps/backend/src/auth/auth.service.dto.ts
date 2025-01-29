@@ -7,7 +7,7 @@ export interface AuthServiceCreateAccessTokenInput {
   user: User;
 }
 
-export interface AuthServiceCreateRefreshTokenOnput {
+export interface AuthServiceCreateRefreshTokenOutput {
   accessToken: string;
   refreshToken: string;
 }

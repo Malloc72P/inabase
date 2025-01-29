@@ -10,7 +10,7 @@ export class BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
+  @Column({ default: false })
   deleted: boolean;
 
   delete() {

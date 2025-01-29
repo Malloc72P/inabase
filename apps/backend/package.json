@@ -45,6 +45,7 @@
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@repo/dto": "workspace:*",
+    "@repo/exceptions": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",

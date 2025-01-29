@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   AccessTokenPayload,
@@ -6,6 +6,8 @@ import {
   RefreshTokenPayload,
   RefreshTokenResult,
   SignInResult,
+  SignUpParam,
+  SignUpResult,
 } from '@repo/dto';
 import { BaseConstants } from '@src/base/base.constant';
 import { BaseController } from '@src/base/base.controller';
@@ -15,11 +17,13 @@ import { JwtAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';
 import * as ms from 'ms';
+import { UserService } from '@src/user/user.service';
 
 @Controller('api/v1/auth')
 export class AuthController extends BaseController {
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private configService: ConfigService
   ) {
     super();
@@ -41,6 +45,15 @@ export class AuthController extends BaseController {
     };
 
     return res.json(result);
+  }
+
+  @Post('signup')
+  async signup(@Body() dto: SignUpParam): Promise<SignUpResult> {
+    const { user } = await this.userService.create({ ...dto });
+
+    return {
+      result: !!user,
+    };
   }
 
   @Post('refresh')

@@ -2,13 +2,27 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { UserServiceFindByEmailInput, UserServiceFindByEmailOutput } from './user.service.dto';
+import {
+  UserServiceCreateInput,
+  UserServiceCreateOutput,
+  UserServiceFindByEmailInput,
+  UserServiceFindByEmailOrThrowInput,
+  UserServiceFindByEmailOrThrowOutput,
+  UserServiceFindByEmailOutput,
+} from './user.service.dto';
+import { EmailAlreadyInUse } from '@src/exceptions/already-exist-user.exception';
+import { HasherService } from '@src/hasher/hasher.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+    private hasherService: HasherService
+  ) {}
 
-  async findByEmail({ email }: UserServiceFindByEmailInput): Promise<UserServiceFindByEmailOutput> {
+  async findByEmailOrThrow({
+    email,
+  }: UserServiceFindByEmailOrThrowInput): Promise<UserServiceFindByEmailOrThrowOutput> {
     const user = await this.userRepository.findOne({
       where: {
         email,
@@ -20,5 +34,35 @@ export class UserService {
     }
 
     return { user };
+  }
+
+  async findByEmail({ email }: UserServiceFindByEmailInput): Promise<UserServiceFindByEmailOutput> {
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
+
+    return { user };
+  }
+
+  async create({
+    email,
+    name,
+    password,
+  }: UserServiceCreateInput): Promise<UserServiceCreateOutput> {
+    const { user } = await this.findByEmail({ email });
+
+    if (user) {
+      throw new EmailAlreadyInUse();
+    }
+
+    const savedUser = await this.userRepository.save({
+      email: email,
+      name: name,
+      password: await this.hasherService.hashPassword(password),
+    });
+
+    return { user: savedUser };
   }
 }
