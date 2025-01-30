@@ -18,7 +18,7 @@
 | 이름    | version |
 | ------- | ------- |
 | Nest    | ^10.0.0 |
-| TypeORM |         |
+| TypeORM | 0.3.20  |
 
 ### Database
 
