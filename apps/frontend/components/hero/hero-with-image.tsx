@@ -16,26 +16,27 @@ export function HeroWithImage() {
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-              안녕하세요! <br />
+              보다 더 빠른 <br />
               <Text
                 component="span"
                 inherit
                 variant="gradient"
                 gradient={{ from: 'pink', to: 'yellow' }}
               >
-                Full Stack
+                서비스 구축
               </Text>{' '}
-              개발자 <br />
-              Malloc72P입니다.
+              을 위한 <br />
+              프로젝트 템플릿 <br />
+              Inabase를 소개합니다.
             </Title>
 
             <Text className={classes.description} mt={30}>
-              Typescript를 주력 언어로 사용하는 FullStack 개발자 Malloc72P라고 합니다. <br />
-              본 포트폴리오는 NextJS와 NestJS로 개발했습니다. <br />
-              Decorator와 강력한 모듈 기능으로 직관적이고 확장에 열려있지만, <br />
-              변경에는 닫혀있는 강력한 백엔드 프레임워크인 NestJS와 <br />
-              Server Component와 Server Action으로 생산성 및 보안이라는 두마리 토끼를 <br />
-              잡은 Full Stack 포트폴리오입니다.
+              프로젝트 구성은 생각보다 손이 많이 가는 작업입니다. <br />
+              eslint, prettier, 프레임워크 설정, styled component 테마 설정, docker-compose,
+              환경변수 설정 등... <br />
+              해야할 일이 생각보다 많습니다 <br />
+              Inabase는 아이디어를 웹서비스로 빠르게 구현할 수 있도록, 웹서비스 프로젝트를
+              템플릿으로 제공합니다.
             </Text>
 
             <Button

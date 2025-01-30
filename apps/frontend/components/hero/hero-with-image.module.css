@@ -54,6 +54,7 @@
   color: var(--mantine-color-white);
   opacity: 0.75;
   max-width: 600px;
+  word-break: keep-all;
 
   @media (max-width: $mantine-breakpoint-md) {
     max-width: 100%;

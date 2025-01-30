@@ -1,37 +1,48 @@
-import { IconCookie, IconGauge, IconLock, IconMessage2, IconUser } from '@tabler/icons-react';
+import {
+  Icon3dCubeSphere,
+  IconBuildingArch,
+  IconCapProjecting,
+  IconCookie,
+  IconDatabase,
+  IconGauge,
+  IconLock,
+  IconMessage2,
+  IconShieldHeart,
+  IconUser,
+  IconUserScreen,
+} from '@tabler/icons-react';
 import { Container, SimpleGrid, Text, ThemeIcon, Title } from '@mantine/core';
 import classes from './feature.module.css';
 
 export const MOCKDATA = [
   {
-    icon: IconGauge,
-    title: 'Extreme performance',
+    icon: IconBuildingArch,
+    title: '모노 레포(TurboRepo)',
     description:
-      'This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit',
+      '웹 서비스를 만들다 보면, 두 개 이상의 앱을 만들기도 하지요. 그러다 보면, 공통으로 사용해야 하는 모듈이 생기기 마련입니다. Inabase는 공통 모듈을 손쉽게 만들고 여러 앱에서 가져다 쓸 수 있도록 모노레포 구조를 사용합니다.',
   },
   {
-    icon: IconUser,
-    title: 'Privacy focused',
+    icon: IconDatabase,
+    title: 'TypeORM 준비 완료',
     description:
-      'People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma',
+      'TypeORM 관련 설정이 준비되어 있습니다. 저장하고 싶은 엔티티를 정의하기만 하면 됩니다.',
   },
   {
-    icon: IconCookie,
-    title: 'No third parties',
+    icon: IconShieldHeart,
+    title: '사용자 인증 준비 완료',
     description:
-      'They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves',
+      'NestJS의 Passport를 통한 간단한 사용자 인증 기능이 구현되어 있습니다. ID/PW 방식 로그인, JWT 토큰 및 리프래시 기능이 제공됩니다.',
   },
   {
-    icon: IconLock,
-    title: 'Secure by default',
-    description:
-      'Although it still can’t fly, its jumping power is outstanding, in Alola the mushrooms on Paras don’t grow up quite right',
+    icon: IconUserScreen,
+    title: 'Secure Styled Component 준비 완료',
+    description: 'Mantine v7이 설치되어 있습니다. 필요한 화면을 바로 구현해보세요.',
   },
   {
-    icon: IconMessage2,
-    title: '24/7 Support',
+    icon: Icon3dCubeSphere,
+    title: 'DTO 공통 모듈',
     description:
-      'Rapidash usually can be seen casually cantering in the fields and plains, Skitty is known to chase around after its own tail',
+      '백엔드 API에 대한 파라미터와 응답 결과를 정의한 DTO가 공통모듈로 되어 있습니다. 프론트엔드 앱은 해당 모듈을 통해 API에 대한 입출력에 대해 타입체킹이 가능합니다.',
   },
 ];
 
@@ -62,11 +73,11 @@ export function FeaturesGrid() {
 
   return (
     <Container className={classes.wrapper}>
-      <Title className={classes.title}>Inabase 포트폴리오의 강점 💪</Title>
+      <Title className={classes.title}>💎 Inabase의 특징</Title>
 
       <Container size={560} p={0}>
         <Text size="sm" className={classes.description}>
-          NextJS와 NestJS를 사용하는 SimpleAppserver는 아래의 강점을 가집니다.
+          NextJS와 NestJS를 사용하는 Inabase는 아래와 같은 특징을 가져요.
         </Text>
       </Container>
 

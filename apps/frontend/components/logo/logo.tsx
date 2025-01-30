@@ -13,7 +13,7 @@ export function Logo() {
         navigator.moveTo.public.landing();
       }}
     >
-      💎 InaBase
+      💎 Inabase
     </div>
   );
 }

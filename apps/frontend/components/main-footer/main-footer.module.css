@@ -48,6 +48,10 @@
   width: 160px;
 }
 
+.wide-wrapper {
+  width: 500px;
+}
+
 .link {
   display: block;
   color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
