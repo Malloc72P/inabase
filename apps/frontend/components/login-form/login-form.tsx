@@ -52,9 +52,9 @@ export function LoginForm() {
           <PasswordInput label="비밀번호" required mt="md" {...form.register('password')} />
           <Group justify="space-between" mt="lg">
             {/* <Checkbox label="Remember me" /> */}
-            <Anchor component="button" size="sm">
+            {/* <Anchor component="button" size="sm">
               비밀번호를 잊으셨나요?
-            </Anchor>
+            </Anchor> */}
           </Group>
           <Button fullWidth mt="xl" type="submit">
             로그인

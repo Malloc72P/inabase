@@ -5,10 +5,10 @@ import { useSession } from 'next-auth/react';
 
 export function PublicAuthGroup() {
   return (
-    <Group visibleFrom="sm" justify="end">
+    <>
       <LoginButton />
       <SignUpButton />
-    </Group>
+    </>
   );
 }
 

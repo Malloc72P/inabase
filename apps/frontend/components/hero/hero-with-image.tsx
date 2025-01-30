@@ -6,8 +6,9 @@ import { useNavigator } from '@hooks/use-navigator';
 
 export function HeroWithImage() {
   const navigator = useNavigator();
+
   const onGetStartedClick = () => {
-    navigator.moveTo.protected.main();
+    navigator.moveTo.external.inabaseGithub();
   };
 
   return (
@@ -31,12 +32,12 @@ export function HeroWithImage() {
             </Title>
 
             <Text className={classes.description} mt={30}>
+              프로젝트를 Inabase 템플릿에서 시작하면, 귀찮은 프로젝트 구성을 또 안해도 됩니다!{' '}
+              <br />
               프로젝트 구성은 생각보다 손이 많이 가는 작업입니다. <br />
-              eslint, prettier, 프레임워크 설정, styled component 테마 설정, docker-compose,
-              환경변수 설정 등... <br />
-              해야할 일이 생각보다 많습니다 <br />
               Inabase는 아이디어를 웹서비스로 빠르게 구현할 수 있도록, 웹서비스 프로젝트를
-              템플릿으로 제공합니다.
+              템플릿으로 제공합니다. <br />
+              지금 바로 Inabase 템플릿에서 서비스를 개발해보세요!
             </Text>
 
             <Button

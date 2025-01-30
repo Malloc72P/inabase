@@ -1,12 +1,8 @@
-import {
-  IconBrandGithub,
-  IconBrandInstagram,
-  IconBrandTwitter,
-  IconBrandYoutube,
-} from '@tabler/icons-react';
-import { ActionIcon, Container, Group, Text } from '@mantine/core';
-import classes from './main-footer.module.css';
 import { Logo } from '@components/logo';
+import { useNavigator } from '@hooks/use-navigator';
+import { ActionIcon, Container, Group, Text } from '@mantine/core';
+import { IconBrandGithub } from '@tabler/icons-react';
+import classes from './main-footer.module.css';
 import { useRouter } from 'next/navigation';
 
 const data = [
@@ -17,17 +13,11 @@ const data = [
 ];
 
 export function MainFooter() {
-  const router = useRouter();
+  const navigator = useNavigator();
 
   const groups = data.map((group) => {
     const links = group.links.map((link, index) => (
-      <Text<'a'>
-        key={index}
-        className={classes.link}
-        component="a"
-        href={link.link}
-        onClick={(event) => event.preventDefault()}
-      >
+      <Text<'a'> key={index} className={classes.link} component="a" href={link.link}>
         {link.label}
       </Text>
     ));
@@ -61,7 +51,7 @@ export function MainFooter() {
             size="lg"
             color="gray"
             variant="subtle"
-            onClick={() => window.open('https://github.com/Malloc72P', '_blank')}
+            onClick={navigator.moveTo.external.malloc72pGithub}
           >
             <IconBrandGithub size={18} stroke={1.5} />
           </ActionIcon>
