@@ -19,7 +19,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
 import { MouseEventHandler } from 'react';
-import { ProtectedAuthGroup, PublicAuthGroup } from './header-auth-group';
+import { AuthGroup } from './header-auth-group';
 import classes from './main-header.module.css';
 import { CommonConstants } from '@libs/constants/common';
 
@@ -47,7 +47,7 @@ export function MainHeader({ mode = 'public' }: MainHeaderProps) {
           <Group>
             <ThemeToggler />
             <Group visibleFrom="sm" justify="end">
-              <AuthButtons mode={mode} />
+              <AuthGroup />
             </Group>
           </Group>
 
@@ -72,20 +72,12 @@ export function MainHeader({ mode = 'public' }: MainHeaderProps) {
           <Divider my="sm" />
 
           <Flex direction="column" gap="md" p="md">
-            <AuthButtons mode={mode} />
+            <AuthGroup />
           </Flex>
         </ScrollArea>
       </Drawer>
     </Box>
   );
-}
-
-interface AuthButtonsProps {
-  mode: MainHeaderMode;
-}
-
-function AuthButtons({ mode }: AuthButtonsProps) {
-  return mode === 'protected' ? <ProtectedAuthGroup /> : <PublicAuthGroup />;
 }
 
 function HeaderLinks() {

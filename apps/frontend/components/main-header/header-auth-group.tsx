@@ -1,18 +1,9 @@
-import { UserMenu } from '@components/user-menu';
+import { UserMenuDropdown } from '@components/user-menu';
 import { useNavigator } from '@hooks/use-navigator';
 import { Group, Button, Skeleton } from '@mantine/core';
 import { useSession } from 'next-auth/react';
 
-export function PublicAuthGroup() {
-  return (
-    <>
-      <LoginButton />
-      <SignUpButton />
-    </>
-  );
-}
-
-export function ProtectedAuthGroup() {
+export function AuthGroup() {
   const { data: session, status: sessionStatus } = useSession();
 
   if (sessionStatus === 'loading') {
@@ -23,7 +14,7 @@ export function ProtectedAuthGroup() {
     <Group visibleFrom="sm" justify="end">
       {session ? (
         <>
-          <UserMenu session={session} />
+          <UserMenuDropdown session={session} />
         </>
       ) : (
         <>

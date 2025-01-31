@@ -6,6 +6,10 @@ import { createTheme, ColorSchemeScript, mantineHtmlProps, MantineProvider } fro
 import { Notifications } from '@mantine/notifications';
 import './globals.css';
 import { PageProgressBar } from '@components/navigation-progress-bar';
+import { AuthSessionProvider } from './providers/auth-session-provider';
+import { getServerSession } from 'next-auth';
+import { nextAuthOption } from './api/auth/[...nextauth]/route';
+import { LoadingOverlayProvider } from '@components/loading-overlay-provider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -23,11 +27,13 @@ export const metadata: Metadata = {
 
 const theme = createTheme({});
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(nextAuthOption);
+
   return (
     <html lang="ko" {...mantineHtmlProps}>
       <head>
@@ -38,7 +44,9 @@ export default function RootLayout({
 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          {children}
+          <AuthSessionProvider session={session}>
+            <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
+          </AuthSessionProvider>
           <Notifications />
           <PageProgressBar />
         </MantineProvider>

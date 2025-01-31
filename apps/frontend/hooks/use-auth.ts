@@ -4,6 +4,7 @@ import { SignInParam, SignUpParam } from '@repo/dto';
 import { signIn, signOut } from 'next-auth/react';
 import { notifyError, notifySuccess } from './use-notification';
 import { PageLinkMap } from '@libs/link-map';
+import { sleep } from '@libs/debug';
 
 export const useAuth = () => {
   const login = async (param: SignInParam) => {
