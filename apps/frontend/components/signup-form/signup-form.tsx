@@ -1,28 +1,24 @@
 'use client';
 
 import { useAuth } from '@hooks/use-auth';
+import { useNavigator } from '@hooks/use-navigator';
+import { notifyError, notifySuccess } from '@hooks/use-notification';
+import { ApiError } from '@libs/fetcher';
+import { submitHandler } from '@libs/form/createSubmitHandler';
 import {
   Anchor,
   Button,
-  Checkbox,
   Container,
-  Group,
   Paper,
   PasswordInput,
   Text,
   TextInput,
   Title,
 } from '@mantine/core';
-import { SignInParam, SignUpParam } from '@repo/dto';
+import { SignUpParam } from '@repo/dto';
 import { FormEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import classes from './signup-form.module.css';
-import { notifyError, notifySuccess } from '@hooks/use-notification';
-import { useNavigator } from '@hooks/use-navigator';
-import { ApiError } from '@libs/fetcher';
-import { submitHandler } from '@libs/form/createSubmitHandler';
-import Link from 'next/link';
-import { PageLinkMap } from '@libs/link-map';
 
 export function SignupForm() {
   const form = useForm<SignUpParam & { passwordConfirm: string }>();
@@ -102,7 +98,7 @@ export function SignupForm() {
             </Text>
           )}
 
-          <Button mt="xl" fullWidth type="submit">
+          <Button mt="xl" fullWidth type="submit" loading={loading}>
             회원가입
           </Button>
         </form>
