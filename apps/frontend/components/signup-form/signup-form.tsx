@@ -21,17 +21,21 @@ import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useNavigator } from '@hooks/use-navigator';
 import { ApiError } from '@libs/fetcher';
 import { submitHandler } from '@libs/form/createSubmitHandler';
+import Link from 'next/link';
+import { PageLinkMap } from '@libs/link-map';
 
 export function SignupForm() {
   const form = useForm<SignUpParam & { passwordConfirm: string }>();
   const navigator = useNavigator();
   const { signup } = useAuth();
+  const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
   const onSubmit = (e: FormEvent) =>
     submitHandler({
       e,
       callback: async () => {
+        setLoading(true);
         const { passwordConfirm, ...input } = form.getValues();
 
         if (input.password !== passwordConfirm) {
@@ -41,14 +45,9 @@ export function SignupForm() {
           });
         }
 
-        try {
-          setLoading(true);
-          await signup(input);
-        } catch (error) {
-          throw error;
-        } finally {
-          setLoading(false);
-        }
+        await signup(input);
+
+        setErrorMsg('');
 
         notifySuccess({
           title: '회원가입 성공!',
@@ -56,6 +55,18 @@ export function SignupForm() {
         });
 
         navigator.moveTo.auth.login();
+      },
+      onError: (error) => {
+        let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
+
+        if (error instanceof ApiError) {
+          errorMessage = error.message;
+        }
+
+        setErrorMsg(errorMessage);
+      },
+      onFinally: () => {
+        setLoading(false);
       },
     });
 
@@ -65,7 +76,12 @@ export function SignupForm() {
         회원가입
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        서비스 이용에 필요한 프로필 정보를 입력해주세요.
+        서비스 이용에 필요한 프로필 정보를 입력해주세요. <br />
+        계정이 이미 있으신 경우,{' '}
+        <Anchor size="sm" component="button" onClick={navigator.moveTo.auth.login}>
+          로그인 페이지
+        </Anchor>
+        로 이동해주세요.
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
@@ -80,8 +96,14 @@ export function SignupForm() {
             {...form.register('passwordConfirm')}
           />
 
+          {errorMsg && (
+            <Text c="red" size="sm" className={classes.error} mt="xl">
+              {errorMsg}
+            </Text>
+          )}
+
           <Button mt="xl" fullWidth type="submit">
-            Create Account
+            회원가입
           </Button>
         </form>
       </Paper>

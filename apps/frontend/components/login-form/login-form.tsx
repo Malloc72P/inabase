@@ -34,21 +34,24 @@ export function LoginForm() {
     submitHandler({
       e,
       callback: async () => {
-        try {
-          setLoading(true);
-          await login(form.getValues());
-          setErrorMsg('');
-          setIsSuccess(true);
-          navigator.moveTo.protected.main();
-        } catch (error) {
-          setIsSuccess(false);
-          if (error instanceof ApiError) {
-            setErrorMsg(error.message);
-          }
-          throw error;
-        } finally {
-          setLoading(false);
+        setLoading(true);
+        await login(form.getValues());
+        setErrorMsg('');
+        setIsSuccess(true);
+        navigator.moveTo.protected.main();
+      },
+      onError: (error) => {
+        let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
+
+        if (error instanceof ApiError) {
+          errorMessage = error.message;
         }
+
+        setIsSuccess(false);
+        setErrorMsg(errorMessage);
+      },
+      onFinally: () => {
+        setLoading(false);
       },
     });
 
