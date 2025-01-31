@@ -14,21 +14,43 @@ import {
   Title,
 } from '@mantine/core';
 import { SignInParam } from '@repo/dto';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import classes from './login-form.module.css';
 import { useNavigator } from '@hooks/use-navigator';
+import { submitHandler } from '@libs/form/createSubmitHandler';
+import { ApiError } from '@libs/fetcher';
+import { IconCircleCheck } from '@tabler/icons-react';
 
 export function LoginForm() {
   const { login } = useAuth();
   const form = useForm<SignInParam>();
   const navigator = useNavigator();
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    await login(form.getValues());
-  };
+  const onSubmit = (e: FormEvent) =>
+    submitHandler({
+      e,
+      callback: async () => {
+        try {
+          setLoading(true);
+          await login(form.getValues());
+          setErrorMsg('');
+          setIsSuccess(true);
+          navigator.moveTo.protected.main();
+        } catch (error) {
+          setIsSuccess(false);
+          if (error instanceof ApiError) {
+            setErrorMsg(error.message);
+          }
+          throw error;
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
 
   const onCreateAccountClick = () => {
     navigator.moveTo.auth.signup();
@@ -50,13 +72,22 @@ export function LoginForm() {
         <form onSubmit={onSubmit}>
           <TextInput label="이메일" required {...form.register('email')} />
           <PasswordInput label="비밀번호" required mt="md" {...form.register('password')} />
-          <Group justify="space-between" mt="lg">
-            {/* <Checkbox label="Remember me" /> */}
-            {/* <Anchor component="button" size="sm">
-              비밀번호를 잊으셨나요?
-            </Anchor> */}
-          </Group>
-          <Button fullWidth mt="xl" type="submit">
+
+          {errorMsg && (
+            <Text c="red" size="sm" className={classes.error} mt="xl">
+              {errorMsg}
+            </Text>
+          )}
+          {isSuccess && (
+            <Group gap={5} mt="xl">
+              <IconCircleCheck color="green" />
+              <Text fw="bold" c="green" size="sm">
+                로그인 성공!
+              </Text>
+            </Group>
+          )}
+
+          <Button fullWidth mt="xl" type="submit" loading={loading}>
             로그인
           </Button>
         </form>

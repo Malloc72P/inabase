@@ -1,6 +1,6 @@
 'use client';
 
-import { MainHeader } from '@components/main-header';
+import { ProtectedHeader } from '@components/main-header';
 import { MainNavbar } from '@components/main-navbar';
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -20,7 +20,7 @@ export default function ProtectedClientLayout({ children }: PropsWithChildren) {
       padding="md"
     >
       <AppShell.Header>
-        <MainHeader mode="protected" />
+        <ProtectedHeader />
       </AppShell.Header>
 
       <AppShell.Navbar p="md">

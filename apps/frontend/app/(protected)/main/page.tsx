@@ -1,10 +1,9 @@
-import { ShowListItemSkeleton } from '@components/show-list-item';
+import { ShowListItem, ShowListItemSkeleton } from '@components/show-list-item';
 import { findShows } from '@libs/server-actions/show';
 import { Container, SimpleGrid } from '@mantine/core';
 import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
 import { getServerSession, Session } from 'next-auth';
 import { Suspense } from 'react';
-import { MainPageBody } from './main-page-body';
 
 export default async function MainPage() {
   const session = await getServerSession(nextAuthOption);
@@ -16,7 +15,13 @@ export default async function MainPage() {
   return (
     <div>
       <Container>
-        <SimpleGrid spacing="lg" cols={3}>
+        <SimpleGrid
+          spacing="lg"
+          cols={{
+            md: 3,
+            sm: 1,
+          }}
+        >
           <Suspense fallback={<MainPageBodyLoading />}>
             <Shows session={session} />
           </Suspense>
@@ -31,7 +36,9 @@ async function Shows({ session }: { session: Session }) {
 
   return (
     <Suspense fallback={<MainPageBodyLoading />}>
-      <MainPageBody shows={shows} />
+      {shows.map((show) => (
+        <ShowListItem key={show.id} title={show.title} tags={show.tags} />
+      ))}
     </Suspense>
   );
 }

@@ -1,4 +1,6 @@
-import { Card, Group, Skeleton, Badge, Text } from '@mantine/core';
+import { cn } from '@libs/ui';
+import { Card, Group, Skeleton, Badge, Text, Flex } from '@mantine/core';
+import classes from './show-list-item.module.css';
 
 export interface ShowListItemProps {
   title: string;
@@ -29,19 +31,18 @@ export function ShowListItemSkeleton() {
 export function ShowListItem({ title, tags = [] }: ShowListItemProps) {
   return (
     <Card
-      className="show-list-item"
+      className={cn('show-list-item', classes.show)}
       shadow="sm"
       padding="lg"
       radius="md"
       withBorder
-      maw={SHOW_LIST_ITEM_WIDTH}
     >
-      <Group justify="space-between">
+      <Flex justify="space-between" direction="column" gap="xs">
         <Text fw="bold">{title}</Text>
         {tags.map((tag) => (
           <Badge key={tag}>{tag}</Badge>
         ))}
-      </Group>
+      </Flex>
     </Card>
   );
 }

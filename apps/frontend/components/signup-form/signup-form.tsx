@@ -14,21 +14,22 @@ import {
   Title,
 } from '@mantine/core';
 import { SignInParam, SignUpParam } from '@repo/dto';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import classes from './signup-form.module.css';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useNavigator } from '@hooks/use-navigator';
 import { ApiError } from '@libs/fetcher';
-import { createSubmitHandler } from '@libs/form/createSubmitHandler';
+import { submitHandler } from '@libs/form/createSubmitHandler';
 
 export function SignupForm() {
   const form = useForm<SignUpParam & { passwordConfirm: string }>();
   const navigator = useNavigator();
   const { signup } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = (e: FormEvent) =>
-    createSubmitHandler({
+    submitHandler({
       e,
       callback: async () => {
         const { passwordConfirm, ...input } = form.getValues();
@@ -40,7 +41,14 @@ export function SignupForm() {
           });
         }
 
-        await signup(input);
+        try {
+          setLoading(true);
+          await signup(input);
+        } catch (error) {
+          throw error;
+        } finally {
+          setLoading(false);
+        }
 
         notifySuccess({
           title: '회원가입 성공!',

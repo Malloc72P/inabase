@@ -1,4 +1,4 @@
-import { fetcher } from '@libs/fetcher';
+import { ApiError, fetcher } from '@libs/fetcher';
 import { ApiLinkMap } from '@libs/link-map/api-link-map';
 import { SignInParam, SignUpParam } from '@repo/dto';
 import { signIn, signOut } from 'next-auth/react';
@@ -8,18 +8,23 @@ import { sleep } from '@libs/debug';
 
 export const useAuth = () => {
   const login = async (param: SignInParam) => {
-    try {
-      await signIn('credentials', {
-        ...param,
-        redirect: true,
-        callbackUrl: PageLinkMap.protected.main(),
-      });
+    const response = await signIn('credentials', {
+      ...param,
+      redirect: false,
+    });
 
-      notifySuccess({
-        title: 'Success',
-        message: '로그인 되었습니다.',
-      });
-    } catch (error) {}
+    if (!response || !response.ok) {
+      throw new ApiError(
+        401,
+        'LoginFailed',
+        '로그인 실패. 아이디 또는 비밀번호를 다시 확인해주세요.'
+      );
+    }
+
+    notifySuccess({
+      title: 'Success',
+      message: '로그인 되었습니다.',
+    });
   };
 
   const logout = async () => {

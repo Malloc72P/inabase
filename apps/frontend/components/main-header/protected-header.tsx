@@ -1,19 +1,19 @@
 'use client';
 
-import { CustomLink } from '@components/custom-link';
 import { Logo } from '@components/logo';
 import { ThemeToggler } from '@components/theme-toggler';
 import { CommonConstants } from '@libs/constants/common';
 import { Box, Burger, Divider, Drawer, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { PublicAuthGroup } from './header-auth-group';
-import classes from './main-header.module.css';
-import { usePublicHeaderLinkModel } from './use-public-header-link-model';
+import { ProtectedAuthGroup } from './header-auth-group';
+import classes from './protected-header.module.css';
+import { UserMenu } from '@components/user-menu';
 
-export interface MainHeaderProps {}
+export interface ProtectedHeaderProps {}
 
-export function MainHeader({}: MainHeaderProps) {
+export function ProtectedHeader({}: ProtectedHeaderProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+  //   useHeader
 
   return (
     <Box pb={120}>
@@ -21,16 +21,12 @@ export function MainHeader({}: MainHeaderProps) {
         <Group justify="start" h="100%">
           <Logo />
 
-          <Group h="100%" gap={0} visibleFrom="sm" ml={100}>
-            <HeaderLinks />
-          </Group>
-
           <Box style={{ flexGrow: 1 }} />
 
           <Group>
             <ThemeToggler />
             <Group visibleFrom="sm" justify="end">
-              <PublicAuthGroup />
+              <ProtectedAuthGroup />
             </Group>
           </Group>
 
@@ -49,22 +45,9 @@ export function MainHeader({}: MainHeaderProps) {
       >
         <ScrollArea h="calc(100vh - 80px" mx="-md">
           <Divider my="sm" />
-
-          <HeaderLinks />
+          <UserMenu />
         </ScrollArea>
       </Drawer>
     </Box>
-  );
-}
-
-function HeaderLinks() {
-  const { links } = usePublicHeaderLinkModel();
-
-  return (
-    <>
-      {links.map((link) => (
-        <CustomLink key={link.label} link={link} />
-      ))}
-    </>
   );
 }

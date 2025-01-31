@@ -7,6 +7,7 @@ export interface UserMenuModel {
   type: 'button' | 'label' | 'divider';
   label: string;
   icon?: typeof IconSettings;
+  color?: string;
   onClick?: () => void;
   loading?: boolean;
   disabled?: boolean;
@@ -56,6 +57,7 @@ export function useUserMenuModel() {
       { type: 'divider', label: 'divider' },
       {
         type: 'button',
+        color: 'red',
         label: 'Delete account',
         icon: IconTrash,
         onClick: () => {},

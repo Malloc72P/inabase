@@ -74,6 +74,7 @@ export function UserMenuDropdown({ session }: UserMenuDropdownProps) {
                     key={key}
                     leftSection={item.icon && <item.icon size={16} stroke={1.5} />}
                     onClick={item.onClick}
+                    color={item.color}
                     disabled={item.disabled || item.loading}
                   >
                     {item.label}

@@ -7,15 +7,14 @@ export interface CreateSubmitHandlerInput {
   callback: () => Promise<void>;
 }
 
-export async function createSubmitHandler({ e, callback }: CreateSubmitHandlerInput) {
+export async function submitHandler({ e, callback }: CreateSubmitHandlerInput) {
   e.preventDefault();
-
   try {
     await callback();
   } catch (error) {
     if (error instanceof ApiError) {
       notifyError({
-        title: '문제가 발생했습니다.',
+        title: 'Error!',
         message: error.message,
       });
     } else {

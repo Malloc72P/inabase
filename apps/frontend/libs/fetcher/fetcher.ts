@@ -5,7 +5,7 @@ import { ApiExceptionPayload, ExceptionCode } from '@repo/exceptions';
 export class ApiError extends Error {
   constructor(
     public status: number,
-    public code: string,
+    public code: ExceptionCode,
     public message: string
   ) {
     super(message);

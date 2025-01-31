@@ -1,15 +1,12 @@
+import { LoadingOverlayProvider } from '@components/loading-overlay-provider';
+import { PageProgressBar } from '@components/navigation-progress-bar';
+import { ColorSchemeScript, createTheme, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
-import { createTheme, ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
-import { Notifications } from '@mantine/notifications';
 import './globals.css';
-import { PageProgressBar } from '@components/navigation-progress-bar';
-import { AuthSessionProvider } from './providers/auth-session-provider';
-import { getServerSession } from 'next-auth';
-import { nextAuthOption } from './api/auth/[...nextauth]/route';
-import { LoadingOverlayProvider } from '@components/loading-overlay-provider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -27,13 +24,11 @@ export const metadata: Metadata = {
 
 const theme = createTheme({});
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(nextAuthOption);
-
   return (
     <html lang="ko" {...mantineHtmlProps}>
       <head>
@@ -44,9 +39,7 @@ export default async function RootLayout({
 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <AuthSessionProvider session={session}>
-            <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
-          </AuthSessionProvider>
+          <LoadingOverlayProvider>{children}</LoadingOverlayProvider>
           <Notifications />
           <PageProgressBar />
         </MantineProvider>
