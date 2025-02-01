@@ -9,6 +9,9 @@ import {
   UserServiceFindByEmailOrThrowInput,
   UserServiceFindByEmailOrThrowOutput,
   UserServiceFindByEmailOutput,
+  UserServiceFindByIdOrThrowInput,
+  UserServiceFindByIdOrThrowOutput,
+  UserServiceUpdateProfileInput,
 } from './user.service.dto';
 import { EmailAlreadyInUse } from '@src/exceptions/already-exist-user.exception';
 import { HasherService } from '@src/hasher/hasher.service';
@@ -46,6 +49,22 @@ export class UserService {
     return { user };
   }
 
+  async findByIdOrThrow({
+    id,
+  }: UserServiceFindByIdOrThrowInput): Promise<UserServiceFindByIdOrThrowOutput> {
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('이미 삭제되었거나 존재하지 않는 사용자입니다.');
+    }
+
+    return { user };
+  }
+
   async create({
     email,
     name,
@@ -64,5 +83,18 @@ export class UserService {
     });
 
     return { user: savedUser };
+  }
+
+  async updateProfile({
+    id,
+    name,
+  }: UserServiceUpdateProfileInput): Promise<UserServiceCreateOutput> {
+    const { user } = await this.findByIdOrThrow({ id });
+
+    user.updateProfile({ name });
+
+    await this.userRepository.save(user);
+
+    return { user };
   }
 }

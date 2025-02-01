@@ -1,4 +1,3 @@
-import { ProfileResult, SignInResult } from '@repo/dto';
 import NextAuth from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 

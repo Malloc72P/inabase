@@ -6,6 +6,7 @@ import { AccessTokenPayload, RefreshTokenPayload } from '@repo/dto';
 export interface TokenServiceSignAccessTokenInput {
   id: string;
   email: string;
+  role: string;
 }
 
 export interface TokenServiceSignAccessTokenOutput {
@@ -18,6 +19,7 @@ export interface TokenServiceSignAccessTokenOutput {
 export interface TokenServiceSignRefreshTokenInput {
   id: string;
   email: string;
+  role: string;
 }
 
 export interface TokenServiceSignRefreshTokenOutput {
@@ -30,6 +32,7 @@ export interface TokenServiceSignRefreshTokenOutput {
 export interface DecodedTokenInfo {
   id: string;
   email: string;
+  role: string;
   iat: number;
   exp: number;
 }

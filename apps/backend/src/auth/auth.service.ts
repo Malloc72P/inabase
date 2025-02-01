@@ -14,7 +14,6 @@ import {
   AuthServiceValidateUserInput,
   AuthServiceValidateUserOutput,
 } from './auth.service.dto';
-import { EmailAlreadyInUse } from '@src/exceptions/already-exist-user.exception';
 
 export interface TargetArtifect {
   ownerId: number;
@@ -66,11 +65,13 @@ export class AuthService {
     const accessTokenPayload: TokenServiceSignAccessTokenInput = {
       id: user.id,
       email: user.email,
+      role: user.role,
     };
 
     const refreshTokenPayload: TokenServiceSignRefreshTokenInput = {
       id: user.id,
       email: user.email,
+      role: user.role,
     };
 
     const { accessToken } = await this.tokenService.signAccessToken(accessTokenPayload);

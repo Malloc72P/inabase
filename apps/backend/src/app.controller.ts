@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { HealthCheckOutput } from '@repo/dto';
 import { networkInterfaces } from 'os';
 import { BaseController } from './base/base.controller';
+import { transformTo } from './util/transformer.util';
 
 @Controller('api/v1/health')
 export class AppController extends BaseController {
@@ -12,11 +13,10 @@ export class AppController extends BaseController {
   @Get()
   healthCheck(): HealthCheckOutput {
     this.logger.log('health check');
-
-    return {
+    return transformTo(HealthCheckOutput, {
       statusCode: 200,
       serverAddr: this.getServerIPAddress(),
-    };
+    });
   }
 
   getServerIPAddress() {

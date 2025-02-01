@@ -11,6 +11,16 @@ export interface UserServiceFindByEmailOrThrowOutput {
 }
 
 //-------------------------------------------------------------------------
+// findByIdOrThrow
+//-------------------------------------------------------------------------
+export interface UserServiceFindByIdOrThrowInput {
+  id: string;
+}
+export interface UserServiceFindByIdOrThrowOutput {
+  user: User;
+}
+
+//-------------------------------------------------------------------------
 // findByEmail
 //-------------------------------------------------------------------------
 export interface UserServiceFindByEmailInput {
@@ -29,5 +39,16 @@ export interface UserServiceCreateInput {
   password: string;
 }
 export interface UserServiceCreateOutput {
+  user: User;
+}
+
+//-------------------------------------------------------------------------
+// updateProfile
+//-------------------------------------------------------------------------
+export interface UserServiceUpdateProfileInput {
+  id: string;
+  name: string;
+}
+export interface UserServiceUpdateProfileOutput {
   user: User;
 }
