@@ -1,4 +1,5 @@
 import { ShowListItem, ShowListItemSkeleton } from '@components/show-list-item';
+import { sleep } from '@libs/debug';
 import { findShows } from '@libs/server-actions/show';
 import { Container, SimpleGrid } from '@mantine/core';
 import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
@@ -22,7 +23,7 @@ export default async function MainPage() {
             sm: 1,
           }}
         >
-          <Suspense fallback={<MainPageBodyLoading />}>
+          <Suspense fallback={<ShowListLoading />}>
             <Shows session={session} />
           </Suspense>
         </SimpleGrid>
@@ -34,16 +35,10 @@ export default async function MainPage() {
 async function Shows({ session }: { session: Session }) {
   const { shows } = await findShows({}, { accessToken: session.backendTokens.accessToken });
 
-  return (
-    <Suspense fallback={<MainPageBodyLoading />}>
-      {shows.map((show) => (
-        <ShowListItem key={show.id} title={show.title} tags={show.tags} />
-      ))}
-    </Suspense>
-  );
+  return shows.map((show) => <ShowListItem key={show.id} title={show.title} tags={show.tags} />);
 }
 
-export function MainPageBodyLoading() {
+export function ShowListLoading() {
   return (
     <>
       <ShowListItemSkeleton />

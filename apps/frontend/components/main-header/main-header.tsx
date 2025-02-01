@@ -16,7 +16,7 @@ export function MainHeader({}: MainHeaderProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
   return (
-    <Box pb={120}>
+    <Box>
       <header className={classes.header}>
         <Group justify="start" h="100%">
           <Logo />

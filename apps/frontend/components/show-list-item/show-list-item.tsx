@@ -1,5 +1,5 @@
 import { cn } from '@libs/ui';
-import { Card, Group, Skeleton, Badge, Text, Flex } from '@mantine/core';
+import { Card, Group, Skeleton, Badge, Text, Flex, Button } from '@mantine/core';
 import classes from './show-list-item.module.css';
 
 export interface ShowListItemProps {
@@ -12,18 +12,16 @@ const SHOW_LIST_ITEM_WIDTH = 320;
 export function ShowListItemSkeleton() {
   return (
     <Card
-      className="show-list-item-skeleton"
+      className={cn('show-list-item-skeleton', classes.show)}
       shadow="sm"
       padding="lg"
       radius="md"
       withBorder
-      maw={SHOW_LIST_ITEM_WIDTH}
     >
-      <Group justify="space-between">
-        <Skeleton w={SHOW_LIST_ITEM_WIDTH} h={20} />
-
+      <Flex justify="space-between" direction="column" gap="xs">
+        <Skeleton w="100%" h={20} />
         <Skeleton w={50} h={20} />
-      </Group>
+      </Flex>
     </Card>
   );
 }
