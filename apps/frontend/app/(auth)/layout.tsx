@@ -1,9 +1,8 @@
 'use client';
 
 import { MainHeader } from '@components/main-header';
-import { AppShell, Box, Flex } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { relative } from 'path';
 import { PropsWithChildren } from 'react';
 import classes from './layout.module.css';
 

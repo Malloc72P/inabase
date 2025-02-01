@@ -5,6 +5,7 @@ export const PageLinkMap = {
   },
   protected: {
     main: () => '/main',
+    artists: () => '/artists',
   },
   public: {
     landing: () => '/',

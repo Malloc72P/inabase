@@ -8,15 +8,25 @@ import { useDisclosure } from '@mantine/hooks';
 import { ProtectedAuthGroup } from './header-auth-group';
 import classes from './protected-header.module.css';
 import { UserMenu } from '@components/user-menu';
+import { MAIN_NAVBAR_HEIGHT, MainNavbar } from '@components/main-navbar';
+import { usePathname } from 'next/navigation';
+import { useNavigator } from '@hooks/use-navigator';
+import { PageLinkMap } from '@libs/link-map';
 
 export interface ProtectedHeaderProps {}
 
+export const PROTECTED_HEADER_HEIGHT = 60 + MAIN_NAVBAR_HEIGHT;
+
 export function ProtectedHeader({}: ProtectedHeaderProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  //   useHeader
+  const pathname = usePathname();
+  const navigator = useNavigator();
+
+  console.log('pathname', pathname);
 
   return (
-    <Box>
+    <Box className={classes.container}>
+      {/* ------ Main Header ------ */}
       <header className={classes.header}>
         <Group justify="start" h="100%">
           <Logo />
@@ -34,6 +44,24 @@ export function ProtectedHeader({}: ProtectedHeaderProps) {
         </Group>
       </header>
 
+      {/* ------ Main Navbar ------ */}
+      <MainNavbar
+        selected={pathname}
+        items={[
+          {
+            label: 'Shows',
+            value: PageLinkMap.protected.main(),
+            onClick: navigator.moveTo.protected.main,
+          },
+          {
+            label: 'Artists',
+            value: PageLinkMap.protected.artists(),
+            onClick: navigator.moveTo.protected.artists,
+          },
+        ]}
+      />
+
+      {/* ------ Mobile Drawer ------ */}
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
