@@ -1,3 +1,5 @@
+'use client';
+
 import { Logo } from '@components/logo';
 import { useNavigator } from '@hooks/use-navigator';
 import { ActionIcon, Container, Group, Text } from '@mantine/core';

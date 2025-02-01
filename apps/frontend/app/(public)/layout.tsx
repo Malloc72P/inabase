@@ -1,13 +1,18 @@
-'use client';
-
 import { MainFooter } from '@components/main-footer';
 import { MainHeader } from '@components/main-header';
+import { PageLinkMap } from '@libs/link-map';
 import { AppShell } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
-export default function PublicPageLayout({ children }: PropsWithChildren) {
-  const [opened, { toggle }] = useDisclosure();
+export default async function PublicPageLayout({ children }: PropsWithChildren) {
+  const session = await getServerSession(nextAuthOption);
+
+  if (session) {
+    redirect(PageLinkMap.protected.main());
+  }
 
   return (
     <AppShell header={{ height: 60 }}>

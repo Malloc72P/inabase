@@ -10,7 +10,8 @@
 
 #nprogress .spinner-icon {
   @mixin light {
-    background: var(--mantine-color-blue-7);
+    border-top-color: var(--mantine-color-blue-7);
+    border-left-color: var(--mantine-color-blue-7);
   }
 
   @mixin dark {
