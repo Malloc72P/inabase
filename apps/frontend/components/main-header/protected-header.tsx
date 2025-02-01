@@ -12,6 +12,7 @@ import { MAIN_NAVBAR_HEIGHT, MainNavbar } from '@components/main-navbar';
 import { usePathname } from 'next/navigation';
 import { useNavigator } from '@hooks/use-navigator';
 import { PageLinkMap } from '@libs/link-map';
+import { IconMovie, IconUserBolt } from '@tabler/icons-react';
 
 export interface ProtectedHeaderProps {}
 
@@ -50,11 +51,13 @@ export function ProtectedHeader({}: ProtectedHeaderProps) {
         items={[
           {
             label: 'Shows',
+            icon: IconMovie,
             value: PageLinkMap.protected.main(),
             onClick: navigator.moveTo.protected.main,
           },
           {
             label: 'Artists',
+            icon: IconUserBolt,
             value: PageLinkMap.protected.artists(),
             onClick: navigator.moveTo.protected.artists,
           },

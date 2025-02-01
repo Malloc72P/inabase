@@ -2,12 +2,14 @@
 
 import { Tabs } from '@mantine/core';
 import classes from './main-navbar.module.css';
+import { Icon123 } from '@tabler/icons-react';
 
-export const MAIN_NAVBAR_HEIGHT = 40;
+export const MAIN_NAVBAR_HEIGHT = 48;
 
 export interface INavbarItem {
   label: string;
   value: string;
+  icon?: typeof Icon123;
   onClick?: () => void;
 }
 
@@ -21,7 +23,7 @@ export function MainNavbar({ items, selected }: MainNavbarProps) {
     <header className="main-navbar">
       <Tabs
         value={selected}
-        variant="outline"
+        variant="default"
         classNames={{
           root: classes.navbar,
           list: classes.tabsList,
@@ -31,7 +33,12 @@ export function MainNavbar({ items, selected }: MainNavbarProps) {
       >
         <Tabs.List>
           {items.map((item) => (
-            <Tabs.Tab key={item.value} value={item.value} onClick={item.onClick}>
+            <Tabs.Tab
+              key={item.value}
+              value={item.value}
+              onClick={item.onClick}
+              leftSection={item.icon && <item.icon strokeWidth={1.5} />}
+            >
               {item.label}
             </Tabs.Tab>
           ))}
