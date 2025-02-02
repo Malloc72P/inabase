@@ -1,15 +1,17 @@
 'use client';
 
 import { PROTECTED_HEADER_HEIGHT, ProtectedHeader } from '@components/main-header';
+import { useAccountNavbarModel, useMainNavbarModel } from '@components/main-navbar';
 import { AppShell, Box } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { PropsWithChildren } from 'react';
 
-export default function ProtectedClientLayout({ children }: PropsWithChildren) {
+export default function AccountLayout({ children }: PropsWithChildren) {
+  const navbarModel = useAccountNavbarModel();
+
   return (
     <AppShell header={{ height: PROTECTED_HEADER_HEIGHT }}>
       <AppShell.Header withBorder={false}>
-        <ProtectedHeader />
+        <ProtectedHeader navbarModel={navbarModel} />
       </AppShell.Header>
 
       <AppShell.Main>

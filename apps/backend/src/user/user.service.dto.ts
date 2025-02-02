@@ -1,3 +1,4 @@
+import { IRequester } from '@src/util/user-decorator';
 import { User } from './user.entity';
 
 //-------------------------------------------------------------------------
@@ -48,6 +49,7 @@ export interface UserServiceCreateOutput {
 export interface UserServiceUpdateProfileInput {
   id: string;
   name: string;
+  requester: IRequester;
 }
 export interface UserServiceUpdateProfileOutput {
   user: User;

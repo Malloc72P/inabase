@@ -1,19 +1,22 @@
-import { nextAuthOption } from 'app/api/auth/[...nextauth]/route';
-import { getServerSession } from 'next-auth';
+'use client';
+
+import { PROTECTED_HEADER_HEIGHT, ProtectedHeader } from '@components/main-header';
+import { useMainNavbarModel } from '@components/main-navbar';
+import { AppShell, Box } from '@mantine/core';
 import { PropsWithChildren } from 'react';
-import ProtectedClientLayout from './client-layout';
-import { AuthSessionProvider } from 'app/providers/auth-session-provider';
 
-export default async function MainLayout({ children }: PropsWithChildren) {
-  const session = await getServerSession(nextAuthOption);
-
-  if (!session) {
-    throw new Error('not authenticated');
-  }
+export default function MainLayout({ children }: PropsWithChildren) {
+  const navbarModel = useMainNavbarModel();
 
   return (
-    <AuthSessionProvider session={session}>
-      <ProtectedClientLayout>{children}</ProtectedClientLayout>
-    </AuthSessionProvider>
+    <AppShell header={{ height: PROTECTED_HEADER_HEIGHT }}>
+      <AppShell.Header withBorder={false}>
+        <ProtectedHeader navbarModel={navbarModel} />
+      </AppShell.Header>
+
+      <AppShell.Main>
+        <Box pt={42}>{children}</Box>
+      </AppShell.Main>
+    </AppShell>
   );
 }

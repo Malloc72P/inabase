@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';
 import * as ms from 'ms';
 import { UserService } from '@src/user/user.service';
+import { IRequester, Requester } from '@src/util/user-decorator';
 
 @Controller('api/v1/auth')
 export class AuthController extends BaseController {
@@ -74,12 +75,10 @@ export class AuthController extends BaseController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  profile(@Req() req: any): ProfileResult {
-    const payload: AccessTokenPayload = req.user;
+  async profile(@Requester() requester: IRequester): Promise<ProfileResult> {
+    const { user } = await this.userService.findByIdOrThrow({ id: requester.id });
 
-    return transformTo(ProfileResult, {
-      ...payload,
-    });
+    return transformTo(ProfileResult, user);
   }
 
   private calcExpireInfo() {

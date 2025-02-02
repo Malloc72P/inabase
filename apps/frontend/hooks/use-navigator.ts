@@ -19,6 +19,7 @@ export const useNavigator = () => {
       protected: {
         main: createNavigateFn(PageLinkMap.protected.main()),
         artists: createNavigateFn(PageLinkMap.protected.artists()),
+        account: createNavigateFn(PageLinkMap.protected.account()),
       },
       external: {
         inabaseGithub: () => window.open('https://github.com/Malloc72P/inabase', '_blank'),

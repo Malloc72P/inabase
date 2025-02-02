@@ -33,6 +33,10 @@ export function useUserMenuModel() {
     }
   };
 
+  const onAccountSettingClick = () => {
+    navigator.moveTo.protected.account();
+  };
+
   const menuItems = useMemo<UserMenuModel[]>(
     () => [
       { type: 'label', label: 'Settings' },
@@ -40,7 +44,7 @@ export function useUserMenuModel() {
         type: 'button',
         label: 'Account settings',
         icon: IconSettings,
-        onClick: () => {},
+        onClick: onAccountSettingClick,
       },
       {
         type: 'button',

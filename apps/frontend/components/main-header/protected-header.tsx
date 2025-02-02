@@ -1,29 +1,34 @@
 'use client';
 
 import { Logo } from '@components/logo';
+import {
+  INavbarItem,
+  MAIN_NAVBAR_HEIGHT,
+  MainNavbar,
+  useMainNavbarModel,
+} from '@components/main-navbar';
 import { ThemeToggler } from '@components/theme-toggler';
+import { UserMenu } from '@components/user-menu';
+import { useNavigator } from '@hooks/use-navigator';
 import { CommonConstants } from '@libs/constants/common';
 import { Box, Burger, Divider, Drawer, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { usePathname } from 'next/navigation';
 import { ProtectedAuthGroup } from './header-auth-group';
 import classes from './protected-header.module.css';
-import { UserMenu } from '@components/user-menu';
-import { MAIN_NAVBAR_HEIGHT, MainNavbar } from '@components/main-navbar';
-import { usePathname } from 'next/navigation';
-import { useNavigator } from '@hooks/use-navigator';
+import { CustomLink } from '@components/custom-link';
 import { PageLinkMap } from '@libs/link-map';
-import { IconMovie, IconUserBolt, IconUserCircle, IconUserSquare } from '@tabler/icons-react';
 
-export interface ProtectedHeaderProps {}
+export interface ProtectedHeaderProps {
+  navbarModel: INavbarItem[];
+}
 
 export const PROTECTED_HEADER_HEIGHT = 60 + MAIN_NAVBAR_HEIGHT;
 
-export function ProtectedHeader({}: ProtectedHeaderProps) {
+export function ProtectedHeader({ navbarModel }: ProtectedHeaderProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const pathname = usePathname();
   const navigator = useNavigator();
-
-  console.log('pathname', pathname);
 
   return (
     <Box className={classes.container}>
@@ -31,6 +36,15 @@ export function ProtectedHeader({}: ProtectedHeaderProps) {
       <header className={classes.header}>
         <Group justify="start" h="100%">
           <Logo />
+
+          {/* {pathname !== PageLinkMap.protected.main() && (
+            <CustomLink
+              link={{
+                label: 'Home',
+                onClick: navigator.moveTo.protected.main,
+              }}
+            />
+          )} */}
 
           <Box style={{ flexGrow: 1 }} />
 
@@ -46,23 +60,7 @@ export function ProtectedHeader({}: ProtectedHeaderProps) {
       </header>
 
       {/* ------ Main Navbar ------ */}
-      <MainNavbar
-        selected={pathname}
-        items={[
-          {
-            label: 'Shows',
-            icon: IconMovie,
-            value: PageLinkMap.protected.main(),
-            onClick: navigator.moveTo.protected.main,
-          },
-          {
-            label: 'Artists',
-            icon: IconUserSquare,
-            value: PageLinkMap.protected.artists(),
-            onClick: navigator.moveTo.protected.artists,
-          },
-        ]}
-      />
+      <MainNavbar selected={pathname} items={navbarModel} />
 
       {/* ------ Mobile Drawer ------ */}
       <Drawer

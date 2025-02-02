@@ -11,7 +11,10 @@ export const ApiLinkMap = {
     signin: () => Env.beApiUrl + '/auth/signin',
     signup: () => Env.beApiUrl + '/auth/signup',
     signout: () => Env.beApiUrl + '/auth/signout',
-    profile: () => Env.beApiUrl + '/auth/profile',
+    profile: {
+      get: () => Env.beApiUrl + '/auth/profile',
+      update: (id: string) => Env.beApiUrl + `/user/${id}`,
+    },
     refresh: () => Env.beApiUrl + '/auth/refresh',
   },
 };

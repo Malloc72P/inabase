@@ -14,21 +14,19 @@ export default async function MainPage() {
   }
 
   return (
-    <div>
-      <Container>
-        <SimpleGrid
-          spacing="lg"
-          cols={{
-            md: 3,
-            sm: 1,
-          }}
-        >
-          <Suspense fallback={<ShowListLoading />}>
-            <Shows session={session} />
-          </Suspense>
-        </SimpleGrid>
-      </Container>
-    </div>
+    <Container>
+      <SimpleGrid
+        spacing="lg"
+        cols={{
+          md: 3,
+          sm: 1,
+        }}
+      >
+        <Suspense fallback={<ShowListLoading />}>
+          <Shows session={session} />
+        </Suspense>
+      </SimpleGrid>
+    </Container>
   );
 }
 

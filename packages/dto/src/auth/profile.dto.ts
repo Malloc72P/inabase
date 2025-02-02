@@ -8,8 +8,5 @@ export class ProfileResult {
   email: string;
 
   @Expose()
-  exp: number;
-
-  @Expose()
-  iat: number;
+  name: string;
 }
