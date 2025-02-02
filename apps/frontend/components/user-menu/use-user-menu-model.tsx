@@ -1,6 +1,12 @@
 import { useAuth } from '@hooks/use-auth';
 import { useNavigator } from '@hooks/use-navigator';
-import { IconSettings, IconSwitchHorizontal, IconLogout, IconTrash } from '@tabler/icons-react';
+import {
+  IconSettings,
+  IconSwitchHorizontal,
+  IconLogout,
+  IconTrash,
+  IconHome,
+} from '@tabler/icons-react';
 import { useState, useMemo } from 'react';
 
 export interface UserMenuModel {
@@ -37,8 +43,19 @@ export function useUserMenuModel() {
     navigator.moveTo.protected.account();
   };
 
+  const onHomeClick = () => {
+    navigator.moveTo.protected.main();
+  };
+
   const menuItems = useMemo<UserMenuModel[]>(
     () => [
+      { type: 'label', label: 'My Page' },
+      {
+        type: 'button',
+        label: 'Home',
+        icon: IconHome,
+        onClick: onHomeClick,
+      },
       { type: 'label', label: 'Settings' },
       {
         type: 'button',
