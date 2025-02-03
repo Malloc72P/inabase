@@ -1,13 +1,25 @@
 'use client';
 
-import { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
-import { PropsWithChildren } from 'react';
+import { ProfileResult } from '@repo/dto';
+import { createContext, Dispatch, PropsWithChildren, SetStateAction, useState } from 'react';
 
-export interface AuthSessionProviderProps extends PropsWithChildren {
-  session: Session | null;
+export interface IProfileContext {
+  profile: ProfileResult;
+  setProfile: Dispatch<SetStateAction<ProfileResult>>;
 }
 
-export function AuthSessionProvider({ children, session }: AuthSessionProviderProps) {
-  return <SessionProvider session={session}>{children}</SessionProvider>;
+export const ProfileContext = createContext<IProfileContext>({
+  profile: { id: '', email: '', name: '' },
+  setProfile: () => {},
+});
+export interface AuthSessionProviderProps extends PropsWithChildren {
+  initialProfile: ProfileResult;
+}
+
+export function ProfileProvider({ children, initialProfile }: AuthSessionProviderProps) {
+  const [profile, setProfile] = useState<ProfileResult>(initialProfile);
+
+  return (
+    <ProfileContext.Provider value={{ profile, setProfile }}>{children}</ProfileContext.Provider>
+  );
 }

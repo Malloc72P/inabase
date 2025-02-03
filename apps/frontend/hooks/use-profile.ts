@@ -4,11 +4,6 @@ import { ProfileResult, UpdateProfileInput, UpdateProfileOutput } from '@repo/dt
 import useSWR from 'swr';
 
 export function useProfile() {
-  const { data: profile, isLoading: isProfileLoading } = useSWR<ProfileResult>(
-    ApiLinkMap.auth.profile.get(),
-    fetcher
-  );
-
   const updateProfile = async ({ id, name }: { id: string } & UpdateProfileInput) => {
     return await fetcher<UpdateProfileInput, UpdateProfileOutput>(
       ApiLinkMap.auth.profile.update(id),
@@ -21,5 +16,5 @@ export function useProfile() {
     );
   };
 
-  return { profile, isProfileLoading, updateProfile };
+  return { updateProfile };
 }

@@ -17,7 +17,6 @@
     "@tabler/icons-react": "^3.26.0",
     "clsx": "^2.1.1",
     "next": "^15.1.0",
-    "next-auth": "^4.24.11",
     "next-nprogress-bar": "^2.4.3",
     "postcss": "^8.4.49",
     "postcss-preset-mantine": "^1.17.0",

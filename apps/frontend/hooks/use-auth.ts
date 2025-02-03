@@ -1,8 +1,6 @@
-import { ApiError, fetcher } from '@libs/fetcher';
+import { fetcher } from '@libs/fetcher';
 import { ApiLinkMap } from '@libs/link-map/api-link-map';
 import { SignInParam, SignInResult, SignUpParam } from '@repo/dto';
-import { notifyError, notifySuccess } from './use-notification';
-import { signOut } from 'next-auth/react';
 
 export const useAuth = () => {
   //-------------------------------------------------------------------------

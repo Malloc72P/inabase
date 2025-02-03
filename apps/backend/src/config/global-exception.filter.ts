@@ -15,7 +15,7 @@ export class LoggingExceptionFilter extends BaseExceptionFilter {
     super.catch(exception, host);
 
     if (this.isWhitelisted(exception)) {
-      //   return;
+      return;
     }
 
     this.logger.error(`Exception: ${exception.message}`, exception.stack);

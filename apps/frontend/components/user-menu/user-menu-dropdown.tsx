@@ -3,12 +3,11 @@
 import { LoadingOverlayContext } from '@components/loading-overlay-provider';
 import { cn } from '@libs/ui';
 import { Group, Menu, Text, UnstyledButton } from '@mantine/core';
+import { ProfileResult } from '@repo/dto';
 import { IconChevronDown } from '@tabler/icons-react';
-import { Session } from 'next-auth';
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { useUserMenuModel } from './use-user-menu-model';
 import classes from './user-menu-dropdown.module.css';
-import { ProfileResult } from '@repo/dto';
 
 export interface UserMenuDropdownProps {
   profile: ProfileResult;

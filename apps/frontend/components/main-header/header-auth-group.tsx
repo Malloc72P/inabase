@@ -1,7 +1,8 @@
 import { UserMenuDropdown } from '@components/user-menu';
 import { useNavigator } from '@hooks/use-navigator';
-import { useProfile } from '@hooks/use-profile';
 import { Button, Group, Skeleton } from '@mantine/core';
+import { ProfileContext } from 'app/providers/auth-session-provider';
+import { useContext } from 'react';
 
 export function PublicAuthGroup() {
   return (
@@ -13,15 +14,11 @@ export function PublicAuthGroup() {
 }
 
 export function ProtectedAuthGroup() {
-  const { profile, isProfileLoading } = useProfile();
-
-  if (isProfileLoading) {
-    return <HeaderAuthGroupLoading />;
-  }
+  const { profile } = useContext(ProfileContext);
 
   return (
     <Group visibleFrom="sm" justify="end">
-      {profile && <UserMenuDropdown profile={profile} />}
+      <UserMenuDropdown profile={profile} />
     </Group>
   );
 }

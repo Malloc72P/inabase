@@ -3,8 +3,9 @@
 import { FormCard } from '@components/form-card';
 import { notifySuccess } from '@hooks/use-notification';
 import { useProfile } from '@hooks/use-profile';
-import { ProfileResult, UpdateProfileInput } from '@repo/dto';
-import { Session } from 'next-auth';
+import { ProfileResult, UpdateProfileInput, UpdateProfileOutput } from '@repo/dto';
+import { ProfileContext } from 'app/providers/auth-session-provider';
+import { useContext } from 'react';
 
 export interface AccountNameFormProps {
   profile: ProfileResult;
@@ -12,12 +13,15 @@ export interface AccountNameFormProps {
 
 export function AccountNameForm({ profile }: AccountNameFormProps) {
   const { updateProfile } = useProfile();
+  const { setProfile } = useContext(ProfileContext);
 
   const onSubmit = async (values: UpdateProfileInput) => {
-    await updateProfile({
+    const updateResult = await updateProfile({
       id: profile.id,
       name: values.name,
     });
+
+    setProfile(updateResult.profile);
 
     notifySuccess({
       title: '저장 완료.',

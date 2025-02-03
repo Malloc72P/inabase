@@ -1,6 +1,8 @@
 import { fetcher } from '@libs/fetcher';
 import { ApiLinkMap, PageLinkMap } from '@libs/link-map';
-import { CommonConstants } from '@repo/dto';
+import { CommonConstants, ProfileResult } from '@repo/dto';
+import { ProfileProvider } from 'app/providers/auth-session-provider';
+import { profile } from 'console';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { PropsWithChildren } from 'react';
@@ -14,18 +16,18 @@ export default async function MainLayout({ children }: PropsWithChildren) {
     return redirect(PageLinkMap.auth.login());
   }
 
-  console.log('refreshToken', refreshToken);
+  let profile: ProfileResult | null = null;
 
   try {
-    const profile = await fetcher(ApiLinkMap.auth.profile.get(), {
+    profile = await fetcher<unknown, ProfileResult>(ApiLinkMap.auth.profile.get(), {
       accessToken,
       refreshToken,
     });
+  } catch (error) {}
 
-    console.log(profile);
-  } catch (error) {
-    console.error(error);
-    return redirect(PageLinkMap.auth.login());
+  if (!profile) {
+    redirect(PageLinkMap.auth.login());
   }
-  return <>{children}</>;
+
+  return <ProfileProvider initialProfile={profile}>{children}</ProfileProvider>;
 }

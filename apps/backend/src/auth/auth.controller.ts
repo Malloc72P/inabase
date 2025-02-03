@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-  AccessTokenPayload,
   CommonConstants,
   ProfileResult,
   RefreshTokenPayload,
@@ -11,15 +10,15 @@ import {
   SignUpResult,
 } from '@repo/dto';
 import { BaseController } from '@src/base/base.controller';
+import { UserService } from '@src/user/user.service';
+import { createCookieOption } from '@src/util/cookie.util';
 import { transformTo } from '@src/util/transformer.util';
+import { IRequester, Requester } from '@src/util/user-decorator';
 import { Request, Response } from 'express';
+import * as ms from 'ms';
 import { JwtAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';
-import * as ms from 'ms';
-import { UserService } from '@src/user/user.service';
-import { IRequester, Requester } from '@src/util/user-decorator';
-import { createCookieOption } from '@src/util/cookie.util';
 
 @Controller('api/v1/auth')
 export class AuthController extends BaseController {
