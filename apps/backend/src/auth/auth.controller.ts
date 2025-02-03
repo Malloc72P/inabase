@@ -19,6 +19,7 @@ import { AuthServiceValidateUserOutput } from './auth.service.dto';
 import * as ms from 'ms';
 import { UserService } from '@src/user/user.service';
 import { IRequester, Requester } from '@src/util/user-decorator';
+import { createCookieOption } from '@src/util/cookie.util';
 
 @Controller('api/v1/auth')
 export class AuthController extends BaseController {
@@ -45,7 +46,18 @@ export class AuthController extends BaseController {
       ...expireInfo,
     };
 
+    this.setCookie(res, accessToken, refreshToken);
+
     return res.json(result);
+  }
+
+  @Post('signout')
+  @UseGuards(JwtAuthGuard)
+  signOut(@Res() res: Response) {
+    res.clearCookie(BaseConstants.token.accessTokenKey);
+    res.clearCookie(BaseConstants.token.refreshTokenKey);
+
+    res.json({ okay: true });
   }
 
   @Post('signup')
@@ -70,6 +82,8 @@ export class AuthController extends BaseController {
       ...expireInfo,
     };
 
+    this.setCookie(res, tokens.accessToken, tokens.refreshToken);
+
     res.json(result);
   }
 
@@ -89,5 +103,19 @@ export class AuthController extends BaseController {
       issuedAt: now,
       expiredAt: now + ms(expireInString),
     };
+  }
+
+  private setCookie(res: Response, accessToken: string, refreshToken: string) {
+    res.cookie(
+      BaseConstants.token.accessTokenKey,
+      accessToken,
+      createCookieOption(this.configService)
+    );
+
+    res.cookie(
+      BaseConstants.token.refreshTokenKey,
+      refreshToken,
+      createCookieOption(this.configService)
+    );
   }
 }
