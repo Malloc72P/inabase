@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common
 import { ConfigService } from '@nestjs/config';
 import {
   AccessTokenPayload,
+  CommonConstants,
   ProfileResult,
   RefreshTokenPayload,
   RefreshTokenResult,
@@ -9,7 +10,6 @@ import {
   SignUpParam,
   SignUpResult,
 } from '@repo/dto';
-import { BaseConstants } from '@src/base/base.constant';
 import { BaseController } from '@src/base/base.controller';
 import { transformTo } from '@src/util/transformer.util';
 import { Request, Response } from 'express';
@@ -54,8 +54,8 @@ export class AuthController extends BaseController {
   @Post('signout')
   @UseGuards(JwtAuthGuard)
   signOut(@Res() res: Response) {
-    res.clearCookie(BaseConstants.token.accessTokenKey);
-    res.clearCookie(BaseConstants.token.refreshTokenKey);
+    res.clearCookie(CommonConstants.token.accessTokenKey);
+    res.clearCookie(CommonConstants.token.refreshTokenKey);
 
     res.json({ okay: true });
   }
@@ -107,13 +107,13 @@ export class AuthController extends BaseController {
 
   private setCookie(res: Response, accessToken: string, refreshToken: string) {
     res.cookie(
-      BaseConstants.token.accessTokenKey,
+      CommonConstants.token.accessTokenKey,
       accessToken,
       createCookieOption(this.configService)
     );
 
     res.cookie(
-      BaseConstants.token.refreshTokenKey,
+      CommonConstants.token.refreshTokenKey,
       refreshToken,
       createCookieOption(this.configService)
     );

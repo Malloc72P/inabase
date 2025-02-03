@@ -5,8 +5,4 @@ export const BaseConstants = {
   dev: {
     envFileName: '.env.local',
   },
-  token: {
-    accessTokenKey: 'ACCESS_TOKEN',
-    refreshTokenKey: 'REFRESH_TOKEN',
-  },
 };

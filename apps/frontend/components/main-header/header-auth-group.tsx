@@ -1,7 +1,5 @@
-import { UserMenuDropdown } from '@components/user-menu';
 import { useNavigator } from '@hooks/use-navigator';
-import { Group, Button, Skeleton } from '@mantine/core';
-import { useSession } from 'next-auth/react';
+import { Button, Group, Skeleton } from '@mantine/core';
 
 export function PublicAuthGroup() {
   return (
@@ -13,15 +11,13 @@ export function PublicAuthGroup() {
 }
 
 export function ProtectedAuthGroup() {
-  const { data: session, status: sessionStatus } = useSession();
-
-  if (sessionStatus === 'loading') {
-    return <HeaderAuthGroupLoading />;
-  }
+  //   if (sessionStatus === 'loading') {
+  //     return <HeaderAuthGroupLoading />;
+  //   }
 
   return (
     <Group visibleFrom="sm" justify="end">
-      {session && <UserMenuDropdown session={session} />}
+      {/* {session && <UserMenuDropdown session={session} />} */}
     </Group>
   );
 }

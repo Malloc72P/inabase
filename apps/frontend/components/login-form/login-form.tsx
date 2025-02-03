@@ -21,6 +21,7 @@ import { useNavigator } from '@hooks/use-navigator';
 import { submitHandler } from '@libs/form/createSubmitHandler';
 import { ApiError } from '@libs/fetcher';
 import { IconCircleCheck } from '@tabler/icons-react';
+import { notifySuccess } from '@hooks/use-notification';
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -35,7 +36,13 @@ export function LoginForm() {
       e,
       callback: async () => {
         setLoading(true);
+
         await login(form.getValues());
+
+        notifySuccess({
+          title: 'Success',
+          message: '로그인 되었습니다.',
+        });
         setErrorMsg('');
         setIsSuccess(true);
         navigator.moveTo.protected.main();

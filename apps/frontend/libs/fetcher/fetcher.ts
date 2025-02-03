@@ -20,6 +20,8 @@ export const fetcher = async <INPUT = any, OUTPUT = any>(
 
   const response = await fetch(url, resolvedOption);
 
+  console.log(await response.clone().json());
+
   if (!response.ok) {
     let apiError: ApiError | null = null;
 

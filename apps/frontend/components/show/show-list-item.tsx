@@ -9,7 +9,7 @@ export interface ShowListItemProps {
 
 const SHOW_LIST_ITEM_WIDTH = 320;
 
-export function ShowListItemSkeleton() {
+export function ShowListItemLoading() {
   return (
     <Card
       className={cn('show-list-item-skeleton', classes.show)}
