@@ -1,15 +1,8 @@
-////////////////////////////////////////////////////////////////////////////////
-// jwt.strategy.ts
-// 2024. 11. 22. created by Malloc72P
-// -----------------------------------------------------------------------------
-// Copyright (c) 2024 Wooritech Inc.
-// All rights reserved.
-////////////////////////////////////////////////////////////////////////////////
-
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { CommonConstants } from '@repo/dto';
+import { TokenConfig } from '@src/config/app.config';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
@@ -18,7 +11,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
  */
 @Injectable()
 export class JwtPassportStrategy extends PassportStrategy(Strategy) {
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService<TokenConfig>) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {

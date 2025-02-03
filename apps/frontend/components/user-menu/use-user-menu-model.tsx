@@ -1,5 +1,6 @@
 import { useAuth } from '@hooks/use-auth';
 import { useNavigator } from '@hooks/use-navigator';
+import { notifySuccess } from '@hooks/use-notification';
 import {
   IconSettings,
   IconSwitchHorizontal,
@@ -32,6 +33,8 @@ export function useUserMenuModel() {
     try {
       setIsLoading(true);
       await logout();
+      notifySuccess({ title: '로그아웃 성공', message: '로그아웃 되었습니다.' });
+      navigator.moveTo.public.landing();
     } catch (error) {
       console.error(error);
     } finally {

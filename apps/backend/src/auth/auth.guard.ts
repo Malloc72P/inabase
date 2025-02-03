@@ -8,6 +8,7 @@
 
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { AccessTokenExpiredException } from '@src/exceptions/access-token-expired.exception';
 
 /**
  * Local, JWT Strategy를 사용하여 토큰 검사
@@ -22,4 +23,18 @@ export class LocalAuthGuard extends AuthGuard('local') {}
 export class RefreshAuthGuard extends AuthGuard('refresh-jwt') {}
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {}
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  handleRequest<TUser = any>(
+    err: any,
+    user: any,
+    info: any,
+    context: ExecutionContext,
+    status?: any
+  ) {
+    if (err || !user) {
+      throw new AccessTokenExpiredException();
+    }
+
+    return user;
+  }
+}

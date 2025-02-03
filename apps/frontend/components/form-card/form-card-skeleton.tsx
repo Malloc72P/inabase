@@ -1,6 +1,6 @@
 import { Card, TextInput, Group, Button, Skeleton } from '@mantine/core';
 
-export function FormSkeleton() {
+export function FormLoading() {
   return (
     <Card p="lg" withBorder shadow="md">
       <Skeleton w="15%" h={33} />

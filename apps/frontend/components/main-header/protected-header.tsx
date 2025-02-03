@@ -28,7 +28,6 @@ export const PROTECTED_HEADER_HEIGHT = 60 + MAIN_NAVBAR_HEIGHT;
 export function ProtectedHeader({ navbarModel }: ProtectedHeaderProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const pathname = usePathname();
-  const navigator = useNavigator();
 
   return (
     <Box className={classes.container}>
@@ -36,15 +35,6 @@ export function ProtectedHeader({ navbarModel }: ProtectedHeaderProps) {
       <header className={classes.header}>
         <Group justify="start" h="100%">
           <Logo />
-
-          {/* {pathname !== PageLinkMap.protected.main() && (
-            <CustomLink
-              link={{
-                label: 'Home',
-                onClick: navigator.moveTo.protected.main,
-              }}
-            />
-          )} */}
 
           <Box style={{ flexGrow: 1 }} />
 

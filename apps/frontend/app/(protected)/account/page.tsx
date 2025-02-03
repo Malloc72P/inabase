@@ -1,9 +1,24 @@
+'use client';
+
+import { AccountNameForm } from '@components/account-setting';
+import { FormLoading } from '@components/form-card/form-card-skeleton';
+import { useProfile } from '@hooks/use-profile';
 import { Container } from '@mantine/core';
 
 export default function Page() {
-  return <Container></Container>;
-}
+  const { profile, isProfileLoading } = useProfile();
 
-async function ServerDisplayNameForm() {
-  //   return <AccountNameForm profile={profile} session={session} />;
+  if (!isProfileLoading && !profile) {
+    throw new Error('no profile');
+  }
+
+  if (isProfileLoading) {
+    return (
+      <Container>
+        <FormLoading />
+      </Container>
+    );
+  }
+
+  return <Container>{profile && <AccountNameForm profile={profile} />}</Container>;
 }

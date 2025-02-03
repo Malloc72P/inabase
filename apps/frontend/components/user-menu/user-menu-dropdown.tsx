@@ -8,12 +8,13 @@ import { Session } from 'next-auth';
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { useUserMenuModel } from './use-user-menu-model';
 import classes from './user-menu-dropdown.module.css';
+import { ProfileResult } from '@repo/dto';
 
 export interface UserMenuDropdownProps {
-  session: Session;
+  profile: ProfileResult;
 }
 
-export function UserMenuDropdown({ session }: UserMenuDropdownProps) {
+export function UserMenuDropdown({ profile }: UserMenuDropdownProps) {
   const userMenuModel = useUserMenuModel();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const loadingOverlayCtx = useContext(LoadingOverlayContext);
@@ -45,7 +46,7 @@ export function UserMenuDropdown({ session }: UserMenuDropdownProps) {
             <Group gap={7}>
               {/* <Avatar src={user.image} alt={user.name} radius="xl" size={20} /> */}
               <Text fw={500} size="sm" lh={1} mr={3}>
-                {session.name}
+                {profile.name}
               </Text>
               <IconChevronDown size={12} stroke={1.5} />
             </Group>

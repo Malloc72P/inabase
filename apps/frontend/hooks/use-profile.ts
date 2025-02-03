@@ -1,14 +1,15 @@
 import { fetcher } from '@libs/fetcher';
 import { ApiLinkMap } from '@libs/link-map';
-import { UpdateProfileInput, UpdateProfileOutput } from '@repo/dto';
-import { Session } from 'next-auth';
+import { ProfileResult, UpdateProfileInput, UpdateProfileOutput } from '@repo/dto';
+import useSWR from 'swr';
 
 export function useProfile() {
-  const updateProfile = async ({
-    id,
-    name,
-    session,
-  }: { session: Session; id: string } & UpdateProfileInput) => {
+  const { data: profile, isLoading: isProfileLoading } = useSWR<ProfileResult>(
+    ApiLinkMap.auth.profile.get(),
+    fetcher
+  );
+
+  const updateProfile = async ({ id, name }: { id: string } & UpdateProfileInput) => {
     return await fetcher<UpdateProfileInput, UpdateProfileOutput>(
       ApiLinkMap.auth.profile.update(id),
       {
@@ -16,10 +17,9 @@ export function useProfile() {
           name,
         },
         method: 'PATCH',
-        accessToken: session.backendTokens.accessToken,
       }
     );
   };
 
-  return { updateProfile };
+  return { profile, isProfileLoading, updateProfile };
 }

@@ -1,6 +1,7 @@
 import { FetchApiOptions } from './fetcher-interface';
-import { resolveFetchOption } from './fetcher-util';
+import { resolveFetchOption, responseToJson, toApiError } from './fetcher-util';
 import { ApiExceptionPayload, ExceptionCode } from '@repo/exceptions';
+import { refreshToken } from './refresh-token';
 
 export class ApiError extends Error {
   constructor(
@@ -17,23 +18,32 @@ export const fetcher = async <INPUT = any, OUTPUT = any>(
   options?: FetchApiOptions<INPUT>
 ) => {
   const resolvedOption = resolveFetchOption(options);
-
   const response = await fetch(url, resolvedOption);
 
-  console.log(await response.clone().json());
-
-  if (!response.ok) {
-    let apiError: ApiError | null = null;
-
-    try {
-      const { status, code, message }: ApiExceptionPayload = await response.clone().json();
-      apiError = new ApiError(status, code, message);
-    } catch (error) {
-      apiError = new ApiError(500, 'Unknown', '알 수 없는 에러가 발생했습니다.');
-    }
-
-    throw apiError;
+  if (response.ok) {
+    return (await responseToJson(response)) as OUTPUT;
   }
 
-  return response.json() as OUTPUT;
+  const apiError: ApiError = await toApiError(response);
+
+  /**
+   * 액세스 토큰 만료상황인 경우 토큰 리프래시하고 재요청.
+   */
+  if (apiError.code === 'AccessTokenExpired') {
+    const { accessToken } = await refreshToken(options?.refreshToken);
+
+    if (resolvedOption.headers) {
+      Reflect.set(resolvedOption.headers, 'Authorization', `bearer ${accessToken}`);
+    }
+
+    const refetchResponse = await fetch(url, resolvedOption);
+
+    if (!refetchResponse.ok) {
+      throw await toApiError(refetchResponse);
+    }
+
+    return responseToJson(refetchResponse) as OUTPUT;
+  }
+
+  throw apiError;
 };

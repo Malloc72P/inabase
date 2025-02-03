@@ -1,4 +1,4 @@
-export type ExceptionCode = 'Unknown' | 'EmailAlreadyInUse' | 'LoginFailed' | 'TokenExpired';
+export type ExceptionCode = 'Unknown' | 'EmailAlreadyInUse' | 'LoginFailed' | 'AccessTokenExpired';
 
 export interface ApiExceptionPayload {
   code: ExceptionCode;

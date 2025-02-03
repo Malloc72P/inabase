@@ -1,4 +1,6 @@
+import { UserMenuDropdown } from '@components/user-menu';
 import { useNavigator } from '@hooks/use-navigator';
+import { useProfile } from '@hooks/use-profile';
 import { Button, Group, Skeleton } from '@mantine/core';
 
 export function PublicAuthGroup() {
@@ -11,13 +13,15 @@ export function PublicAuthGroup() {
 }
 
 export function ProtectedAuthGroup() {
-  //   if (sessionStatus === 'loading') {
-  //     return <HeaderAuthGroupLoading />;
-  //   }
+  const { profile, isProfileLoading } = useProfile();
+
+  if (isProfileLoading) {
+    return <HeaderAuthGroupLoading />;
+  }
 
   return (
     <Group visibleFrom="sm" justify="end">
-      {/* {session && <UserMenuDropdown session={session} />} */}
+      {profile && <UserMenuDropdown profile={profile} />}
     </Group>
   );
 }

@@ -8,17 +8,15 @@ import { Session } from 'next-auth';
 
 export interface AccountNameFormProps {
   profile: ProfileResult;
-  session: Session;
 }
 
-export function AccountNameForm({ profile, session }: AccountNameFormProps) {
+export function AccountNameForm({ profile }: AccountNameFormProps) {
   const { updateProfile } = useProfile();
 
   const onSubmit = async (values: UpdateProfileInput) => {
     await updateProfile({
-      id: session.id,
+      id: profile.id,
       name: values.name,
-      session,
     });
 
     notifySuccess({
