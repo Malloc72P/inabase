@@ -8,6 +8,7 @@ export interface BallModelOptions {
   containerX: number;
   containerY: number;
   speed?: number;
+  radius?: number;
 }
 
 export class BallModel implements BallModelOptions {
@@ -20,37 +21,41 @@ export class BallModel implements BallModelOptions {
   public containerX: number;
   public containerY: number;
   public speed: number;
+  public radius: number;
 
   constructor(options: BallModelOptions) {
     this.x = options.x;
     this.y = options.y;
-    this.dx = options.dx;
-    this.dy = options.dy;
     this.width = options.width;
     this.height = options.height;
     this.containerX = options.containerX;
     this.containerY = options.containerY;
     this.speed = options.speed ?? 1;
+    this.radius = options.radius ?? 16;
+    this.dx = options.dx;
+    this.dy = options.dy;
   }
 
   move() {
-    this.x = this.x + this.dx;
-    this.y = this.y + this.dy;
+    this.x += this.dx * this.speed;
+    this.y += this.dy * this.speed;
+
+    const r2 = 2 * this.radius;
 
     if (this.x < 0) {
       this.x = 0;
-      this.dx = 1 * this.speed;
-    } else if (this.x + this.width > this.containerX) {
-      this.x = this.containerX - this.width;
-      this.dx = -1 * this.speed;
+      this.dx *= -1;
+    } else if (this.x > this.containerX - r2) {
+      this.x = this.containerX - r2;
+      this.dx *= -1;
     }
 
     if (this.y < 0) {
       this.y = 0;
-      this.dy = 1 * this.speed;
-    } else if (this.y + this.height > this.containerY) {
-      this.y = this.containerY - this.height;
-      this.dy = -1 * this.speed;
+      this.dy *= -1;
+    } else if (this.y > this.containerY - r2) {
+      this.y = this.containerY - r2;
+      this.dy *= -1;
     }
   }
 }

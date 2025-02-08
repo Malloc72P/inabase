@@ -25,9 +25,9 @@ export class BallView {
     const template = `
         <svg class="${BallView.ClassNames.root}">
             <circle 
-                cx="16" 
-                cy="16" 
-                r="16" 
+                cx="${model.radius}" 
+                cy="${model.radius}" 
+                r="${model.radius}" 
                 fill="tomato"
                 class="${BallView.ClassNames.circle}">
             </circle>
@@ -47,6 +47,8 @@ export class BallView {
       },
     };
 
+    this.root.element.style.width = model.width + 'px';
+    this.root.element.style.height = model.height + 'px';
     this.root.element.style.position = 'absolute';
 
     this.container.appendChild(this.root.element);
