@@ -7,19 +7,34 @@ if (!container) {
   throw new Error('no container');
 }
 
-const options: BallModelOptions[] = new Array(1000).fill(0).map((v, i) => ({
-  x: getRandomInt(0, 250),
-  y: getRandomInt(0, 250),
-  dx: getRandomInt(0, 1) === 0 ? -1 : 1,
-  dy: getRandomInt(0, 1) === 0 ? -1 : 1,
-  width: 32,
-  height: 32,
-  containerX: 300,
-  containerY: 300,
-}));
+async function createModelOptions() {
+  const options: BallModelOptions[] = new Array(5000).fill(0).map((v, i) => ({
+    x: getRandomInt(0, 250),
+    y: getRandomInt(0, 250),
+    dx: getRandomInt(0, 1) === 0 ? -1 : 1,
+    dy: getRandomInt(0, 1) === 0 ? -1 : 1,
+    width: 32,
+    height: 32,
+    containerX: 600,
+    containerY: 600,
+    speed: getRandomInt(3, 10),
+  }));
 
-const ballView = options
-  .map((option) => new BallModel(option))
-  .map((model) => new BallView(container, model));
+  return options;
+}
 
-ballView.forEach((view) => view.start());
+async function createView(container: HTMLElement, options: BallModelOptions[]) {
+  return options
+    .map((option) => new BallModel(option))
+    .map((model) => new BallView(container, model));
+}
+
+async function draw(viewList: BallView[]) {
+  viewList.forEach((view) => view.start());
+}
+
+(async function main() {
+  const options = await createModelOptions();
+  const views = await createView(container, options);
+  draw(views);
+})();
