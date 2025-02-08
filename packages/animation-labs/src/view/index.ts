@@ -1,2 +1,2 @@
 export * from './ball';
-export * from './renderer/canvas-renderer';
+export * from './renderer/CanvasAnimationViewer';

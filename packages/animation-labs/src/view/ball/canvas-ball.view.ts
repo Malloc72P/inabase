@@ -1,23 +1,23 @@
 import { BallModel } from '@model/ball';
-import { CanvasRenderer } from '@view/renderer/canvas-renderer';
+import { CanvasAnimationViewer } from '@view/renderer/CanvasAnimationViewer';
 
 export class CanvasBallView {
   constructor(public model: BallModel) {}
 
-  render(renderer: CanvasRenderer) {
+  render(viewer: CanvasAnimationViewer) {
     this.model.move();
 
-    this.drawCircle(renderer, this.model.x, this.model.y, this.model.radius, 'red');
+    this.drawCircle(viewer, this.model.x, this.model.y, this.model.radius, 'red');
   }
 
   private drawCircle(
-    renderer: CanvasRenderer,
+    viewer: CanvasAnimationViewer,
     x: number,
     y: number,
     radius: number,
     color: string
   ) {
-    const ctx = renderer.ctx;
+    const ctx = viewer.ctx;
 
     ctx.beginPath();
     ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);

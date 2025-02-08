@@ -1,12 +1,12 @@
 import { CanvasBallView } from '@view/ball';
 
-export interface CanvasRendererOptions {
+export interface CanvasAnimationViewerOptions {
   canvas: HTMLCanvasElement;
   width: number;
   height: number;
 }
 
-export class CanvasRenderer {
+export class CanvasAnimationViewer {
   private canvas: HTMLCanvasElement;
   private width: number;
   private height: number;
@@ -14,7 +14,7 @@ export class CanvasRenderer {
   private items: CanvasBallView[] = [];
   private _ctx: CanvasRenderingContext2D;
 
-  constructor(options: CanvasRendererOptions) {
+  constructor(options: CanvasAnimationViewerOptions) {
     this.canvas = options.canvas;
     this.width = options.width;
     this.height = options.height;
