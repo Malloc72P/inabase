@@ -7,6 +7,7 @@ export interface BallModelOptions {
   height: number;
   containerX: number;
   containerY: number;
+  speed?: number;
 }
 
 export class BallModel implements BallModelOptions {
@@ -18,6 +19,7 @@ export class BallModel implements BallModelOptions {
   public height: number;
   public containerX: number;
   public containerY: number;
+  public speed: number;
 
   constructor(options: BallModelOptions) {
     this.x = options.x;
@@ -28,6 +30,7 @@ export class BallModel implements BallModelOptions {
     this.height = options.height;
     this.containerX = options.containerX;
     this.containerY = options.containerY;
+    this.speed = options.speed ?? 1;
   }
 
   move() {
@@ -36,18 +39,18 @@ export class BallModel implements BallModelOptions {
 
     if (this.x < 0) {
       this.x = 0;
-      this.dx = 1;
+      this.dx = 1 * this.speed;
     } else if (this.x + this.width > this.containerX) {
       this.x = this.containerX - this.width;
-      this.dx = -1;
+      this.dx = -1 * this.speed;
     }
 
     if (this.y < 0) {
       this.y = 0;
-      this.dy = 1;
+      this.dy = 1 * this.speed;
     } else if (this.y + this.height > this.containerY) {
       this.y = this.containerY - this.height;
-      this.dy = -1;
+      this.dy = -1 * this.speed;
     }
   }
 }
