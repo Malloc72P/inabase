@@ -1,4 +1,5 @@
-import { BallView, BallModel, BallModelOptions } from '../../main';
+import { BallModelOptions, BallModel } from '@model/ball';
+import { BallView } from '@view/ball';
 
 const container = document.getElementById('container');
 

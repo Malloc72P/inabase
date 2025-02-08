@@ -7,7 +7,7 @@ if (!container) {
   throw new Error('no container');
 }
 
-const options: BallModelOptions[] = new Array(50).fill(0).map((v, i) => ({
+const options: BallModelOptions[] = new Array(1000).fill(0).map((v, i) => ({
   x: getRandomInt(0, 250),
   y: getRandomInt(0, 250),
   dx: getRandomInt(0, 1) === 0 ? -1 : 1,

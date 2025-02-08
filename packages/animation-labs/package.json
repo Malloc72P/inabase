@@ -14,8 +14,8 @@
     "./style.css": "./dist/animation-labs.css"
   },
   "scripts": {
-    "dev": "vite -- config vite.config.dev.ts",
-    "build": "tsc && vite build --config vite.config.lib.ts",
+    "dev": "vite --config vite.config.dev.js",
+    "build": "tsc && vite build --config vite.config.lib.js",
     "preview": "vite preview"
   },
   "devDependencies": {

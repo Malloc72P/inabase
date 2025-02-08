@@ -1,5 +1,5 @@
-import { BallModelOptions } from '../../model';
-import { getRandomInt } from '../demo-util';
+import { getRandomInt } from '@demo/demo-util';
+import { BallModelOptions } from '@model/ball';
 
 export function createBallModels() {
   const options: BallModelOptions[] = new Array(50).fill(0).map((v, i) => ({

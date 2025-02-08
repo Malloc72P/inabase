@@ -1,4 +1,4 @@
-import { BallModel } from '../../model';
+import { BallModel } from '@model/ball';
 
 interface BallViewElementMap {
   element: SVGSVGElement;
