@@ -1,30 +1,20 @@
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { commonOption } from './vite.config.common';
+import path from 'path';
 
 export default defineConfig({
+  ...commonOption,
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/main.ts'),
+      formats: ['umd', 'iife', 'es', 'cjs'],
+      entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'AnimationLabs',
       // the proper extensions will be added
       fileName: 'animation-labs',
     },
-    rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      //   external: ['vue'],
-      output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        // globals: {
-        //   vue: 'Vue',
-        // },
-      },
-    },
+    minify: 'terser',
+    rollupOptions: {},
   },
   plugins: [
     dts({
