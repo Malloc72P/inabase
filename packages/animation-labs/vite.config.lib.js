@@ -10,10 +10,9 @@ export default defineConfig({
       formats: ['umd', 'iife', 'es', 'cjs'],
       entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'AnimationLabs',
-      // the proper extensions will be added
       fileName: 'animation-labs',
     },
-    minify: 'terser',
+    minify: 'esbuild',
     rollupOptions: {},
   },
   plugins: [
