@@ -1,9 +1,8 @@
-import { Expose } from 'class-transformer';
+import z from 'zod';
 
-export class HealthCheckOutput {
-  @Expose()
-  statusCode: number;
+export const HealthCheckOutputSchema = z.object({
+  statusCode: z.string(),
+  serverAddr: z.string(),
+});
 
-  @Expose()
-  serverAddr: string;
-}
+export type HealthCheckOutput = z.infer<typeof HealthCheckOutputSchema>;

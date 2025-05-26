@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common
 import { ConfigService } from '@nestjs/config';
 import {
   CommonConstants,
-  ProfileResult,
+  Profile,
   RefreshTokenPayload,
   RefreshTokenResult,
   SignInResult,
@@ -88,7 +88,7 @@ export class AuthController extends BaseController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  async profile(@Requester() requester: IRequester): Promise<ProfileResult> {
+  async profile(@Requester() requester: IRequester): Promise<Profile> {
     const { user } = await this.userService.findByIdOrThrow({ id: requester.id });
 
     return transformTo(ProfileResult, user);

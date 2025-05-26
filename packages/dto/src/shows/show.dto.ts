@@ -1,12 +1,9 @@
-import { Expose } from 'class-transformer';
+import z from 'zod';
 
-export class ShowDto {
-  @Expose()
-  id: string;
+export const ShowDtoSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  tags: z.string(),
+});
 
-  @Expose()
-  title: string;
-
-  @Expose()
-  tags: string[];
-}
+export type ShowDto = z.infer<typeof ShowDtoSchema>;

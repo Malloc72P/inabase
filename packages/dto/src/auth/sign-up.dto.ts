@@ -1,20 +1,17 @@
-import { Expose } from 'class-transformer';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import z from 'zod';
 
-export class SignUpParam {
-  @IsNotEmpty()
-  @IsString()
-  email: string;
+export const SignUpParamSchema = z
+  .object({
+    email: z.string().nonempty(),
+    name: z.string().nonempty(),
+    password: z.string().nonempty(),
+  })
+  .strict();
 
-  @IsNotEmpty()
-  @IsString()
-  name: string;
+export type SignUpParam = z.infer<typeof SignUpParamSchema>;
 
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-}
+export const SignUpResultSchema = z.object({
+  result: z.boolean(),
+});
 
-export class SignUpResult {
-  result: boolean;
-}
+export type SignUpResult = z.infer<typeof SignUpResultSchema>;

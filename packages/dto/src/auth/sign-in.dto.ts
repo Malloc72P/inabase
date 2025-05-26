@@ -1,35 +1,24 @@
-import { Expose } from 'class-transformer';
-import { IsNotEmpty, IsString } from 'class-validator';
+import z from 'zod';
 
-export class SignInParam {
-  @IsNotEmpty()
-  @IsString()
-  email: string;
+export const SignInParamSchema = z.object({
+  email: z
+    .string({ message: 'email은 문자열이어야 합니다.' })
+    .nonempty({ message: 'email은 비어 있을 수 없습니다.' }),
+  password: z
+    .string({ message: 'password은 문자열이어야 합니다.' })
+    .nonempty({ message: 'password은 비어 있을 수 없습니다.' }),
+});
 
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-}
+export type SignInParam = z.infer<typeof SignInParamSchema>;
 
-export class SignInResult {
-  @Expose()
-  id: string;
+export const SignInResultSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  accessToken: z.string(),
+  refreshToken: z.string(),
+  issuedAt: z.number(),
+  expiredAt: z.number(),
+});
 
-  @Expose()
-  name: string;
-
-  @Expose()
-  email: string;
-
-  @Expose()
-  accessToken: string;
-
-  @Expose()
-  refreshToken: string;
-
-  @Expose()
-  issuedAt: number;
-
-  @Expose()
-  expiredAt: number;
-}
+export type SignInResult = z.infer<typeof SignInResultSchema>;
