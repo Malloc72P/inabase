@@ -62,9 +62,13 @@ describe('UserApiController', () => {
     it('프로필 조회 테스트', async () => {
       const profile = await controller.profile({ id: '', email: '', role: '' });
 
-      console.log(profile);
+      const { user: dummyUser } = mockUserService.findByIdOrThrow();
 
       expect(profile['password']).toBeFalsy();
+      expect(profile['role']).toBeFalsy();
+      expect(profile['id']).toStrictEqual(dummyUser.id);
+      expect(profile['email']).toStrictEqual(dummyUser.email);
+      expect(profile['name']).toStrictEqual(dummyUser.name);
     });
   });
 });

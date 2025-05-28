@@ -10,6 +10,7 @@ import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggingExceptionFilter } from './config/global-exception.filter';
+import { MapperModule } from './mapper/mapper.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { LoggingExceptionFilter } from './config/global-exception.filter';
     AuthModule,
     HasherModule,
     TokenModule,
+    MapperModule,
   ],
   controllers: [AppController],
   providers: [

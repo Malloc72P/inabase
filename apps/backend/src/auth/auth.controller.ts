@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import {
   CommonConstants,
   Profile,
+  ProfileSchema,
   RefreshTokenPayload,
   RefreshTokenResult,
   SignInResult,
@@ -12,13 +13,14 @@ import {
 import { BaseController } from '@src/base/base.controller';
 import { UserService } from '@src/user/user.service';
 import { createCookieOption } from '@src/util/cookie.util';
-import { transformTo } from '@src/util/transformer.util';
+import { transformTo, transformTo2 } from '@src/util/transformer.util';
 import { IRequester, Requester } from '@src/util/user-decorator';
 import { Request, Response } from 'express';
 import * as ms from 'ms';
 import { JwtAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';
+import { Mapper } from '@src/mapper';
 
 @Controller('api/v1/auth')
 export class AuthController extends BaseController {
@@ -91,7 +93,7 @@ export class AuthController extends BaseController {
   async profile(@Requester() requester: IRequester): Promise<Profile> {
     const { user } = await this.userService.findByIdOrThrow({ id: requester.id });
 
-    return transformTo(ProfileResult, user);
+    return Mapper.auth.toProfile(user);
   }
 
   private calcExpireInfo() {
