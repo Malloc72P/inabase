@@ -3,9 +3,9 @@ import {
   TokenServiceSignAccessTokenInput,
   TokenServiceSignRefreshTokenInput,
 } from '@src/token/token.service.dto';
-import { HasherService } from 'src/hasher/hasher.service';
-import { TokenService } from 'src/token/token.service';
-import { UserService } from 'src/user/user.service';
+import { HasherService } from '@src/hasher/hasher.service';
+import { TokenService } from '@src/token/token.service';
+import { UserService } from '@src/user/user.service';
 import {
   AuthServiceCreateAccessTokenInput,
   AuthServiceCreateRefreshTokenOutput,

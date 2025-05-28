@@ -61,10 +61,10 @@ export class AuthController extends BaseController {
 
   @Post('signup')
   async signup(@Body() dto: SignUpParam): Promise<SignUpResult> {
-    const { user } = await this.userService.create({ ...dto });
+    await this.userService.create({ ...dto });
 
     return {
-      result: !!user,
+      result: true,
     };
   }
 
