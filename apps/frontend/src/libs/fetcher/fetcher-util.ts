@@ -1,4 +1,4 @@
-import { ApiExceptionPayload, ExceptionCode } from '@repo/exceptions';
+import { ApiExceptionPayload, ExceptionCode, FieldError } from '@repo/exceptions';
 import { FetchApiOptions } from './fetcher-interface';
 import { ApiError } from './fetcher';
 
@@ -40,17 +40,19 @@ export async function toApiError(response: Response) {
   const defaultMessage = '알 수 없는 에러가 발생했습니다.';
   const defaultStatus = 500;
   const defaultCode: ExceptionCode = 'Unknown';
+  const defaultFieldErrors: FieldError[] = [];
 
   try {
     const {
       status = defaultStatus,
       code = defaultCode,
       message = defaultMessage,
+      fieldErrors = defaultFieldErrors,
     }: ApiExceptionPayload = await responseToJson(response);
 
-    apiError = new ApiError(status, code, message);
+    apiError = new ApiError(status, code, message, fieldErrors);
   } catch (error) {
-    apiError = new ApiError(defaultStatus, defaultCode, defaultMessage);
+    apiError = new ApiError(defaultStatus, defaultCode, defaultMessage, defaultFieldErrors);
   }
 
   return apiError;

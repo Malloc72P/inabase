@@ -1,6 +1,7 @@
 import { Catch, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { AccessTokenExpiredException } from '@src/exceptions/access-token-expired.exception';
+import { InvalidFieldException } from '@src/exceptions/invalid-field.exception';
 
 @Catch()
 export class LoggingExceptionFilter extends BaseExceptionFilter {
@@ -9,6 +10,7 @@ export class LoggingExceptionFilter extends BaseExceptionFilter {
     UnauthorizedException.name,
     NotFoundException.name,
     AccessTokenExpiredException.name,
+    InvalidFieldException.name,
   ];
 
   catch(exception: any, host: any) {

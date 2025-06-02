@@ -1,13 +1,14 @@
 import { FetchApiOptions } from './fetcher-interface';
 import { resolveFetchOption, responseToJson, toApiError } from './fetcher-util';
-import { ApiExceptionPayload, ExceptionCode } from '@repo/exceptions';
+import { ApiExceptionPayload, ExceptionCode, FieldError } from '@repo/exceptions';
 import { refreshToken } from './refresh-token';
 
 export class ApiError extends Error {
   constructor(
     public status: number,
     public code: ExceptionCode,
-    public message: string
+    public message: string,
+    public fieldErrors: FieldError[] = []
   ) {
     super(message);
   }

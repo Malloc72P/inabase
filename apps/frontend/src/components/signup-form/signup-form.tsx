@@ -32,13 +32,17 @@ export function SignupForm() {
       e,
       callback: async () => {
         setLoading(true);
+        form.clearErrors();
+
         const { passwordConfirm, ...input } = form.getValues();
 
         if (input.password !== passwordConfirm) {
-          notifyError({
-            title: '회원가입 실패!',
-            message: '패스워드가 일치하지 않습니다. 다시 확인해주세요.',
+          form.setError('passwordConfirm', {
+            type: 'manual',
+            message: '비밀번호가 일치하지 않습니다.',
           });
+
+          return;
         }
 
         await signup(input);
@@ -57,6 +61,15 @@ export function SignupForm() {
 
         if (error instanceof ApiError) {
           errorMessage = error.message;
+
+          if (error.fieldErrors) {
+            for (const fieldError of error.fieldErrors) {
+              form.setError(fieldError.field as keyof SignUpParam, {
+                type: 'manual',
+                message: fieldError.message,
+              });
+            }
+          }
         }
 
         setErrorMsg(errorMessage);
@@ -82,14 +95,32 @@ export function SignupForm() {
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={onSubmit}>
-          <TextInput label="닉네임" required {...form.register('name')} />
-          <TextInput label="이메일" mt="md" required {...form.register('email')} />
-          <PasswordInput label="비밀번호" required mt="md" {...form.register('password')} />
+          <TextInput
+            label="닉네임"
+            required
+            {...form.register('name')}
+            error={form.formState.errors['name']?.message}
+          />
+          <TextInput
+            label="이메일"
+            mt="md"
+            required
+            {...form.register('email')}
+            error={form.formState.errors['email']?.message}
+          />
+          <PasswordInput
+            label="비밀번호"
+            required
+            mt="md"
+            {...form.register('password')}
+            error={form.formState.errors['password']?.message}
+          />
           <PasswordInput
             label="비밀번호 확인"
             required
             mt="md"
             {...form.register('passwordConfirm')}
+            error={form.formState.errors['passwordConfirm']?.message}
           />
 
           {errorMsg && (
