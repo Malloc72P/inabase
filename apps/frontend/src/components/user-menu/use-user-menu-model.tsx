@@ -9,7 +9,7 @@ import {
   IconHome,
 } from '@tabler/icons-react';
 import { useState, useMemo } from 'react';
-import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/loading-store';
+import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/global-loading-store';
 
 export interface UserMenuModel {
   type: 'button' | 'label' | 'divider';

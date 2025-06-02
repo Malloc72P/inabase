@@ -5,7 +5,7 @@ export interface GlobalLoadingState {
   setGlobalLoading: (v: boolean) => void;
 }
 
-export const useGlobalLoadingStore = create<GlobalLoadingState>()((set) => ({
+export const useGlobalLoadingStore = create<GlobalLoadingState>((set) => ({
   globalLoading: false,
   setGlobalLoading: (globalLoading) => set({ globalLoading }),
 }));

@@ -1,1 +1,1 @@
-export * from './loading-overlay-provider';
+export * from './global-loading-container';
