@@ -5,7 +5,7 @@ import { Divider, Text } from '@mantine/core';
 import classes from './user-menu.module.css';
 
 export function UserMenu() {
-  const { menuItems, isLoading } = useUserMenuModel();
+  const { menuItems } = useUserMenuModel();
 
   return (
     <>

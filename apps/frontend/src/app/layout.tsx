@@ -1,4 +1,4 @@
-import { LoadingOverlayProvider } from 'src/components/loading-overlay-provider';
+import { GlobalLoadingContainer } from '@libs/stores/loading-overlay-provider';
 import { PageProgressBar } from 'src/components/navigation-progress-bar';
 import { ColorSchemeScript, createTheme, mantineHtmlProps, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
@@ -48,9 +48,9 @@ export default async function RootLayout({
 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider theme={theme} defaultColorScheme="dark">
-          <LoadingOverlayProvider>
+          <GlobalLoadingContainer>
             <SessionProvider {...session}>{children}</SessionProvider>
-          </LoadingOverlayProvider>
+          </GlobalLoadingContainer>
           <Notifications />
           <PageProgressBar />
         </MantineProvider>

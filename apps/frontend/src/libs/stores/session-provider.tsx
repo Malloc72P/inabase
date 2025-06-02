@@ -25,5 +25,7 @@ export function useSession(): SessionState {
   return {
     user: useStore(store, (s) => s.user),
     state: useStore(store, (s) => s.state),
+    updateSession: useStore(store, (s) => s.updateSession),
+    setLoading: useStore(store, (s) => s.setLoading),
   };
 }

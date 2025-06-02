@@ -9,6 +9,7 @@ import {
   IconHome,
 } from '@tabler/icons-react';
 import { useState, useMemo } from 'react';
+import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/loading-store';
 
 export interface UserMenuModel {
   type: 'button' | 'label' | 'divider';
@@ -21,9 +22,9 @@ export interface UserMenuModel {
 }
 
 export function useUserMenuModel() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigator = useNavigator();
   const { logout } = useAuth();
+  const { setGlobalLoading } = useGlobalLoadingStore();
 
   const onChangeAccountClick = () => {
     navigator.moveTo.auth.login();
@@ -31,14 +32,15 @@ export function useUserMenuModel() {
 
   const onLogoutClick = async () => {
     try {
-      setIsLoading(true);
+      setGlobalLoading(true);
       await logout();
+
       notifySuccess({ title: '로그아웃 성공', message: '로그아웃 되었습니다.' });
       navigator.moveTo.public.landing();
     } catch (error) {
       console.error(error);
     } finally {
-      setIsLoading(true);
+      setGlobalLoading(false);
     }
   };
 
@@ -87,11 +89,10 @@ export function useUserMenuModel() {
         onClick: () => {},
       },
     ],
-    [isLoading]
+    []
   );
 
   return {
     menuItems,
-    isLoading,
   };
 }

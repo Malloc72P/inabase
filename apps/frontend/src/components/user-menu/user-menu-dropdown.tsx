@@ -1,11 +1,10 @@
 'use client';
 
-import { LoadingOverlayContext } from 'src/components/loading-overlay-provider';
-import { cn } from 'src/libs/ui';
 import { Group, Menu, Text, UnstyledButton } from '@mantine/core';
 import { ProfileResult } from '@repo/dto';
 import { IconChevronDown } from '@tabler/icons-react';
-import { ReactElement, useContext, useEffect, useState } from 'react';
+import { ReactElement, useState } from 'react';
+import { cn } from 'src/libs/ui';
 import { useUserMenuModel } from './use-user-menu-model';
 import classes from './user-menu-dropdown.module.css';
 
@@ -16,15 +15,6 @@ export interface UserMenuDropdownProps {
 export function UserMenuDropdown({ profile }: UserMenuDropdownProps) {
   const userMenuModel = useUserMenuModel();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const loadingOverlayCtx = useContext(LoadingOverlayContext);
-
-  useEffect(() => {
-    if (userMenuModel.isLoading) {
-      loadingOverlayCtx.showLoadingOverlay('요청을 처리중입니다. 잠시만 기다려주세요.');
-    } else {
-      loadingOverlayCtx.hideLoadingOverlay();
-    }
-  }, [userMenuModel.isLoading]);
 
   return (
     <>

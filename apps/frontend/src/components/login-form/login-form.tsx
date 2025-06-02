@@ -43,6 +43,7 @@ export function LoginForm() {
           title: 'Success',
           message: '로그인 되었습니다.',
         });
+
         setErrorMsg('');
         setIsSuccess(true);
         navigator.moveTo.protected.main();

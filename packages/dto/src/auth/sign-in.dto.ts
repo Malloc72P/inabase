@@ -1,5 +1,6 @@
 import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { ProfileResult } from './profile.dto';
 
 export class SignInParam {
   @IsNotEmpty()
@@ -13,13 +14,7 @@ export class SignInParam {
 
 export class SignInResult {
   @Expose()
-  id: string;
-
-  @Expose()
-  name: string;
-
-  @Expose()
-  email: string;
+  profile: ProfileResult;
 
   @Expose()
   accessToken: string;

@@ -8,13 +8,24 @@ export interface SessionProps {
   state: SessionFetchingState;
 }
 
-export interface SessionState extends SessionProps {}
+export interface SessionState extends SessionProps {
+  updateSession: (newProfile: ProfileResult | null) => void;
+  setLoading: () => void;
+}
 
 export const createSessionStore = (initialProps?: SessionProps) => {
   return createStore<SessionState>()((set, get) => ({
     user: null,
     state: 'unauthenticated',
     ...initialProps,
+    updateSession: (newProfile) => {
+      const nextState: SessionFetchingState = newProfile ? 'authenticated' : 'unauthenticated';
+
+      set({ state: nextState, user: newProfile });
+    },
+    setLoading: () => {
+      set({ state: 'loading' });
+    },
   }));
 };
 
