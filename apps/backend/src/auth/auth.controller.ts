@@ -37,9 +37,11 @@ export class AuthController extends BaseController {
     const expireInfo = this.calcExpireInfo();
 
     const result: SignInResult = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
+      profile: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
       accessToken,
       refreshToken,
       ...expireInfo,
@@ -52,7 +54,7 @@ export class AuthController extends BaseController {
 
   @Post('signout')
   @UseGuards(JwtAuthGuard)
-  signOut(@Res() res: Response) {
+  async signOut(@Res() res: Response) {
     res.clearCookie(CommonConstants.token.accessTokenKey);
     res.clearCookie(CommonConstants.token.refreshTokenKey);
 
@@ -89,6 +91,8 @@ export class AuthController extends BaseController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async profile(@Requester() requester: IRequester): Promise<ProfileResult> {
+    this.logger.log('profile invoked');
+
     const { user } = await this.userService.findByIdOrThrow({ id: requester.id });
 
     return transformTo(ProfileResult, user);

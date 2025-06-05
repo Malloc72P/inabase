@@ -9,6 +9,7 @@ const datas = [
   { email: 'saul@inabase.com', name: 'saul', password: 'test', role: UserRole.NORMAL },
   { email: 'comet@inabase.com', name: 'comet', password: 'test', role: UserRole.NORMAL },
   { email: 'admin@inabase.com', name: 'admin', password: 'test', role: UserRole.ADMIN },
+  { email: 'test@inabase.com', name: 'test', password: 'test', role: UserRole.ADMIN },
 ];
 
 export default class UserSeeder implements Seeder {

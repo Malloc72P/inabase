@@ -59,6 +59,10 @@ export class AuthService {
     return await this.createTokens({ user });
   }
 
+  /**
+   * 액세스토큰과 리프래시 토큰 쌍을 생성하고 반환함.
+   * 토큰 생성은 tokenService에서 담당함.
+   */
   private async createTokens({
     user,
   }: AuthServiceCreateAccessTokenInput): Promise<AuthServiceCreateRefreshTokenOutput> {
