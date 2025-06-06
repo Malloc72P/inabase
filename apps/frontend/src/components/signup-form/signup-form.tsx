@@ -19,6 +19,7 @@ import { SignUpParam } from '@repo/dto';
 import { FormEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import classes from './signup-form.module.css';
+import { Logo } from '@components/logo';
 
 export function SignupForm() {
   const form = useForm<SignUpParam & { passwordConfirm: string }>();
@@ -82,7 +83,7 @@ export function SignupForm() {
   return (
     <Container size={420} mt="20vh">
       <Title ta="center" className={classes.title}>
-        회원가입
+        <Logo style={{ fontSize: 32 }} />
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         서비스 이용에 필요한 프로필 정보를 입력해주세요. <br />
