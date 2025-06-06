@@ -43,4 +43,4 @@ class ZodValidationPipe implements PipeTransform {
   }
 }
 
-export const ZodValidator = (schema: ZodTypeAny) => UsePipes(new ZodValidationPipe(schema));
+export const ZodInput = (schema: ZodTypeAny) => UsePipes(new ZodValidationPipe(schema));

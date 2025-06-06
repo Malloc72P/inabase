@@ -9,7 +9,7 @@ import {
 } from '@repo/dto';
 import { IRequester, Requester } from '@src/util/user-decorator';
 import { transformTo } from '@src/util/transformer.util';
-import { ZodValidationPipe } from '@src/util/zod-validation.pipe';
+import { ZodInput } from '@src/util/zod-validation.pipe';
 
 @Controller('api/v1/user')
 export class UserController {
@@ -17,10 +17,11 @@ export class UserController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
+  @ZodInput(UpdateProfileInputSchema)
   async updateProfile(
     @Requester() requester: IRequester,
     @Param('id') id: string,
-    @Body(new ZodValidationPipe(UpdateProfileInputSchema)) { name }: UpdateProfileInput
+    @Body() { name }: UpdateProfileInput
   ): Promise<UpdateProfileOutput> {
     const { user } = await this.userService.updateProfile({
       id,
