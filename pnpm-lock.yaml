@@ -47,12 +47,6 @@ importers:
       argon2:
         specifier: ^0.41.1
         version: 0.41.1
-      class-transformer:
-        specifier: ^0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.1
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -77,6 +71,9 @@ importers:
       typeorm-seeding:
         specifier: ^1.6.1
         version: 1.6.1(typeorm@0.3.20(pg@8.13.1)(ts-node@10.9.2(@types/node@20.17.6)(typescript@5.5.4)))
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.51
     devDependencies:
       '@nestjs/cli':
         specifier: ^10.0.0
@@ -226,12 +223,9 @@ importers:
 
   packages/dto:
     dependencies:
-      class-transformer:
-        specifier: ^0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.14.1
-        version: 0.14.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.51
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -4305,6 +4299,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod@3.25.51:
+    resolution: {integrity: sha512-TQSnBldh+XSGL+opiSIq0575wvDPqu09AqWe1F7JhUMKY+M91/aGlK4MhpVNO7MgYfHcVCB1ffwAUTJzllKJqg==}
 
   zustand@5.0.5:
     resolution: {integrity: sha512-mILtRfKW9xM47hqxGIxCv12gXusoY/xTSHBYApXozR0HmQv299whhBeeAcRy+KrPPybzosvJBCOmVjq6x12fCg==}
@@ -8930,6 +8927,8 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@3.25.51: {}
 
   zustand@5.0.5(@types/react@18.3.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0)):
     optionalDependencies:

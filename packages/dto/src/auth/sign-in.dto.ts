@@ -1,30 +1,20 @@
-import { Expose } from 'class-transformer';
-import { IsNotEmpty, IsString } from 'class-validator';
-import { ProfileResult } from './profile.dto';
+import { z } from 'zod';
+import { ProfileResultSchema } from './profile.dto';
 
-export class SignInParam {
-  @IsNotEmpty()
-  @IsString()
-  email: string;
+export const SignInParamSchema = z
+  .object({
+    email: z.string().min(1),
+    password: z.string().min(1),
+  })
+  .strict();
+export type SignInParam = z.infer<typeof SignInParamSchema>;
 
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-}
-
-export class SignInResult {
-  @Expose()
-  profile: ProfileResult;
-
-  @Expose()
-  accessToken: string;
-
-  @Expose()
-  refreshToken: string;
-
-  @Expose()
-  issuedAt: number;
-
-  @Expose()
-  expiredAt: number;
-}
+export const SignInResultSchema = z
+  .object({
+    profile: ProfileResultSchema,
+    accessToken: z.string(),
+    refreshToken: z.string(),
+    issuedAt: z.number(),
+    expiredAt: z.number(),
+  });
+export type SignInResult = z.infer<typeof SignInResultSchema>;

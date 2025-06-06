@@ -1,12 +1,9 @@
-import { Expose } from 'class-transformer';
+import { z } from 'zod';
 
-export class ProfileResult {
-  @Expose()
-  id: string;
+export const ProfileResultSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  name: z.string(),
+});
 
-  @Expose()
-  email: string;
-
-  @Expose()
-  name: string;
-}
+export type ProfileResult = z.infer<typeof ProfileResultSchema>;

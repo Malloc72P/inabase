@@ -1,9 +1,15 @@
 import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@src/auth/auth.guard';
 import { UserService } from './user.service';
-import { ProfileResult, UpdateProfileInput, UpdateProfileOutput } from '@repo/dto';
+import {
+  ProfileResultSchema,
+  UpdateProfileInput,
+  UpdateProfileInputSchema,
+  UpdateProfileOutput,
+} from '@repo/dto';
 import { IRequester, Requester } from '@src/util/user-decorator';
 import { transformTo } from '@src/util/transformer.util';
+import { ZodValidationPipe } from '@src/util/zod-validation.pipe';
 
 @Controller('api/v1/user')
 export class UserController {
@@ -14,7 +20,7 @@ export class UserController {
   async updateProfile(
     @Requester() requester: IRequester,
     @Param('id') id: string,
-    @Body() { name }: UpdateProfileInput
+    @Body(new ZodValidationPipe(UpdateProfileInputSchema)) { name }: UpdateProfileInput
   ): Promise<UpdateProfileOutput> {
     const { user } = await this.userService.updateProfile({
       id,
@@ -22,6 +28,6 @@ export class UserController {
       requester,
     });
 
-    return { profile: transformTo(ProfileResult, user) };
+    return { profile: transformTo(ProfileResultSchema, user) };
   }
 }

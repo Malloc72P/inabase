@@ -1,4 +1,4 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
@@ -12,13 +12,6 @@ async function bootstrap() {
 
   configCORS(app, configService);
   configCookie(app);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true, // Automatically transform payloads to DTO instances
-      whitelist: true, // Strip unknown properties
-      forbidNonWhitelisted: true, // Throw error for unknown properties
-    })
-  );
 
   await app.listen(configService.get('appPort') ?? BaseConstants.app.defaultPort);
 }
