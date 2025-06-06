@@ -16,7 +16,7 @@ import { UserService } from '@src/user/user.service';
 import { UserServiceCreateInput } from '@src/user/user.service.dto';
 import { createCookieOption } from '@src/util/cookie.util';
 import { transformTo } from '@src/util/transformer.util';
-import { ZodValidationPipe } from '@src/util/zod-validation.pipe';
+import { ZodValidator } from '@src/util/zod-validation.pipe';
 import { IRequester, Requester } from '@src/util/user-decorator';
 import { Request, Response } from 'express';
 import * as ms from 'ms';
@@ -66,9 +66,8 @@ export class AuthController extends BaseController {
   }
 
   @Post('signup')
-  async signup(
-    @Body(new ZodValidationPipe(SignUpParamSchema)) dto: SignUpParam
-  ): Promise<SignUpResult> {
+  @ZodValidator(SignUpParamSchema)
+  async signup(@Body() dto: SignUpParam): Promise<SignUpResult> {
     await this.userService.create(dto as UserServiceCreateInput);
 
     return {
