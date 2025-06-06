@@ -15,70 +15,73 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { SignUpParam } from '@repo/dto';
+import { SignUpParam, SignUpParamSchema } from '@repo/dto';
 import { FormEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import classes from './signup-form.module.css';
 import { Logo } from '@components/logo';
+import { zodResolver } from '@hookform/resolvers/zod';
+import z from 'zod';
+
+const ClientSignUpParamSchema = SignUpParamSchema.extend({
+  passwordConfirm: z.string({ message: '비밀번호 확인을 입력해주세요.' }),
+}).refine(({ password, passwordConfirm }) => password === passwordConfirm, {
+  message: '비밀번호가 일치하지 않습니다.',
+});
+
+type ClientSignUpParam = z.infer<typeof ClientSignUpParamSchema>;
 
 export function SignupForm() {
-  const form = useForm<SignUpParam & { passwordConfirm: string }>();
+  const form = useForm<ClientSignUpParam>({
+    resolver: zodResolver(
+      SignUpParamSchema.extend({
+        passwordConfirm: z.string(),
+      })
+    ),
+  });
   const navigator = useNavigator();
   const { signup } = useAuth();
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e: FormEvent) =>
-    submitHandler({
-      e,
-      callback: async () => {
-        setLoading(true);
-        form.clearErrors();
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+      form.clearErrors();
 
-        const { passwordConfirm, ...input } = form.getValues();
+      const { passwordConfirm, ...input } = form.getValues();
 
-        if (input.password !== passwordConfirm) {
-          form.setError('passwordConfirm', {
-            type: 'manual',
-            message: '비밀번호가 일치하지 않습니다.',
-          });
+      await signup(input);
 
-          return;
-        }
+      setErrorMsg('');
 
-        await signup(input);
+      notifySuccess({
+        title: '회원가입 성공!',
+        message: '회원가입되었습니다. 입력하신 정보로 로그인해주세요.',
+      });
 
-        setErrorMsg('');
+      navigator.moveTo.auth.login();
+    } catch (error) {
+      let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
 
-        notifySuccess({
-          title: '회원가입 성공!',
-          message: '회원가입되었습니다. 입력하신 정보로 로그인해주세요.',
-        });
+      if (error instanceof ApiError) {
+        errorMessage = error.message;
 
-        navigator.moveTo.auth.login();
-      },
-      onError: (error) => {
-        let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
-
-        if (error instanceof ApiError) {
-          errorMessage = error.message;
-
-          if (error.fieldErrors) {
-            for (const fieldError of error.fieldErrors) {
-              form.setError(fieldError.field as keyof SignUpParam, {
-                type: 'manual',
-                message: fieldError.message,
-              });
-            }
+        if (error.fieldErrors) {
+          for (const fieldError of error.fieldErrors) {
+            form.setError(fieldError.field as keyof SignUpParam, {
+              type: 'manual',
+              message: fieldError.message,
+            });
           }
         }
+      }
 
-        setErrorMsg(errorMessage);
-      },
-      onFinally: () => {
-        setLoading(false);
-      },
-    });
+      setErrorMsg(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container size={420} mt="20vh">
@@ -95,7 +98,7 @@ export function SignupForm() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form onSubmit={onSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <TextInput
             label="닉네임"
             required
