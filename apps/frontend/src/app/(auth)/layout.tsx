@@ -9,10 +9,13 @@ export default function AuthLayout({ children }: PropsWithChildren) {
   const [opened] = useDisclosure(false);
 
   return (
-    <AppShell header={{ height: 60 }} padding="md">
-      <AppShell.Header>
+    <AppShell
+      //  header={{ height: 60 }}
+      padding="md"
+    >
+      {/* <AppShell.Header>
         <MainHeader />
-      </AppShell.Header>
+      </AppShell.Header> */}
 
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>

@@ -1,14 +1,15 @@
-import { Expose } from 'class-transformer';
-import { ProfileResult } from '../auth';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { z } from 'zod';
+import { ProfileResultSchema } from '../auth';
 
-export class UpdateProfileInput {
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-}
+export const UpdateProfileInputSchema = z
+  .object({
+    name: z.string().min(1),
+  })
+  .strict();
+export type UpdateProfileInput = z.infer<typeof UpdateProfileInputSchema>;
 
-export class UpdateProfileOutput {
-  @Expose()
-  profile: ProfileResult;
-}
+export const UpdateProfileOutputSchema = z
+  .object({
+    profile: ProfileResultSchema,
+  });
+export type UpdateProfileOutput = z.infer<typeof UpdateProfileOutputSchema>;

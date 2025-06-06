@@ -1,5 +1,5 @@
-import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { ZodTypeAny } from 'zod';
 
-export function transformTo<T, V>(cls: ClassConstructor<T>, originObj: V): T {
-  return plainToInstance(cls, originObj, { excludeExtraneousValues: true });
+export function transformTo<T>(schema: ZodTypeAny, originObj: unknown): T {
+  return schema.parse(originObj);
 }

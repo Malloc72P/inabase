@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { HealthCheckOutput } from '@repo/dto';
+import { HealthCheckOutput, HealthCheckOutputSchema } from '@repo/dto';
 import { networkInterfaces } from 'os';
 import { BaseController } from './base/base.controller';
 import { transformTo } from './util/transformer.util';
@@ -13,7 +13,7 @@ export class AppController extends BaseController {
   @Get()
   healthCheck(): HealthCheckOutput {
     this.logger.log('health check');
-    return transformTo(HealthCheckOutput, {
+    return transformTo(HealthCheckOutputSchema, {
       statusCode: 200,
       serverAddr: this.getServerIPAddress(),
     });

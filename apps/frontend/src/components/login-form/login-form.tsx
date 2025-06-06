@@ -22,6 +22,7 @@ import { submitHandler } from 'src/libs/form/createSubmitHandler';
 import { ApiError } from 'src/libs/fetcher';
 import { IconCircleCheck } from '@tabler/icons-react';
 import { notifySuccess } from 'src/hooks/use-notification';
+import { Logo } from '@components/logo';
 
 export function LoginForm() {
   const { login } = useAuth();
@@ -70,7 +71,7 @@ export function LoginForm() {
   return (
     <Container size={420} my="20vh">
       <Title ta="center" className={classes.title}>
-        환영합니다!
+        <Logo style={{ fontSize: 32 }} />
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         아직 계정이 없으신가요?{' '}

@@ -1,17 +1,12 @@
-import { Expose } from 'class-transformer';
+import { z } from 'zod';
 
-export class RefreshTokenParam {}
+export const RefreshTokenParamSchema = z.object({}).strict();
+export type RefreshTokenParam = z.infer<typeof RefreshTokenParamSchema>;
 
-export class RefreshTokenResult {
-  @Expose()
-  accessToken: string;
-
-  @Expose()
-  refreshToken: string;
-
-  @Expose()
-  issuedAt: number;
-
-  @Expose()
-  expiredAt: number;
-}
+export const RefreshTokenResultSchema = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+  issuedAt: z.number(),
+  expiredAt: z.number(),
+});
+export type RefreshTokenResult = z.infer<typeof RefreshTokenResultSchema>;
