@@ -6,6 +6,7 @@ export const ApiLinkMap = {
   },
   shows: {
     list: () => Env.beApiUrl + '/shows',
+    create: () => Env.beApiUrl + '/shows',
   },
   auth: {
     signin: () => Env.beApiUrl + '/auth/signin',

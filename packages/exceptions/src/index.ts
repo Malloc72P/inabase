@@ -8,7 +8,8 @@ export type ExceptionCode =
   | 'UserNotFound'
   | 'Unauthorized'
   | 'Forbidden'
-  | 'InternalServerError';
+  | 'InternalServerError'
+  | 'TransformFailed';
 
 export interface FieldError {
   field: string;

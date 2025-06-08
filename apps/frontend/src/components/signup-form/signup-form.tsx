@@ -21,6 +21,7 @@ import classes from './signup-form.module.css';
 import { Logo } from '@components/logo';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import { handleApiError } from '@libs/fetcher/fetcher-util';
 
 const ClientSignUpParamSchema = SignUpParamSchema.extend({
   passwordConfirm: z.string({ message: '비밀번호 확인을 입력해주세요.' }),
@@ -61,20 +62,7 @@ export function SignupForm() {
 
       navigator.moveTo.auth.login();
     } catch (error) {
-      let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
-
-      if (error instanceof ApiError) {
-        errorMessage = error.message;
-
-        if (error.fieldErrors) {
-          for (const fieldError of error.fieldErrors) {
-            form.setError(fieldError.field as keyof SignUpParam, {
-              type: 'manual',
-              message: fieldError.message,
-            });
-          }
-        }
-      }
+      const { errorMessage } = handleApiError(error, form);
 
       setErrorMsg(errorMessage);
     } finally {

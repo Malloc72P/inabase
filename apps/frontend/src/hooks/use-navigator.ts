@@ -17,7 +17,8 @@ export const useNavigator = () => {
         landing: createNavigateFn(PageLinkMap.public.landing()),
       },
       protected: {
-        main: createNavigateFn(PageLinkMap.protected.main()),
+        shows: createNavigateFn(PageLinkMap.protected.shows()),
+        createShow: createNavigateFn(PageLinkMap.protected.createShow()),
         artists: createNavigateFn(PageLinkMap.protected.artists()),
         account: createNavigateFn(PageLinkMap.protected.account()),
       },

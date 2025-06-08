@@ -22,6 +22,19 @@ export interface ShowServiceFindOneOutput {
 }
 
 //-------------------------------------------------------------------------
+// create
+//-------------------------------------------------------------------------
+
+export interface ShowServiceCreateInput {
+  title: string;
+  tags: string[];
+}
+
+export interface ShowServiceCreateOutput {
+  show: Show;
+}
+
+//-------------------------------------------------------------------------
 // remove
 //-------------------------------------------------------------------------
 

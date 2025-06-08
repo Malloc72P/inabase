@@ -15,7 +15,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
       </AppShell.Header>
 
       <AppShell.Main>
-        <Box pt={42}>{children}</Box>
+        <Box>{children}</Box>
       </AppShell.Main>
     </AppShell>
   );

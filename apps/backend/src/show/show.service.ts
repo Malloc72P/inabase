@@ -4,6 +4,8 @@ import { BaseComponent } from '@src/base/base.component';
 import { Repository } from 'typeorm';
 import { Show } from './show.entity';
 import {
+  ShowServiceCreateInput,
+  ShowServiceCreateOutput,
   ShowServiceFindAllOutput,
   ShowServiceFindOneInput,
   ShowServiceFindOneOutput,
@@ -18,7 +20,7 @@ export class ShowService extends BaseComponent {
   }
 
   async findAll(): Promise<ShowServiceFindAllOutput> {
-    const shows = await this.showRepository.find();
+    const shows = await this.showRepository.find({ where: { deleted: false } });
 
     return {
       shows,
@@ -26,7 +28,7 @@ export class ShowService extends BaseComponent {
   }
 
   async findOne({ id }: ShowServiceFindOneInput): Promise<ShowServiceFindOneOutput> {
-    const show = await this.showRepository.findOneBy({ id });
+    const show = await this.showRepository.findOneBy({ id, deleted: false });
 
     if (!show) {
       throw new NotFoundException('이미 삭제되었거나 존재하지 않는 쇼 입니다.');
@@ -35,6 +37,12 @@ export class ShowService extends BaseComponent {
     return {
       show,
     };
+  }
+
+  async create({ title, tags }: ShowServiceCreateInput): Promise<ShowServiceCreateOutput> {
+    const show = await this.showRepository.save({ title, tags });
+
+    return { show };
   }
 
   async remove({ id }: ShowServiceRemoveInput): Promise<ShowServiceRemoveOutput> {

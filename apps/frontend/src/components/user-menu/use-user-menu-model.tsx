@@ -49,7 +49,7 @@ export function useUserMenuModel() {
   };
 
   const onHomeClick = () => {
-    navigator.moveTo.protected.main();
+    navigator.moveTo.protected.shows();
   };
 
   const menuItems = useMemo<UserMenuModel[]>(

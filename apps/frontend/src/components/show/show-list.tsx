@@ -10,7 +10,6 @@ export interface ShowListProps {
 export function ShowList({ shows, isShowLoading }: ShowListProps) {
   return (
     <SimpleGrid
-      spacing="lg"
       cols={{
         md: 3,
         sm: 1,

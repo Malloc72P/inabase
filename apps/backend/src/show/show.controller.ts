@@ -1,5 +1,11 @@
-import { Body, Controller, Get, UseGuards } from '@nestjs/common';
-import { FindShowsInput, FindShowsInputSchema, FindShowsOutput, ShowDtoSchema } from '@repo/dto';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  CreateShowInput,
+  CreateShowInputSchema,
+  CreateShowOutput,
+  FindShowsOutput,
+  ShowDtoSchema,
+} from '@repo/dto';
 import { BaseController } from '@src/base/base.controller';
 import { transformTo } from '@src/util/transformer.util';
 import { ShowService } from './show.service';
@@ -14,12 +20,22 @@ export class ShowController extends BaseController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ZodInput(FindShowsInputSchema)
-  async shows(@Body() param: FindShowsInput): Promise<FindShowsOutput> {
+  async shows(): Promise<FindShowsOutput> {
     const { shows } = await this.showService.findAll();
 
     return {
       shows: shows.map((show) => transformTo(ShowDtoSchema, show)),
+    };
+  }
+
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  @ZodInput(CreateShowInputSchema)
+  async create(@Body() param: CreateShowInput): Promise<CreateShowOutput> {
+    const { show } = await this.showService.create(param);
+
+    return {
+      show: transformTo(ShowDtoSchema, show),
     };
   }
 }

@@ -9,8 +9,8 @@ export function useMainNavbarModel() {
     {
       label: 'Shows',
       icon: IconMovie,
-      value: PageLinkMap.protected.main(),
-      onClick: navigator.moveTo.protected.main,
+      value: PageLinkMap.protected.shows(),
+      onClick: navigator.moveTo.protected.shows,
     },
     {
       label: 'Artists',

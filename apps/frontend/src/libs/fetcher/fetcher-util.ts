@@ -1,6 +1,7 @@
 import { ApiExceptionPayload, ExceptionCode, FieldError } from '@repo/exceptions';
 import { FetchApiOptions } from './fetcher-interface';
 import { ApiError } from './fetcher';
+import { UseFormReturn } from 'react-hook-form';
 
 export function resolveFetchOption(options: FetchApiOptions | undefined): RequestInit {
   const { body, headers, method, accessToken, refreshToken, ...rest } = options || {};
@@ -56,4 +57,25 @@ export async function toApiError(response: Response) {
   }
 
   return apiError;
+}
+
+export function handleApiError(error: unknown, form?: UseFormReturn<any>) {
+  let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
+
+  if (error instanceof ApiError) {
+    // ApiError 인스턴스인 경우 서버에서 응답한 에러 메시지를 설정합니다.
+    errorMessage = error.message;
+
+    // fieldErrors가 존재하면 각 필드에 대한 에러를 설정합니다.
+    if (error.fieldErrors && form) {
+      for (const fieldError of error.fieldErrors) {
+        form.setError(fieldError.field, {
+          type: 'manual',
+          message: fieldError.message,
+        });
+      }
+    }
+  }
+
+  return { errorMessage };
 }
