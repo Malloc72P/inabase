@@ -64,10 +64,11 @@ export function MainHeader({}: MainHeaderProps) {
           <ScrollArea
             mx="-md"
             onClick={(e) => {
-              const el = e.target as HTMLElement;
-              const isButton = el?.dataset?.type === 'button';
+              const buttonElement = (e.target as HTMLElement)?.closest(
+                '[data-type="button"], button'
+              );
 
-              if (isButton) {
+              if (buttonElement) {
                 closeDrawer();
               }
             }}
