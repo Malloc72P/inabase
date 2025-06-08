@@ -8,4 +8,4 @@
 
 ### 프로젝트 설정
 
-- example-env파일을 복제한 다음, 이름을 .env로 수정합니다.
+- example-env파일을 복제한 다음, 이름을 .env.local로 수정합니다.
