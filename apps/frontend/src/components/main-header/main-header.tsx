@@ -1,21 +1,25 @@
 'use client';
 
-import { CustomLink } from 'src/components/custom-link';
+import { CustomLink, CustomLinkType } from 'src/components/custom-link';
 import { Logo } from 'src/components/logo';
 import { ThemeToggler } from 'src/components/theme-toggler';
 import { CommonConstants } from 'src/libs/constants/common';
-import { Box, Burger, Divider, Drawer, Group, ScrollArea } from '@mantine/core';
+import { Box, Burger, Divider, Drawer, Flex, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { ProtectedAuthGroup, PublicAuthGroup } from './header-auth-group';
+import { ProtectedAuthGroup, PublicAuthGroup } from './header-group';
 import classes from './main-header.module.css';
 import { usePublicHeaderLinkModel } from './use-public-header-link-model';
 import { useSession } from '@libs/stores/session-provider';
+import { useUserMenuModel } from '@components/user-menu/use-user-menu-model';
 
 export interface MainHeaderProps {}
+
+const mobileSize = 'md';
 
 export function MainHeader({}: MainHeaderProps) {
   const { state, user } = useSession();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+  const userMenuModel = useUserMenuModel();
 
   return (
     <Box>
@@ -23,7 +27,7 @@ export function MainHeader({}: MainHeaderProps) {
         <Group justify="start" h="100%">
           <Logo />
 
-          <Group h="100%" gap={0} visibleFrom="sm" ml={100}>
+          <Group h="100%" gap={0} visibleFrom={mobileSize} ml={100}>
             <HeaderLinks />
           </Group>
 
@@ -32,7 +36,8 @@ export function MainHeader({}: MainHeaderProps) {
           <Group>
             <ThemeToggler />
 
-            <Group visibleFrom="sm" justify="end">
+            {/* ------ 헤더 우측 버튼 그룹(로그인,회원가입 - 유저 드랍다운 버튼 ------ */}
+            <Group visibleFrom={mobileSize} justify="end">
               {state === 'authenticated' && user ? (
                 <ProtectedAuthGroup user={user} />
               ) : (
@@ -41,7 +46,7 @@ export function MainHeader({}: MainHeaderProps) {
             </Group>
           </Group>
 
-          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom={mobileSize} />
         </Group>
       </header>
 
@@ -49,16 +54,37 @@ export function MainHeader({}: MainHeaderProps) {
         opened={drawerOpened}
         onClose={closeDrawer}
         size="100%"
-        padding="md"
-        title={CommonConstants.appName}
-        hiddenFrom="sm"
+        title={<Logo clickEnabled={false} />}
+        hiddenFrom={mobileSize}
         zIndex={1000000}
       >
-        <ScrollArea h="calc(100vh - 80px" mx="-md">
-          <Divider my="sm" />
+        <>
+          <Divider mb="sm" mx="-md" />
 
-          <HeaderLinks />
-        </ScrollArea>
+          <ScrollArea
+            mx="-md"
+            onClick={(e) => {
+              const el = e.target as HTMLElement;
+              const isButton = el?.dataset?.type === 'button';
+
+              if (isButton) {
+                closeDrawer();
+              }
+            }}
+          >
+            <HeaderLinks />
+
+            {state === 'authenticated' ? (
+              userMenuModel.menuItems
+                .filter((link) => link.type !== 'divider')
+                .map((link) => <CustomLink key={link.label} type={link.type} link={link} />)
+            ) : (
+              <Flex direction="column" maw="95%" mx="auto" justify="center" gap="xl" mt="xl">
+                <PublicAuthGroup />
+              </Flex>
+            )}
+          </ScrollArea>
+        </>
       </Drawer>
     </Box>
   );

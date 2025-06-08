@@ -18,7 +18,6 @@ import { FormEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import classes from './login-form.module.css';
 import { useNavigator } from 'src/hooks/use-navigator';
-import { submitHandler } from 'src/libs/form/createSubmitHandler';
 import { ApiError } from 'src/libs/fetcher';
 import { IconCircleCheck } from '@tabler/icons-react';
 import { notifySuccess } from 'src/hooks/use-notification';
@@ -32,37 +31,32 @@ export function LoginForm() {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const onSubmit = (e: FormEvent) =>
-    submitHandler({
-      e,
-      callback: async () => {
-        setLoading(true);
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+      await login(form.getValues());
 
-        await login(form.getValues());
+      notifySuccess({
+        title: 'Success',
+        message: '로그인 되었습니다.',
+      });
 
-        notifySuccess({
-          title: 'Success',
-          message: '로그인 되었습니다.',
-        });
+      setErrorMsg('');
+      setIsSuccess(true);
+      navigator.moveTo.protected.main();
+    } catch (error) {
+      let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
 
-        setErrorMsg('');
-        setIsSuccess(true);
-        navigator.moveTo.protected.main();
-      },
-      onError: (error) => {
-        let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
+      if (error instanceof ApiError) {
+        errorMessage = error.message;
+      }
 
-        if (error instanceof ApiError) {
-          errorMessage = error.message;
-        }
-
-        setIsSuccess(false);
-        setErrorMsg(errorMessage);
-      },
-      onFinally: () => {
-        setLoading(false);
-      },
-    });
+      setIsSuccess(false);
+      setErrorMsg(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onCreateAccountClick = () => {
     navigator.moveTo.auth.signup();
@@ -81,8 +75,8 @@ export function LoginForm() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <form onSubmit={onSubmit}>
-          <TextInput label="이메일" required {...form.register('email')} />
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <TextInput label="이메일" required autoFocus {...form.register('email')} />
           <PasswordInput label="비밀번호" required mt="md" {...form.register('password')} />
 
           {errorMsg && (
