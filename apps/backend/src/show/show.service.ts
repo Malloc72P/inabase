@@ -11,7 +11,10 @@ import {
   ShowServiceFindOneOutput,
   ShowServiceRemoveInput,
   ShowServiceRemoveOutput,
+  ShowServiceUpdateInput,
+  ShowServiceUpdateOutput,
 } from './show.service.dto';
+import { EntityNotFound } from '@src/exceptions/common.exception';
 
 @Injectable()
 export class ShowService extends BaseComponent {
@@ -45,8 +48,26 @@ export class ShowService extends BaseComponent {
     return { show };
   }
 
+  async update({ id, title, tags }: ShowServiceUpdateInput): Promise<ShowServiceUpdateOutput> {
+    const { show } = await this.findOne({ id });
+
+    if (!show || show.deleted) {
+      throw new EntityNotFound('쇼를 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 쇼입니다.');
+    }
+
+    show.update({ title, tags });
+
+    this.showRepository.save(show);
+
+    return { show };
+  }
+
   async remove({ id }: ShowServiceRemoveInput): Promise<ShowServiceRemoveOutput> {
     const { show } = await this.findOne({ id });
+
+    if (!show || show.deleted) {
+      throw new EntityNotFound('쇼를 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 쇼입니다.');
+    }
 
     show.delete();
 

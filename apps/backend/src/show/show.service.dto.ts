@@ -35,6 +35,20 @@ export interface ShowServiceCreateOutput {
 }
 
 //-------------------------------------------------------------------------
+// update
+//-------------------------------------------------------------------------
+
+export interface ShowServiceUpdateInput {
+  id: string;
+  title?: string;
+  tags: string[];
+}
+
+export interface ShowServiceUpdateOutput {
+  show: Show;
+}
+
+//-------------------------------------------------------------------------
 // remove
 //-------------------------------------------------------------------------
 

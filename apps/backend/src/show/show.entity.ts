@@ -8,4 +8,12 @@ export class Show extends BaseEntity {
 
   @Column('varchar', { array: true })
   tags: string[];
+
+  update({ title, tags }: { title?: string; tags: string[] }) {
+    if (title) {
+      this.title = title;
+    }
+
+    this.tags = tags;
+  }
 }

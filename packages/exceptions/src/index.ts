@@ -9,7 +9,9 @@ export type ExceptionCode =
   | 'Unauthorized'
   | 'Forbidden'
   | 'InternalServerError'
-  | 'TransformFailed';
+  | 'TransformFailed'
+  | 'ValidationError'
+  | 'NotFound';
 
 export interface FieldError {
   field: string;

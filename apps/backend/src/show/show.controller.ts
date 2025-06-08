@@ -1,10 +1,14 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import {
   CreateShowInput,
   CreateShowInputSchema,
   CreateShowOutput,
   FindShowsOutput,
   ShowDtoSchema,
+  DeleteShowOutput,
+  UpdateShowInputSchema,
+  UpdateShowOutput,
+  UpdateShowInput,
 } from '@repo/dto';
 import { BaseController } from '@src/base/base.controller';
 import { transformTo } from '@src/util/transformer.util';
@@ -37,5 +41,24 @@ export class ShowController extends BaseController {
     return {
       show: transformTo(ShowDtoSchema, show),
     };
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ZodInput(UpdateShowInputSchema)
+  async update(@Param('id') id: string, @Body() param: UpdateShowInput): Promise<UpdateShowOutput> {
+    const { show } = await this.showService.update({ id, ...param });
+
+    return {
+      show: transformTo(ShowDtoSchema, show),
+    };
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async delete(@Param('id') id: string): Promise<DeleteShowOutput> {
+    await this.showService.remove({ id });
+
+    return {};
   }
 }
