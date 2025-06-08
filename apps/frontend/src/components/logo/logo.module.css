@@ -1,5 +1,9 @@
 .logo {
+  cursor: default;
   font-size: var(--mantine-font-size-xl);
   font-weight: 700;
+}
+
+.logo[data-click-enabled='true'] {
   cursor: pointer;
 }

@@ -1,11 +1,19 @@
 import { CustomLinkModel } from './custom-link-model';
 import classes from './custom-link.module.css';
 
-export function CustomLink({ link }: { link: CustomLinkModel }) {
+export type CustomLinkType = 'button' | 'label' | 'divider';
+
+export interface CustomLinkProps {
+  type?: CustomLinkType;
+  link: CustomLinkModel;
+}
+
+export function CustomLink({ type = 'button', link }: CustomLinkProps) {
   return (
     <a
       href="#"
       className={classes.link}
+      data-type={type}
       style={{
         color: link.color,
       }}

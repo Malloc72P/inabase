@@ -12,7 +12,7 @@ export function ThemeToggler() {
   };
 
   return (
-    <ActionIcon variant="default" size="lg" onClick={onTogglerClick}>
+    <ActionIcon variant="transparent" color="gray" size="lg" onClick={onTogglerClick}>
       <IconSun className={classes.light} width="80%" height="80%" stroke={1.5} />
       <IconMoon className={classes.dark} width="80%" height="80%" stroke={1.5} />
     </ActionIcon>

@@ -2,9 +2,8 @@
 
 import { useAuth } from 'src/hooks/use-auth';
 import { useNavigator } from 'src/hooks/use-navigator';
-import { notifyError, notifySuccess } from 'src/hooks/use-notification';
+import { notifySuccess } from 'src/hooks/use-notification';
 import { ApiError } from 'src/libs/fetcher';
-import { submitHandler } from 'src/libs/form/createSubmitHandler';
 import {
   Anchor,
   Button,
@@ -102,6 +101,7 @@ export function SignupForm() {
           <TextInput
             label="닉네임"
             required
+            autoFocus
             {...form.register('name')}
             error={form.formState.errors['name']?.message}
           />
