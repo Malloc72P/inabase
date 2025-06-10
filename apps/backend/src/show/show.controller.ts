@@ -59,6 +59,8 @@ export class ShowController extends BaseController {
   async delete(@Param('id') id: string): Promise<DeleteShowOutput> {
     await this.showService.remove({ id });
 
-    return {};
+    return {
+      success: true,
+    };
   }
 }

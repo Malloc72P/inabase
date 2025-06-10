@@ -18,7 +18,7 @@ export function ShowList({ shows, isShowLoading }: ShowListProps) {
       {isShowLoading ? (
         <ShowListLoading />
       ) : (
-        shows.map((show) => <ShowListItem key={show.id} title={show.title} tags={show.tags} />)
+        shows.map((show) => <ShowListItem key={show.id} show={show} />)
       )}
     </SimpleGrid>
   );

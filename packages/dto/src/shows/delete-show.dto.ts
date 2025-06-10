@@ -1,2 +1,4 @@
 export type DeleteShowInput = {};
-export type DeleteShowOutput = {};
+export type DeleteShowOutput = {
+  success: boolean;
+};
