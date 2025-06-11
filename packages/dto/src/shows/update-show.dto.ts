@@ -6,9 +6,7 @@ export const UpdateShowInputSchema = z
     title: z
       .string()
       .min(1, '제목은 필수입니다.')
-      .max(50, '제목은 최대 50자까지 입력할 수 있습니다.')
-      .optional(),
-
+      .max(50, '제목은 최대 50자까지 입력할 수 있습니다.'),
     tags: z
       .array(z.string())
       .max(30, '태그는 최대 30개까지 등록할 수 있습니다.')

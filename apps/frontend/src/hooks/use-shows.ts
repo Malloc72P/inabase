@@ -8,6 +8,8 @@ import {
   DeleteShowInput,
   DeleteShowOutput,
   FindShowsOutput,
+  UpdateShowInput,
+  UpdateShowOutput,
 } from '@repo/dto';
 import useSWR from 'swr';
 import { toApiError } from '@libs/fetcher/fetcher-util';
@@ -46,11 +48,31 @@ export function useShow() {
     return true;
   };
 
+  const updateShow = async (showId: string, param: UpdateShowInput) => {
+    const { show } = await fetcher<UpdateShowInput, UpdateShowOutput>(
+      ApiLinkMap.shows.update(showId),
+      {
+        method: 'PATCH',
+        body: JSON.stringify(param),
+      }
+    );
+
+    swrObj.mutate(
+      (data) => ({
+        shows: data?.shows.map((s) => (s.id === showId ? show : s)) || [],
+      }),
+      false
+    );
+
+    return true;
+  };
+
   return {
     shows: swrObj.data ? swrObj.data.shows : [],
     isShowLoading: swrObj.isLoading,
     showSwr: swrObj,
     createShow,
+    updateShow,
     deleteShow,
   };
 }
