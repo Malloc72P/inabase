@@ -23,7 +23,10 @@ export class ShowService extends BaseComponent {
   }
 
   async findAll(): Promise<ShowServiceFindAllOutput> {
-    const shows = await this.showRepository.find({ where: { deleted: false } });
+    const shows = await this.showRepository.find({
+      where: { deleted: false },
+      order: { createdAt: 'desc' },
+    });
 
     return {
       shows,

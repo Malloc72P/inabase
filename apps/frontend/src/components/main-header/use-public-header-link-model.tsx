@@ -9,7 +9,7 @@ export function usePublicHeaderLinkModel() {
   };
 
   const onMainClick = () => {
-    navigator.moveTo.protected.shows();
+    navigator.moveTo.protected.shows.list();
   };
 
   const onProjectClick = () => {

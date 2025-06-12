@@ -1,18 +1,18 @@
 'use client';
 
-import { ShowList } from 'src/components/show';
-import { useShow } from 'src/hooks/use-shows';
-import { ActionIcon, Button, Container, Flex, TextInput } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
 import { useNavigator } from '@hooks/use-navigator';
+import { ActionIcon, Box, Button, Flex, TextInput } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
+import { ShowList } from 'src/components/show';
+import { useShows } from 'src/hooks/use-shows';
 
 export default function MainPage() {
-  const { shows, isShowLoading } = useShow();
+  const { shows, isShowLoading } = useShows();
   const navigator = useNavigator();
 
   return (
-    <Container>
-      <Flex my={32} gap="xl">
+    <Box pb={300}>
+      <Flex mb={32} gap="xl">
         <TextInput
           style={{ flexGrow: 1 }}
           rightSection={
@@ -30,6 +30,6 @@ export default function MainPage() {
         </Button>
       </Flex>
       <ShowList shows={shows} isShowLoading={isShowLoading} />
-    </Container>
+    </Box>
   );
 }

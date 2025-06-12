@@ -1,7 +1,7 @@
-import { SimpleGrid } from '@mantine/core';
+import { Box, SimpleGrid, Title } from '@mantine/core';
 import { ShowDto } from '@repo/dto';
 import { ShowListItemLoading, ShowListItem } from './show-list-item';
-
+import classes from './show-list.module.css';
 export interface ShowListProps {
   shows: ShowDto[];
   isShowLoading: boolean;
@@ -9,18 +9,18 @@ export interface ShowListProps {
 
 export function ShowList({ shows, isShowLoading }: ShowListProps) {
   return (
-    <SimpleGrid
-      cols={{
-        md: 3,
-        sm: 1,
-      }}
-    >
-      {isShowLoading ? (
-        <ShowListLoading />
-      ) : (
-        shows.map((show) => <ShowListItem key={show.id} show={show} />)
-      )}
-    </SimpleGrid>
+    <Box className={classes.showList}>
+      {isShowLoading && <ShowListLoading />}
+
+      {!isShowLoading &&
+        shows.map((show) => (
+          <ShowListItem
+            key={show.id}
+            show={show}
+            isLast={shows.indexOf(show) === shows.length - 1}
+          />
+        ))}
+    </Box>
   );
 }
 
@@ -28,11 +28,11 @@ export function ShowListLoading() {
   return (
     <>
       <ShowListItemLoading />
+      <ShowListItemLoading tagCount={5} />
       <ShowListItemLoading />
+      <ShowListItemLoading tagCount={2} />
       <ShowListItemLoading />
-      <ShowListItemLoading />
-      <ShowListItemLoading />
-      <ShowListItemLoading />
+      <ShowListItemLoading tagCount={4} />
     </>
   );
 }

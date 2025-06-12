@@ -4,8 +4,11 @@ export const PageLinkMap = {
     signup: () => '/signup',
   },
   protected: {
-    shows: () => '/shows',
-    createShow: () => '/shows/create',
+    shows: {
+      list: () => '/shows',
+      detail: (id: string) => `/shows/${id}`,
+      create: () => '/shows/create',
+    },
     artists: () => '/artists',
     account: () => '/account',
   },

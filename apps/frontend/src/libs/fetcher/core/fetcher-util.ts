@@ -1,7 +1,7 @@
 import { ApiExceptionPayload, ExceptionCode, FieldError } from '@repo/exceptions';
 import { FetchApiOptions } from './fetcher-interface';
-import { ApiError } from './fetcher';
 import { UseFormReturn } from 'react-hook-form';
+import { ApiError } from './fetcher';
 
 export function resolveFetchOption(options: FetchApiOptions | undefined): RequestInit {
   const { body, headers, method, accessToken, refreshToken, ...rest } = options || {};
@@ -19,9 +19,9 @@ export function resolveFetchOption(options: FetchApiOptions | undefined): Reques
     Reflect.set(processedHeaders, 'Authorization', `bearer ${accessToken}`);
   }
 
-  if (refreshToken) {
-    Reflect.set(processedHeaders, 'Authorization', `bearer ${refreshToken}`);
-  }
+  //   if (refreshToken) {
+  //     Reflect.set(processedHeaders, 'Authorization', `bearer ${refreshToken}`);
+  //   }
 
   return {
     ...rest,

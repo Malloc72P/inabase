@@ -31,7 +31,7 @@ export function UserMenuDropdown({ profile }: UserMenuDropdownProps) {
         // DropDown Trigger
         //-------------------------------------------------------------------------*/}
         <Menu.Target>
-          <UnstyledButton className={cn(classes.user, classes.userActive)}>
+          <UnstyledButton className={classes.user}>
             <Group gap={7}>
               {/* <Avatar src={user.image} alt={user.name} radius="xl" size={20} /> */}
               <Text fw={500} size="sm" lh={1} mr={3}>

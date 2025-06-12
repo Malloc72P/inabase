@@ -1,6 +1,6 @@
+import { ExceptionCode, FieldError } from '@repo/exceptions';
 import { FetchApiOptions } from './fetcher-interface';
 import { resolveFetchOption, responseToJson, toApiError } from './fetcher-util';
-import { ApiExceptionPayload, ExceptionCode, FieldError } from '@repo/exceptions';
 import { refreshToken } from './refresh-token';
 
 /**

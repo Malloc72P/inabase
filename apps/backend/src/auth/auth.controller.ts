@@ -96,8 +96,6 @@ export class AuthController extends BaseController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async profile(@Requester() requester: IRequester): Promise<ProfileResult> {
-    this.logger.log('profile invoked');
-
     const { user } = await this.userService.findByIdOrThrow({ id: requester.id });
 
     return transformTo(ProfileResultSchema, user);

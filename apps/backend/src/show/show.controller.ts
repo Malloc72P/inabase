@@ -9,12 +9,14 @@ import {
   UpdateShowInputSchema,
   UpdateShowOutput,
   UpdateShowInput,
+  FindShowOutput,
 } from '@repo/dto';
 import { BaseController } from '@src/base/base.controller';
 import { transformTo } from '@src/util/transformer.util';
 import { ShowService } from './show.service';
 import { JwtAuthGuard } from '@src/auth/auth.guard';
 import { ZodInput } from '@src/util/zod-validation.pipe';
+import { Requester, IRequester } from '@src/util/user-decorator';
 
 @Controller('api/v1/shows')
 export class ShowController extends BaseController {
@@ -29,6 +31,23 @@ export class ShowController extends BaseController {
 
     return {
       shows: shows.map((show) => transformTo(ShowDtoSchema, show)),
+    };
+  }
+
+  @Get(':showId')
+  @UseGuards(JwtAuthGuard)
+  async showById(
+    @Param('showId') showId: string,
+    @Requester() requester: IRequester
+  ): Promise<FindShowOutput> {
+    this.logger.log('showById', { showId, requester });
+
+    const { show } = await this.showService.findOne({ id: showId });
+
+    this.logger.log('showById', show);
+
+    return {
+      show: transformTo(ShowDtoSchema, show),
     };
   }
 

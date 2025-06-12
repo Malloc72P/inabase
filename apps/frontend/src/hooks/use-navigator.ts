@@ -3,24 +3,24 @@ import { useRouter } from 'next-nprogress-bar';
 
 export const useNavigator = () => {
   const router = useRouter();
-  const createNavigateFn = (href: string) => {
-    return () => router.push(href);
-  };
 
   return {
     moveTo: {
       auth: {
-        login: createNavigateFn(PageLinkMap.auth.login()),
-        signup: createNavigateFn(PageLinkMap.auth.signup()),
+        login: () => router.push(PageLinkMap.auth.login()),
+        signup: () => router.push(PageLinkMap.auth.signup()),
       },
       public: {
-        landing: createNavigateFn(PageLinkMap.public.landing()),
+        landing: () => router.push(PageLinkMap.public.landing()),
       },
       protected: {
-        shows: createNavigateFn(PageLinkMap.protected.shows()),
-        createShow: createNavigateFn(PageLinkMap.protected.createShow()),
-        artists: createNavigateFn(PageLinkMap.protected.artists()),
-        account: createNavigateFn(PageLinkMap.protected.account()),
+        shows: {
+          list: () => router.push(PageLinkMap.protected.shows.list()),
+          detail: (id: string) => router.push(PageLinkMap.protected.shows.detail(id)),
+        },
+        createShow: () => router.push(PageLinkMap.protected.shows.create()),
+        artists: () => router.push(PageLinkMap.protected.artists()),
+        account: () => router.push(PageLinkMap.protected.account()),
       },
       external: {
         inabaseGithub: () => window.open('https://github.com/Malloc72P/inabase', '_blank'),

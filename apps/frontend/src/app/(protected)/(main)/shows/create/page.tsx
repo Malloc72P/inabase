@@ -3,16 +3,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError } from '@hooks/use-notification';
-import { useShow } from '@hooks/use-shows';
-import { handleApiError } from '@libs/fetcher/fetcher-util';
-import { Box, Button, Container, Flex, TagsInput, TextInput, Title } from '@mantine/core';
+import { useShows } from '@hooks/use-shows';
+import { handleApiError } from '@libs/fetcher';
+import { Box, Button, Flex, TagsInput, TextInput, Title } from '@mantine/core';
 import { CreateShowInput, CreateShowInputSchema } from '@repo/dto';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function CreateShowPage() {
   const navigator = useNavigator();
-  const { createShow } = useShow();
+  const { createShow } = useShows();
   const [loading, setLoading] = useState(false);
   const form = useForm<CreateShowInput>({
     resolver: zodResolver(CreateShowInputSchema),
@@ -26,7 +26,7 @@ export default function CreateShowPage() {
       setLoading(true);
       await createShow(data);
       form.reset();
-      navigator.moveTo.protected.shows();
+      navigator.moveTo.protected.shows.list();
     } catch (error) {
       const { errorMessage } = handleApiError(error, form);
       notifyError({ message: errorMessage });
@@ -36,8 +36,8 @@ export default function CreateShowPage() {
   };
 
   return (
-    <Container>
-      <Box my={32}>
+    <>
+      <Box mb={32}>
         <Title size={24}>Create New Show</Title>
       </Box>
 
@@ -72,7 +72,7 @@ export default function CreateShowPage() {
           <Button
             variant="default"
             onClick={() => {
-              navigator.moveTo.protected.shows();
+              navigator.moveTo.protected.shows.list();
             }}
           >
             Cancel
@@ -82,6 +82,6 @@ export default function CreateShowPage() {
           </Button>
         </Flex>
       </form>
-    </Container>
+    </>
   );
 }

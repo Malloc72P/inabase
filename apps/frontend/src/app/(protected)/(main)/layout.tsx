@@ -2,8 +2,10 @@
 
 import { PROTECTED_HEADER_HEIGHT, ProtectedHeader } from 'src/components/main-header';
 import { useMainNavbarModel } from 'src/components/main-navbar';
-import { AppShell, Box } from '@mantine/core';
+import { AppShell, Box, Container } from '@mantine/core';
 import { PropsWithChildren } from 'react';
+
+import classes from './layout.module.css';
 
 export default function MainLayout({ children }: PropsWithChildren) {
   const navbarModel = useMainNavbarModel();
@@ -14,8 +16,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <ProtectedHeader navbarModel={navbarModel} />
       </AppShell.Header>
 
-      <AppShell.Main>
-        <Box>{children}</Box>
+      <AppShell.Main className={classes.layout}>
+        <Container pt={32}>{children}</Container>
       </AppShell.Main>
     </AppShell>
   );

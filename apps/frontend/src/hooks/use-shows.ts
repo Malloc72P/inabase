@@ -1,27 +1,16 @@
 'use client';
 
-import { ApiError, fetcher } from 'src/libs/fetcher';
+import { createShowApi, deleteShowApi, findShowsApi, UpdateShowApi } from '@libs/fetcher/shows';
+
+import { CreateShowInput, UpdateShowInput } from '@repo/dto';
 import { ApiLinkMap } from 'src/libs/link-map/api-link-map';
-import {
-  CreateShowInput,
-  CreateShowOutput,
-  DeleteShowInput,
-  DeleteShowOutput,
-  FindShowsOutput,
-  UpdateShowInput,
-  UpdateShowOutput,
-} from '@repo/dto';
 import useSWR from 'swr';
-import { toApiError } from '@libs/fetcher/fetcher-util';
 
-export function useShow() {
-  const swrObj = useSWR<FindShowsOutput>(ApiLinkMap.shows.list(), fetcher);
+export function useShows() {
+  const swrObj = useSWR(ApiLinkMap.shows.list(), findShowsApi);
 
-  const createShow = async (param: CreateShowInput) => {
-    const response = await fetcher<CreateShowInput, CreateShowOutput>(ApiLinkMap.shows.create(), {
-      method: 'POST',
-      body: JSON.stringify(param),
-    });
+  const createShow = async (input: CreateShowInput) => {
+    const response = await createShowApi(input);
 
     swrObj.mutate(
       (data) => ({
@@ -34,9 +23,7 @@ export function useShow() {
   };
 
   const deleteShow = async (showId: string) => {
-    await fetcher<DeleteShowInput, DeleteShowOutput>(ApiLinkMap.shows.delete(showId), {
-      method: 'DELETE',
-    });
+    await deleteShowApi(showId);
 
     swrObj.mutate(
       (data) => ({
@@ -48,14 +35,8 @@ export function useShow() {
     return true;
   };
 
-  const updateShow = async (showId: string, param: UpdateShowInput) => {
-    const { show } = await fetcher<UpdateShowInput, UpdateShowOutput>(
-      ApiLinkMap.shows.update(showId),
-      {
-        method: 'PATCH',
-        body: JSON.stringify(param),
-      }
-    );
+  const updateShow = async (showId: string, input: UpdateShowInput) => {
+    const { show } = await UpdateShowApi(showId, input);
 
     swrObj.mutate(
       (data) => ({

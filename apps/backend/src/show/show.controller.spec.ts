@@ -1,108 +1,120 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule, Test } from '@nestjs/testing';
 import { ShowController } from './show.controller';
 import { ShowService } from './show.service';
-import { ShowDto, CreateShowInput, UpdateShowInput } from '@repo/dto';
 import { Show } from './show.entity';
+import { ShowDto } from '@repo/dto';
 
 describe('ShowController', () => {
   let controller: ShowController;
-  let showService: jest.Mocked<ShowService>;
-
-  const mockShow: Show = new Show();
-  mockShow.id = '1';
-  mockShow.title = 'Test Show';
-  mockShow.tags = ['test'];
-  mockShow.deleted = false;
-  const mockShowDto: ShowDto = {
-    id: '1',
-    title: 'Test Show',
-    tags: ['test'],
-  };
+  let service: ShowService;
 
   beforeEach(async () => {
-    const mockShowService = {
-      findAll: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
-      remove: jest.fn(),
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ShowController],
       providers: [
         {
           provide: ShowService,
-          useValue: mockShowService,
+          useValue: {
+            findAll: jest.fn(),
+            create: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
+            findOne: jest.fn(),
+          },
         },
       ],
     }).compile();
 
     controller = module.get<ShowController>(ShowController);
-    showService = module.get(ShowService);
+    service = module.get<ShowService>(ShowService);
   });
 
-  describe('shows', () => {
-    it('should return an array of shows', async () => {
-      showService.findAll.mockResolvedValue({ shows: [mockShow] });
+  describe('GET /shows', () => {
+    it('모든 쇼 목록을 성공적으로 조회해야 한다', async () => {
+      // given
+      const showDtos: ShowDto[] = [
+        { id: '1', title: 'Test Show 1', tags: [] },
+        { id: '2', title: 'Test Show 2', tags: [] },
+        { id: '3', title: 'Test Show 3', tags: [] },
+      ];
+      const shows = showDtos.map(({ id, title }) => createShow(id, title));
+      jest.spyOn(service, 'findAll').mockResolvedValue({ shows });
 
-      const result = await controller.shows();
+      //  when
+      const response = await controller.shows();
 
-      expect(result.shows).toHaveLength(1);
-      expect(result.shows[0]).toEqual(mockShowDto);
-      expect(showService.findAll).toHaveBeenCalled();
+      // then
+      expect(response).toStrictEqual({ shows: showDtos });
     });
   });
 
-  describe('create', () => {
-    it('should create a show', async () => {
-      const createShowInput: CreateShowInput = {
-        title: 'Test Show',
-        tags: ['test'],
-      };
+  describe('POST /shows', () => {
+    it('새로운 쇼를 성공적으로 생성해야 한다', async () => {
+      // given
+      const dto: ShowDto = { id: '1', title: 'Test Show 1', tags: [] };
+      const show: Show = createShow(dto.id, dto.title);
+      jest.spyOn(service, 'create').mockResolvedValue({ show });
 
-      showService.create.mockResolvedValue({ show: mockShow });
+      // when
+      const response = await controller.create({ title: dto.title, tags: dto.tags });
 
-      const result = await controller.create(createShowInput);
-
-      expect(result.show).toEqual(mockShowDto);
-      expect(showService.create).toHaveBeenCalledWith(createShowInput);
+      // then
+      expect(response).toStrictEqual({ show: dto });
     });
   });
 
-  describe('update', () => {
-    it('should update a show', async () => {
-      const updateShowInput: UpdateShowInput = {
-        title: 'Updated Show',
-        tags: ['updated'],
-      };
-      const updatedShow: Show = new Show();
-      updatedShow.id = '1';
-      updatedShow.title = 'Updated Show';
-      updatedShow.tags = ['updated'];
-      updatedShow.deleted = false;
-      const updatedShowDto: ShowDto = {
-        id: '1',
-        title: 'Updated Show',
-        tags: ['updated'],
-      };
+  describe('GET /shows/:showId', () => {
+    it('특정 쇼를 ID로 조회해야 한다', async () => {
+      // given
+      const dto: ShowDto = { id: '1', title: 'Test Show 1', tags: [] };
+      const show: Show = createShow(dto.id, dto.title);
+      jest.spyOn(service, 'findOne').mockResolvedValue({ show });
 
-      showService.update.mockResolvedValue({ show: updatedShow });
+      // when
+      const response = await controller.showById(dto.id);
 
-      const result = await controller.update('1', updateShowInput);
-
-      expect(result.show).toEqual(updatedShowDto);
-      expect(showService.update).toHaveBeenCalledWith({ id: '1', ...updateShowInput });
+      // then
+      expect(response).toStrictEqual({ show: dto });
     });
   });
 
-  describe('delete', () => {
-    it('should delete a show', async () => {
-      showService.remove.mockResolvedValue(undefined);
+  describe('PATCH /shows/:id', () => {
+    it('쇼 정보를 성공적으로 수정해야 한다', async () => {
+      // given
+      const dto: ShowDto = { id: '1', title: 'Updated Show', tags: ['tag1'] };
+      const show: Show = createShow(dto.id, dto.title, dto.tags);
+      jest.spyOn(service, 'update').mockResolvedValue({ show });
 
-      const result = await controller.delete('1');
+      // when
+      const response = await controller.update(dto.id, { title: dto.title, tags: dto.tags });
 
-      expect(result).toEqual({});
-      expect(showService.remove).toHaveBeenCalledWith({ id: '1' });
+      // then
+      expect(response).toStrictEqual({ show: dto });
+    });
+  });
+
+  describe('DELETE /shows/:id', () => {
+    it('쇼를 성공적으로 삭제해야 한다', async () => {
+      // given
+      const showId = '1';
+      jest.spyOn(service, 'remove').mockResolvedValue(undefined);
+
+      // when
+      const response = await controller.delete(showId);
+
+      // then
+      expect(response).toStrictEqual({ success: true });
+      expect(service.remove).toHaveBeenCalledWith({ id: showId });
     });
   });
 });
+
+function createShow(id: string, title: string, tags: string[] = []): Show {
+  const show = new Show();
+
+  show.id = id;
+  show.title = title;
+  show.tags = tags;
+
+  return show;
+}

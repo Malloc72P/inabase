@@ -6,7 +6,7 @@
 // All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AccessTokenExpiredException } from '@src/exceptions/access-token-expired.exception';
 
@@ -24,6 +24,8 @@ export class RefreshAuthGuard extends AuthGuard('refresh-jwt') {}
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
+  private readonly logger = new Logger(JwtAuthGuard.name);
+
   handleRequest<TUser = any>(
     err: any,
     user: any,
@@ -31,6 +33,20 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     context: ExecutionContext,
     status?: any
   ) {
+    const request = context.switchToHttp().getRequest();
+
+    this.logger.debug({
+      err,
+      user,
+      info,
+      status,
+      headers: {
+        authorization: request.headers.authorization,
+        cookie: request.headers.cookie,
+      },
+      requestPath: context.switchToHttp().getRequest().path,
+    });
+
     if (err || !user) {
       throw new AccessTokenExpiredException();
     }

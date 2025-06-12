@@ -7,8 +7,9 @@ export const ApiLinkMap = {
   shows: {
     list: () => Env.beApiUrl + '/shows',
     create: () => Env.beApiUrl + '/shows',
-    delete: (showId: string) => Env.beApiUrl + `/shows/${showId}`,
+    detail: (showId: string) => Env.beApiUrl + `/shows/${showId}`,
     update: (showId: string) => Env.beApiUrl + `/shows/${showId}`,
+    delete: (showId: string) => Env.beApiUrl + `/shows/${showId}`,
   },
   auth: {
     signin: () => Env.beApiUrl + '/auth/signin',
