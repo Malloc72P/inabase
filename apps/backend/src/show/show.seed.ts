@@ -17,6 +17,7 @@ export default class ShowSeeder implements Seeder {
       show.deleted = false;
       show.tags = data.tags;
       show.title = data.title;
+      show.description = data.description;
 
       await showRepository.save(show);
     }
@@ -25,6 +26,7 @@ export default class ShowSeeder implements Seeder {
 
 type Item = {
   title: string;
+  description: string;
   tags: string[];
 };
 
@@ -64,7 +66,9 @@ export function generateDummyData(count: number): Item[] {
     const tagCount = faker.number.int({ min: 1, max: 3 });
     const tags = faker.helpers.arrayElements(GENRES, tagCount);
 
-    items.push({ title, tags });
+    const description = faker.lorem.paragraph({ min: 10, max: 20 });
+
+    items.push({ title, tags, description });
   }
 
   return items;
