@@ -15,18 +15,19 @@ import {
 } from './user.service.dto';
 import { EmailAlreadyInUse } from '@src/exceptions/already-exist-user.exception';
 import { HasherService } from '@src/hasher/hasher.service';
+import { PrismaService } from '@src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    private prisma: PrismaService,
     private hasherService: HasherService
   ) {}
 
   async findByEmailOrThrow({
     email,
   }: UserServiceFindByEmailOrThrowInput): Promise<UserServiceFindByEmailOrThrowOutput> {
-    const user = await this.userRepository.findOne({
+    const user = await this.prisma.user.findOne({
       where: {
         email,
       },

@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggingExceptionFilter } from './config/global-exception.filter';
 import { ValidationExceptionFilter } from './config/validation.filter';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ValidationExceptionFilter } from './config/validation.filter';
       provide: APP_FILTER,
       useClass: LoggingExceptionFilter,
     },
+    PrismaService,
   ],
 })
 export class AppModule {}

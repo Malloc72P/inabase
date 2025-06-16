@@ -17,8 +17,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "typeorm-extension seed:run -d src/seed/index.ts",
-    "migrate:gen": "typeorm-extension migration:generate -d src/migration -n",
-    "migrate:run": "typeorm-extension migration:run -d src/migration"
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@faker-js/faker": "^9.8.0",
@@ -28,6 +27,7 @@
     "@nestjs/passport": "^11.0.4",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
+    "@prisma/client": "^6.9.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/ms": "^2.1.0",
     "argon2": "^0.41.1",
@@ -58,6 +58,7 @@
     "@types/supertest": "^6.0.0",
     "jest": "^29.5.0",
     "pg": "^8.13.1",
+    "prisma": "^6.9.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.0",
