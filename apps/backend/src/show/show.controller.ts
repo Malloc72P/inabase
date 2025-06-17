@@ -10,6 +10,7 @@ import {
   UpdateShowOutput,
   UpdateShowInput,
   FindShowOutput,
+  ShowDetailDtoSchema,
 } from '@repo/dto';
 import { BaseController } from '@src/base/base.controller';
 import { transformTo } from '@src/util/transformer.util';
@@ -40,14 +41,10 @@ export class ShowController extends BaseController {
     @Param('showId') showId: string,
     @Requester() requester: IRequester
   ): Promise<FindShowOutput> {
-    this.logger.log('showById', { showId, requester });
-
     const { show } = await this.showService.findOne({ id: showId });
 
-    this.logger.log('showById', show);
-
     return {
-      show: transformTo(ShowDtoSchema, show),
+      show: transformTo(ShowDetailDtoSchema, show),
     };
   }
 
@@ -69,7 +66,7 @@ export class ShowController extends BaseController {
     const { show } = await this.showService.update({ id, ...param });
 
     return {
-      show: transformTo(ShowDtoSchema, show),
+      show: transformTo(ShowDetailDtoSchema, show),
     };
   }
 

@@ -2,10 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigator } from '@hooks/use-navigator';
-import { notifyError } from '@hooks/use-notification';
+import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useShows } from '@hooks/use-shows';
 import { handleApiError } from '@libs/fetcher';
-import { Box, Button, Flex, TagsInput, TextInput, Title } from '@mantine/core';
+import { Box, Button, Flex, TagsInput, Textarea, TextInput, Title } from '@mantine/core';
 import { CreateShowInput, CreateShowInputSchema } from '@repo/dto';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,15 +17,19 @@ export default function CreateShowPage() {
   const form = useForm<CreateShowInput>({
     resolver: zodResolver(CreateShowInputSchema),
     disabled: loading,
+    defaultValues: {
+      title: '',
+      tags: [],
+      description: '',
+    },
   });
-
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const onSubmit = async (data: CreateShowInput) => {
     try {
       setLoading(true);
       await createShow(data);
       form.reset();
+      notifySuccess({ message: 'Show created successfully!' });
       navigator.moveTo.protected.shows.list();
     } catch (error) {
       const { errorMessage } = handleApiError(error, form);
@@ -65,6 +69,16 @@ export default function CreateShowPage() {
             value={form.watch('tags') || []}
             onChange={(value) => form.setValue('tags', value)}
             error={form.formState.errors.tags?.message}
+          />
+        </Box>
+
+        <Box mb={16}>
+          <Textarea
+            id="tags"
+            label="Add description"
+            placeholder="Enter description"
+            {...form.register('description', { onChange: undefined })}
+            error={form.formState.errors.description?.message}
           />
         </Box>
 

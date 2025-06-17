@@ -4,3 +4,4 @@ export * from './create-show.dto';
 export * from './delete-show.dto';
 export * from './update-show.dto';
 export * from './show.dto';
+export * from './show-detail.dto';

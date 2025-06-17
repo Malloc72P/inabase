@@ -1,4 +1,5 @@
 import { ProfileProvider } from '@components/auth-session-provider';
+import { waitForTimeout } from '@libs/utils/wait-for-timeout';
 import { CommonConstants, ProfileResult } from '@repo/dto';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -17,12 +18,19 @@ export default async function MainLayout({ children }: PropsWithChildren) {
 
   let profile: ProfileResult | null = null;
 
-  try {
-    profile = await fetcher<unknown, ProfileResult>(ApiLinkMap.auth.profile.get(), {
-      accessToken,
-      refreshToken,
-    });
-  } catch (error) {}
+  for (let index = 0; index < 5; index++) {
+    try {
+      profile = await fetcher<unknown, ProfileResult>(ApiLinkMap.auth.profile.get(), {
+        accessToken,
+        refreshToken,
+      });
+
+      break;
+    } catch (error) {
+      await waitForTimeout(200);
+      continue;
+    }
+  }
 
   if (!profile) {
     redirect(PageLinkMap.auth.login());

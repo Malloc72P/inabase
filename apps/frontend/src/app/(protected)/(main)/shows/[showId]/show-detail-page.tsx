@@ -1,19 +1,41 @@
 'use client';
 
 import { InaText } from '@components/custom-components';
+import { useNavigator } from '@hooks/use-navigator';
+import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useShow } from '@hooks/use-show';
-import { Badge, Box, Divider, Flex, Skeleton, Title } from '@mantine/core';
+import { ApiError } from '@libs/fetcher';
+import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';
+import { Badge, Box, Button, Divider, Flex, Skeleton, Space, Title } from '@mantine/core';
 
 export interface ShowDetailPageProps {
   showId: string;
 }
 
 export function ShowDetailPage({ showId }: ShowDetailPageProps) {
-  const { show, isShowLoading } = useShow(showId);
+  const { show, isShowLoading, deleteShow } = useShow(showId);
+  const navigator = useNavigator();
+  const { setGlobalLoading } = useGlobalLoadingStore();
+
+  const onDeleteBtnClicked = async () => {
+    try {
+      setGlobalLoading(true);
+      await deleteShow();
+
+      notifySuccess({ message: `${show?.title} 이(가) 삭제되었습니다.` });
+      navigator.moveTo.protected.shows.list();
+    } catch (error) {
+      const apiError = error as ApiError;
+      console.error('Failed to delete show:', error);
+      notifyError({ message: apiError.message });
+    } finally {
+      setGlobalLoading(false);
+    }
+  };
 
   return (
     <div>
-      <Box mb={32}>
+      <Flex align={'center'} mb={16}>
         <InaText
           bold
           fontSize={24}
@@ -23,21 +45,35 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
         >
           {show?.title}
         </InaText>
-      </Box>
+
+        <Space style={{ flexGrow: 1 }} />
+
+        <Flex gap={'lg'}>
+          <Button variant="default" onClick={onDeleteBtnClicked}>
+            Delete
+          </Button>
+          <Button variant="default" onClick={() => navigator.moveTo.protected.shows.edit(showId)}>
+            Edit
+          </Button>
+          <Button onClick={() => navigator.moveTo.protected.shows.create()}>New show</Button>
+        </Flex>
+      </Flex>
 
       <Flex gap={'md'} mb={32}>
         {isShowLoading ? (
           <TagSkeletons />
         ) : (
           show?.tags.map((tag) => (
-            <Badge variant="light" size="xl" key={tag}>
+            <Badge variant="light" size="lg" key={tag}>
               {tag}
             </Badge>
           ))
         )}
       </Flex>
 
-      <Divider />
+      <Divider my={32} />
+
+      <InaText>{show?.description}</InaText>
     </div>
   );
 }

@@ -8,6 +8,7 @@ export const PageLinkMap = {
       list: () => '/shows',
       detail: (id: string) => `/shows/${id}`,
       create: () => '/shows/create',
+      edit: (id: string) => `/shows/${id}/edit`,
     },
     artists: () => '/artists',
     account: () => '/account',

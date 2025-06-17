@@ -2,7 +2,7 @@ import { ApiLinkMap } from '@libs/link-map';
 import { fetcher } from '../core/fetcher';
 import { UpdateShowInput, UpdateShowOutput } from '@repo/dto';
 
-export async function UpdateShowApi(
+export async function updateShowApi(
   showId: string,
   body: UpdateShowInput
 ): Promise<UpdateShowOutput> {

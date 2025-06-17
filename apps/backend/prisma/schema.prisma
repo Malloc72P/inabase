@@ -52,7 +52,7 @@ model Show {
 
     // Property ================================================
     title       String
-    description String?
+    description String
     tags        String[]
 
     // Relation ================================================

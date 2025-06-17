@@ -1,4 +1,10 @@
 {
-  "watch": ["src", "./node_modules/@repo/dto/dist", "../../packages/dto/dist", "prisma"],
+  "watch": [
+    "src",
+    "./node_modules/@repo/dto/dist",
+    "../../packages/dto/dist",
+    "prisma",
+    "prisma/schema.prisma"
+  ],
   "exec": "pnpm generate && pnpm nest start --debug --watch"
 }

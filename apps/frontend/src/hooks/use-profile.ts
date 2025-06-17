@@ -1,7 +1,6 @@
+import { UpdateProfileInput, UpdateProfileOutput } from '@repo/dto';
 import { fetcher } from 'src/libs/fetcher';
 import { ApiLinkMap } from 'src/libs/link-map';
-import { ProfileResult, UpdateProfileInput, UpdateProfileOutput } from '@repo/dto';
-import useSWR from 'swr';
 
 export function useProfile() {
   const updateProfile = async ({ id, name }: { id: string } & UpdateProfileInput) => {

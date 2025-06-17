@@ -1,32 +1,41 @@
 'use client';
 
-import { UpdateShowApi } from '@libs/fetcher/shows';
+import { deleteShowApi, updateShowApi } from '@libs/fetcher/shows';
 import { findShowApi } from '@libs/fetcher/shows/find-show.api';
 import { UpdateShowInput } from '@repo/dto';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { ApiLinkMap } from 'src/libs/link-map/api-link-map';
-import useSWR from 'swr';
+import { useQueryKey } from './use-query-key';
 
 export function useShow(showId: string) {
-  const swrObj = useSWR(ApiLinkMap.shows.detail(showId), () => findShowApi(showId));
+  const queryKey = useQueryKey();
 
-  const updateShow = async (showId: string, input: UpdateShowInput) => {
-    const { show } = await UpdateShowApi(showId, input);
+  const { data, isLoading } = useQuery({
+    queryKey: [queryKey.show.detail(showId)],
+    queryFn: () => findShowApi(showId),
+    initialData: null,
+  });
 
-    swrObj.mutate(
-      (data) => ({
-        show: data ? { ...data.show, ...show } : show,
-      }),
-      false
-    );
+  const { mutateAsync: updateShow } = useMutation({
+    mutationFn: async (input: UpdateShowInput) => {
+      const { show } = await updateShowApi(showId, input);
 
-    return true;
-  };
+      return show;
+    },
+    onSuccess: () => {},
+  });
+
+  const { mutateAsync: deleteShow } = useMutation({
+    mutationFn: async () => {
+      await deleteShowApi(showId);
+    },
+    onSuccess: () => {},
+  });
 
   return {
-    show: swrObj.data ? swrObj.data.show : null,
-    isShowLoading: swrObj.isLoading,
-    showSwr: swrObj,
+    show: data?.show,
+    isShowLoading: isLoading,
     updateShow,
+    deleteShow,
   };
 }

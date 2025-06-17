@@ -5,12 +5,13 @@ import { ApiError } from '@libs/fetcher';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/global-loading-store';
 import { Badge, Box, Flex, Group, Skeleton, Text } from '@mantine/core';
 import { ShowDto } from '@repo/dto';
-import { IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 import { cn } from 'src/libs/ui';
 import classes from './show-list-item.module.css';
 import Link from 'next/link';
 import { PageLinkMap } from '@libs/link-map';
+import { useNavigator } from '@hooks/use-navigator';
 
 export interface ShowListItemProps {
   show: ShowDto;
@@ -36,6 +37,7 @@ export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
   const [hover, setHover] = useState<boolean>(false);
   const { deleteShow } = useShows();
   const { setGlobalLoading } = useGlobalLoadingStore();
+  const navigator = useNavigator();
 
   const onDeleteBtnClicked = async () => {
     try {
@@ -67,13 +69,15 @@ export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
             <Text fw="bold">{show.title}</Text>
           </Link>
           <span style={{ flexGrow: 1 }}></span>
-          <Group>
+          <Group style={{ opacity: hover ? 1 : 0, transition: 'opacity 0.2s' }}>
             <IconButton
-              icon={IconTrash}
-              onClick={onDeleteBtnClicked}
-              style={{ opacity: hover ? 1 : 0, transition: 'opacity 0.2s' }}
+              icon={IconEdit}
+              onClick={() => {
+                navigator.moveTo.protected.shows.edit(show.id);
+              }}
               variant="transparent"
             />
+            <IconButton icon={IconTrash} onClick={onDeleteBtnClicked} variant="transparent" />
           </Group>
         </Flex>
 

@@ -15,6 +15,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SessionProps } from '@libs/stores/session-store';
 import { getServerSession } from './get-server-session';
+import { ReactQueryProvider } from '@libs/query-client';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -50,7 +51,9 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <GlobalLoadingContainer>
-            <SessionProvider {...session}>{children}</SessionProvider>
+            <ReactQueryProvider>
+              <SessionProvider {...session}>{children}</SessionProvider>
+            </ReactQueryProvider>
           </GlobalLoadingContainer>
           <Notifications />
           <PageProgressBar />

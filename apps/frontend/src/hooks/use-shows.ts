@@ -1,57 +1,65 @@
 'use client';
 
-import { createShowApi, deleteShowApi, findShowsApi, UpdateShowApi } from '@libs/fetcher/shows';
+import { createShowApi, deleteShowApi, findShowsApi, updateShowApi } from '@libs/fetcher/shows';
 
 import { CreateShowInput, UpdateShowInput } from '@repo/dto';
-import { ApiLinkMap } from 'src/libs/link-map/api-link-map';
-import useSWR from 'swr';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQueryKey } from './use-query-key';
+import { queryClient } from '@libs/query-client';
 
 export function useShows() {
-  const swrObj = useSWR(ApiLinkMap.shows.list(), findShowsApi);
+  const queryKey = useQueryKey();
 
-  const createShow = async (input: CreateShowInput) => {
-    const response = await createShowApi(input);
+  const { data, isLoading } = useQuery({
+    queryKey: queryKey.show.list(),
+    queryFn: () => findShowsApi(),
+    initialData: {
+      shows: [],
+    },
+  });
 
-    swrObj.mutate(
-      (data) => ({
-        shows: [...(data?.shows || []), response.show],
-      }),
-      false
-    );
+  const { mutateAsync: createShow } = useMutation({
+    mutationFn: async (input: CreateShowInput) => {
+      const response = await createShowApi(input);
 
-    return response;
-  };
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKey.show.list(),
+      });
+    },
+  });
 
-  const deleteShow = async (showId: string) => {
-    await deleteShowApi(showId);
+  const { mutateAsync: deleteShow } = useMutation({
+    mutationFn: async (showId: string) => {
+      await deleteShowApi(showId);
 
-    swrObj.mutate(
-      (data) => ({
-        shows: data?.shows.filter((show) => show.id !== showId) || [],
-      }),
-      false
-    );
+      return true;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKey.show.list(),
+      });
+    },
+  });
 
-    return true;
-  };
+  const { mutateAsync: updateShow } = useMutation({
+    mutationFn: async ({ showId, ...input }: UpdateShowInput & { showId: string }) => {
+      const { show } = await updateShowApi(showId, input);
 
-  const updateShow = async (showId: string, input: UpdateShowInput) => {
-    const { show } = await UpdateShowApi(showId, input);
-
-    swrObj.mutate(
-      (data) => ({
-        shows: data?.shows.map((s) => (s.id === showId ? show : s)) || [],
-      }),
-      false
-    );
-
-    return true;
-  };
+      return show;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKey.show.list(),
+      });
+    },
+  });
 
   return {
-    shows: swrObj.data ? swrObj.data.shows : [],
-    isShowLoading: swrObj.isLoading,
-    showSwr: swrObj,
+    shows: data.shows,
+    isShowLoading: isLoading,
     createShow,
     updateShow,
     deleteShow,

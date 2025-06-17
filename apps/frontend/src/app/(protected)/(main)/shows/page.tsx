@@ -23,7 +23,7 @@ export default function MainPage() {
         />
         <Button
           onClick={() => {
-            navigator.moveTo.protected.createShow();
+            navigator.moveTo.protected.shows.create();
           }}
         >
           New Show

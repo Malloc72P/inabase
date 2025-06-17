@@ -27,6 +27,7 @@ export interface ShowServiceFindOneOutput {
 
 export interface ShowServiceCreateInput {
   title: string;
+  description: string;
   tags: string[];
 }
 

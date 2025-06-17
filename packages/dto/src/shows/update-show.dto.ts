@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ShowDtoSchema } from './show.dto';
+import { ShowDetailDtoSchema } from './show-detail.dto';
 
 export const UpdateShowInputSchema = z
   .object({
@@ -17,6 +18,6 @@ export const UpdateShowInputSchema = z
 export type UpdateShowInput = z.infer<typeof UpdateShowInputSchema>;
 
 export const UpdateShowOutputSchema = z.object({
-  show: ShowDtoSchema,
+  show: ShowDetailDtoSchema,
 });
 export type UpdateShowOutput = z.infer<typeof UpdateShowOutputSchema>;

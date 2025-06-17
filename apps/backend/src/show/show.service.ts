@@ -24,6 +24,7 @@ export class ShowService extends BaseComponent {
     const shows = await this.prisma.show.findMany({
       where: { deleted: false },
       orderBy: { createdAt: 'desc' },
+      take: 20,
     });
 
     return {
@@ -43,9 +44,13 @@ export class ShowService extends BaseComponent {
     };
   }
 
-  async create({ title, tags }: ShowServiceCreateInput): Promise<ShowServiceCreateOutput> {
+  async create({
+    title,
+    description,
+    tags,
+  }: ShowServiceCreateInput): Promise<ShowServiceCreateOutput> {
     const show = await this.prisma.show.create({
-      data: { title, tags },
+      data: { title, description, tags },
     });
 
     return { show };

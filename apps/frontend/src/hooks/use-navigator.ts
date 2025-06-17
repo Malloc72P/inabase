@@ -1,5 +1,6 @@
 import { PageLinkMap } from 'src/libs/link-map';
 import { useRouter } from 'next-nprogress-bar';
+import { create } from 'domain';
 
 export const useNavigator = () => {
   const router = useRouter();
@@ -17,8 +18,9 @@ export const useNavigator = () => {
         shows: {
           list: () => router.push(PageLinkMap.protected.shows.list()),
           detail: (id: string) => router.push(PageLinkMap.protected.shows.detail(id)),
+          create: () => router.push(PageLinkMap.protected.shows.create()),
+          edit: (id: string) => router.push(PageLinkMap.protected.shows.edit(id)),
         },
-        createShow: () => router.push(PageLinkMap.protected.shows.create()),
         artists: () => router.push(PageLinkMap.protected.artists()),
         account: () => router.push(PageLinkMap.protected.account()),
       },

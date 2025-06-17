@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { ShowDtoSchema } from './show.dto';
+import { ShowDetailDtoSchema } from './show-detail.dto';
 
 export type FindShowInput = {};
 
 export const FindShowOutputSchema = z.object({
-  show: ShowDtoSchema,
+  show: ShowDetailDtoSchema,
 });
 export type FindShowOutput = z.infer<typeof FindShowOutputSchema>;

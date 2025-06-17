@@ -1,4 +1,4 @@
-import { ShowDetailPage } from './show-detail-page';
+import { ShowDetailPage } from '../show-detail-page';
 
 export interface PageProps {
   params: Promise<{
@@ -9,5 +9,10 @@ export interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { showId } = await params;
 
-  return <ShowDetailPage showId={showId} />;
+  return (
+    <>
+      EDIT PAGE
+      <ShowDetailPage showId={showId} />
+    </>
+  );
 }
