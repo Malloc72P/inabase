@@ -8,4 +8,16 @@
 
 ### 프로젝트 설정
 
-- example-env파일을 복제한 다음, 이름을 .env.local로 수정합니다.
+- example-env파일을 복제한 다음, 이름을 .env로 수정합니다.
+- 개발용 데이터베이스를 실행합니다
+    ```
+    docker compose up -d
+    ```
+- Prisma Schema와 개발용 데이터베이스를 동기화합니다.
+    ```
+    pnpm sync
+    ```
+- 개발용 데이터베이스에 초기 데이터를 채워 넣습니다.
+    ```
+    pnpm seed
+    ```

@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { BaseComponent } from '@src/base/base.component';
-import { Repository } from 'typeorm';
-import { Show } from './show.entity';
+import { EntityNotFound } from '@src/exceptions/common.exception';
+import { PrismaService } from '@src/prisma/prisma.service';
 import {
   ShowServiceCreateInput,
   ShowServiceCreateOutput,
@@ -14,18 +13,17 @@ import {
   ShowServiceUpdateInput,
   ShowServiceUpdateOutput,
 } from './show.service.dto';
-import { EntityNotFound } from '@src/exceptions/common.exception';
 
 @Injectable()
 export class ShowService extends BaseComponent {
-  constructor(@InjectRepository(Show) private showRepository: Repository<Show>) {
+  constructor(private prisma: PrismaService) {
     super();
   }
 
   async findAll(): Promise<ShowServiceFindAllOutput> {
-    const shows = await this.showRepository.find({
+    const shows = await this.prisma.show.findMany({
       where: { deleted: false },
-      order: { createdAt: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
 
     return {
@@ -34,7 +32,7 @@ export class ShowService extends BaseComponent {
   }
 
   async findOne({ id }: ShowServiceFindOneInput): Promise<ShowServiceFindOneOutput> {
-    const show = await this.showRepository.findOneBy({ id, deleted: false });
+    const show = await this.prisma.show.findUnique({ where: { id, deleted: false } });
 
     if (!show) {
       throw new NotFoundException('이미 삭제되었거나 존재하지 않는 쇼 입니다.');
@@ -46,7 +44,9 @@ export class ShowService extends BaseComponent {
   }
 
   async create({ title, tags }: ShowServiceCreateInput): Promise<ShowServiceCreateOutput> {
-    const show = await this.showRepository.save({ title, tags });
+    const show = await this.prisma.show.create({
+      data: { title, tags },
+    });
 
     return { show };
   }
@@ -58,9 +58,10 @@ export class ShowService extends BaseComponent {
       throw new EntityNotFound('쇼를 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 쇼입니다.');
     }
 
-    show.update({ title, tags });
-
-    this.showRepository.save(show);
+    this.prisma.show.update({
+      where: { id },
+      data: { title, tags },
+    });
 
     return { show };
   }
@@ -72,8 +73,9 @@ export class ShowService extends BaseComponent {
       throw new EntityNotFound('쇼를 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 쇼입니다.');
     }
 
-    show.delete();
-
-    await this.showRepository.save(show);
+    await this.prisma.show.update({
+      where: { id },
+      data: { deleted: true },
+    });
   }
 }

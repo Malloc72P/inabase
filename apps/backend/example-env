@@ -9,6 +9,7 @@ dbPort=30700
 username='dev'
 password='dev'
 database='inabase'
+databaseURL='postgres://dev:dev@localhost:30700/inabase'
 
 # TokenConfig
 authSecret="authSecret"

@@ -15,6 +15,7 @@ export interface DatabaseConfig {
   username: string;
   password: string;
   database: string;
+  databaseURL: string;
 }
 
 export interface TokenConfig {

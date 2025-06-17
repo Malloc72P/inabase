@@ -12,6 +12,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { LoggingExceptionFilter } from './config/global-exception.filter';
 import { ValidationExceptionFilter } from './config/validation.filter';
 import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PrismaService } from './prisma/prisma.service';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
+    PrismaModule,
     ShowModule,
     UserModule,
     AuthModule,

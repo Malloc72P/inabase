@@ -1,27 +1,14 @@
-import { DataSource } from 'typeorm';
-import { Seeder } from 'typeorm-extension';
-import { Show } from './show.entity';
 import { faker } from '@faker-js/faker';
+import { PrismaClient } from '@prisma/client';
 
-export default class ShowSeeder implements Seeder {
-  async run(dataSource: DataSource): Promise<any> {
-    const showRepository = dataSource.getRepository(Show);
-    await showRepository.clear();
+export async function seedShows(prisma: PrismaClient) {
+  await prisma.show.deleteMany();
 
-    const datas = generateDummyData(100);
+  const data = generateDummyData(100);
 
-    for (let i = 0; i < datas.length; i++) {
-      const data = datas[i];
-      const show = new Show();
-
-      show.deleted = false;
-      show.tags = data.tags;
-      show.title = data.title;
-      show.description = data.description;
-
-      await showRepository.save(show);
-    }
-  }
+  await prisma.show.createMany({
+    data,
+  });
 }
 
 type Item = {

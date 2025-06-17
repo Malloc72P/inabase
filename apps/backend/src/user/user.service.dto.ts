@@ -1,5 +1,5 @@
+import { User } from '@prisma/client';
 import { IRequester } from '@src/util/user-decorator';
-import { User } from './user.entity';
 
 //-------------------------------------------------------------------------
 // findByEmail

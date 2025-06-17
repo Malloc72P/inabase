@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { UserRole } from '@prisma/client';
+import { EmailAlreadyInUse } from '@src/exceptions/already-exist-user.exception';
+import { HasherService } from '@src/hasher/hasher.service';
+import { PrismaService } from '@src/prisma/prisma.service';
 import {
   UserServiceCreateInput,
   UserServiceCreateOutput,
@@ -13,9 +14,6 @@ import {
   UserServiceFindByIdOrThrowOutput,
   UserServiceUpdateProfileInput,
 } from './user.service.dto';
-import { EmailAlreadyInUse } from '@src/exceptions/already-exist-user.exception';
-import { HasherService } from '@src/hasher/hasher.service';
-import { PrismaService } from '@src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -27,7 +25,7 @@ export class UserService {
   async findByEmailOrThrow({
     email,
   }: UserServiceFindByEmailOrThrowInput): Promise<UserServiceFindByEmailOrThrowOutput> {
-    const user = await this.prisma.user.findOne({
+    const user = await this.prisma.user.findUnique({
       where: {
         email,
       },
@@ -41,7 +39,7 @@ export class UserService {
   }
 
   async findByEmail({ email }: UserServiceFindByEmailInput): Promise<UserServiceFindByEmailOutput> {
-    const user = await this.userRepository.findOne({
+    const user = await this.prisma.user.findUnique({
       where: {
         email,
       },
@@ -53,7 +51,7 @@ export class UserService {
   async findByIdOrThrow({
     id,
   }: UserServiceFindByIdOrThrowInput): Promise<UserServiceFindByIdOrThrowOutput> {
-    const user = await this.userRepository.findOne({
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
@@ -77,10 +75,13 @@ export class UserService {
       throw new EmailAlreadyInUse();
     }
 
-    const savedUser = await this.userRepository.save({
-      email: email,
-      name: name,
-      password: await this.hasherService.hashPassword(password),
+    const savedUser = await this.prisma.user.create({
+      data: {
+        email,
+        name,
+        role: UserRole.USER,
+        password: await this.hasherService.hashPassword(password),
+      },
     });
 
     return { user: savedUser };
@@ -92,9 +93,10 @@ export class UserService {
   }: UserServiceUpdateProfileInput): Promise<UserServiceCreateOutput> {
     const { user } = await this.findByIdOrThrow({ id });
 
-    user.updateProfile({ name });
-
-    await this.userRepository.save(user);
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { name },
+    });
 
     return { user };
   }

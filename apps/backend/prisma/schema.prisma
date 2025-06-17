@@ -6,12 +6,11 @@
 
 generator client {
     provider = "prisma-client-js"
-    output   = "../generated/prisma"
 }
 
 datasource db {
     provider = "postgresql"
-    url      = env("DATABASE_URL")
+    url      = env("databaseURL")
 }
 
 enum UserRole {
@@ -19,14 +18,44 @@ enum UserRole {
     ADMIN
 }
 
+/**
+ * 사용자 엔티티
+ */
 model User {
+    // Common ================================================
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     deleted   Boolean  @default(false)
 
-    name     String?
-    email    String   @unique
-    password String
-    role     UserRole
+    // Property ================================================
+    name     String? // 사용자 이름
+    email    String   @unique // 사용자 이메일
+    password String // 사용자 비밀번호
+    role     UserRole @default(USER) // 사용자 역할
+
+    // Relation ================================================
+
+    // Index ================================================
+    @@index([email], name: "idx_user_email")
+}
+
+/**
+ * 쇼 엔티티
+ */
+model Show {
+    // Common ==================================================
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deleted   Boolean  @default(false)
+
+    // Property ================================================
+    title       String
+    description String?
+    tags        String[]
+
+    // Relation ================================================
+
+    // Index ===================================================
 }

@@ -1,4 +1,4 @@
-import { Show } from './show.entity';
+import { Show } from '@prisma/client';
 
 //-------------------------------------------------------------------------
 // findAll

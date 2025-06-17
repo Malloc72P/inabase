@@ -16,8 +16,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "typeorm-extension seed:run -d src/seed/index.ts",
-    "prisma:generate": "prisma generate"
+    "seed": "tsx ./prisma/seed.ts",
+    "generate": "prisma generate",
+    "sync": "prisma db push"
   },
   "dependencies": {
     "@faker-js/faker": "^9.8.0",
@@ -65,6 +66,7 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.20.3",
     "typeorm": "^0.3.20",
     "typeorm-extension": "^3.6.3",
     "typescript": "^5.1.3"
