@@ -1,6 +1,7 @@
 'use client';
 
 import { ApiLinkMap } from '@libs/link-map';
+import { FindShowInput } from '@repo/dto';
 
 export const useQueryKey = () => {
   return {
@@ -9,10 +10,8 @@ export const useQueryKey = () => {
       detail: (showId: string) => {
         return [ApiLinkMap.shows.detail(showId)];
       },
-      list: (keywords?: string) => {
-        console.log('queryKeyBuilder: keywords', keywords);
-
-        return [ApiLinkMap.shows.list(), keywords ? { keywords } : undefined].filter((v) => v);
+      list: (params: FindShowInput) => {
+        return [ApiLinkMap.shows.list(params)].filter((v) => v);
       },
     },
   };

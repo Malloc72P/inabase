@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { ShowList } from 'src/components/show';
 import { useShows } from 'src/hooks/use-shows';
 
-export default function MainPage() {
+export default function ShowListPage() {
   const form = useForm<FindShowsInput>({
     defaultValues: {
       keyword: '',
@@ -31,6 +31,7 @@ export default function MainPage() {
       <Flex mb={32} gap="xl">
         <form style={{ flexGrow: 1 }} onSubmit={form.handleSubmit(onSearchSubmit)}>
           <TextInput
+            placeholder="검색어를 입력하세요"
             {...form.register('keyword')}
             rightSection={<IconButton type="submit" variant="transparent" icon={IconSearch} />}
           />

@@ -27,6 +27,8 @@ export default async function MainLayout({ children }: PropsWithChildren) {
 
       break;
     } catch (error) {
+      console.log(`Failed to fetch profile, attempt ${index + 1}:`, error);
+
       await waitForTimeout(200);
       continue;
     }

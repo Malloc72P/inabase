@@ -15,14 +15,27 @@ import {
   ShowServiceUpdateOutput,
 } from './show.service.dto';
 import { Prisma } from '@prisma/client';
+import { CursorService } from '@src/cursor/cursor.service';
+
+export type ShowCursor = { createdAt: string; id: string };
 
 @Injectable()
 export class ShowService extends BaseComponent {
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private cursorService: CursorService
+  ) {
     super();
   }
 
-  async findAll({ keyword }: ShowServiceFindAllInput): Promise<ShowServiceFindAllOutput> {
+  async findAll({ cursor, keyword }: ShowServiceFindAllInput): Promise<ShowServiceFindAllOutput> {
+    const pageSize = 20;
+    this.logger.debug('ShowService.findAll', { cursor, keyword });
+
+    const cursorObj = this.cursorService.decodeCursor<ShowCursor>(cursor);
+
+    this.logger.debug('Decoded cursor', { cursorObj });
+
     const where: Prisma.ShowWhereInput = {
       deleted: false,
     };
@@ -40,11 +53,22 @@ export class ShowService extends BaseComponent {
     const shows = await this.prisma.show.findMany({
       where,
       orderBy: [{ createdAt: 'desc' }, { updatedAt: 'desc' }],
-      take: 20,
+      take: pageSize + 1, // Fetch one extra to check for next page
     });
+
+    const nextCursor =
+      shows.length > 0
+        ? this.cursorService.encodeCursor<ShowCursor>({
+            createdAt: shows[shows.length - 1].createdAt.toISOString(),
+            id: shows[shows.length - 1].id,
+          })
+        : '';
+    const hasNext = shows.length === pageSize + 1;
 
     return {
       shows,
+      nextCursor,
+      hasNext,
     };
   }
 

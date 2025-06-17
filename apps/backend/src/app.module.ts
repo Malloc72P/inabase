@@ -11,6 +11,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { ShowModule } from './show/show.module';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
+import { CursorModule } from './cursor/cursor.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     HasherModule,
     TokenModule,
+    CursorModule,
   ],
   controllers: [AppController],
   providers: [

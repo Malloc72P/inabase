@@ -18,7 +18,7 @@ export function useShowMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: queryKey.show.list(),
+        queryKey: queryKey.show.list({ keyword: '', cursor: '' }),
       });
     },
   });
@@ -36,7 +36,11 @@ export function useShowMutation() {
     mutationFn: async (showId: string) => {
       await deleteShowApi({ showId });
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKey.show.list({ keyword: '', cursor: '' }),
+      });
+    },
   });
 
   return {

@@ -4,11 +4,15 @@ import { Show } from '@prisma/client';
 // findAll
 //-------------------------------------------------------------------------
 export interface ShowServiceFindAllInput {
+  cursor?: string;
   keyword?: string;
+  pageSize?: number;
 }
 
 export interface ShowServiceFindAllOutput {
   shows: Show[];
+  nextCursor: string;
+  hasNext: boolean;
 }
 
 //-------------------------------------------------------------------------

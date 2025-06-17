@@ -28,6 +28,7 @@ import { ShowService } from './show.service';
 import { JwtAuthGuard } from '@src/auth/auth.guard';
 import { ZodInput } from '@src/util/zod-validation.pipe';
 import { Requester, IRequester } from '@src/util/user-decorator';
+import { CursorService } from '@src/cursor/cursor.service';
 
 @Controller('api/v1/shows')
 export class ShowController extends BaseController {
@@ -37,11 +38,16 @@ export class ShowController extends BaseController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async shows(@Query('keyword') keyword?: string): Promise<FindShowsOutput> {
-    const { shows } = await this.showService.findAll({ keyword });
+  async shows(
+    @Query('cursor') cursor?: string,
+    @Query('keyword') keyword?: string
+  ): Promise<FindShowsOutput> {
+    const { shows, hasNext, nextCursor } = await this.showService.findAll({ cursor, keyword });
 
     return {
       shows: shows.map((show) => transformTo(ShowDtoSchema, show)),
+      hasNext,
+      nextCursor,
     };
   }
 
