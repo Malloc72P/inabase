@@ -1,6 +1,5 @@
-import * as argon2 from 'argon2';
-import { DataSource } from 'typeorm';
 import { PrismaClient, UserRole } from '@prisma/client';
+import * as argon2 from 'argon2';
 
 const p = async (pw: string) => await argon2.hash(pw);
 

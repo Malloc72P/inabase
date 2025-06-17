@@ -1,8 +1,9 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { ShowController } from './show.controller';
 import { ShowService } from './show.service';
-import { Show } from './show.entity';
-import { ShowDto } from '@repo/dto';
+import { ShowDetailDto, ShowDto } from '@repo/dto';
+import { Show, UserRole } from '@prisma/client';
+import { faker } from '@faker-js/faker/.';
 
 describe('ShowController', () => {
   let controller: ShowController;
@@ -32,12 +33,15 @@ describe('ShowController', () => {
   describe('GET /shows', () => {
     it('모든 쇼 목록을 성공적으로 조회해야 한다', async () => {
       // given
-      const showDtos: ShowDto[] = [
-        { id: '1', title: 'Test Show 1', tags: [] },
-        { id: '2', title: 'Test Show 2', tags: [] },
-        { id: '3', title: 'Test Show 3', tags: [] },
-      ];
-      const shows = showDtos.map(({ id, title }) => createShow(id, title));
+      const shows: Show[] = [];
+      const showDtos: ShowDto[] = [];
+
+      for (let i = 0; i < 3; i++) {
+        const { show, dto } = createShow();
+        shows.push(show);
+        showDtos.push(dto);
+      }
+
       jest.spyOn(service, 'findAll').mockResolvedValue({ shows });
 
       //  when
@@ -51,12 +55,15 @@ describe('ShowController', () => {
   describe('POST /shows', () => {
     it('새로운 쇼를 성공적으로 생성해야 한다', async () => {
       // given
-      const dto: ShowDto = { id: '1', title: 'Test Show 1', tags: [] };
-      const show: Show = createShow(dto.id, dto.title);
+      const { show, dto } = createShow();
       jest.spyOn(service, 'create').mockResolvedValue({ show });
 
       // when
-      const response = await controller.create({ title: dto.title, tags: dto.tags });
+      const response = await controller.create({
+        title: show.title,
+        description: show.description,
+        tags: show.tags,
+      });
 
       // then
       expect(response).toStrictEqual({ show: dto });
@@ -66,30 +73,38 @@ describe('ShowController', () => {
   describe('GET /shows/:showId', () => {
     it('특정 쇼를 ID로 조회해야 한다', async () => {
       // given
-      const dto: ShowDto = { id: '1', title: 'Test Show 1', tags: [] };
-      const show: Show = createShow(dto.id, dto.title);
+      const { show, detailDto } = createShow();
       jest.spyOn(service, 'findOne').mockResolvedValue({ show });
 
       // when
-      const response = await controller.showById(dto.id);
+      const response = await controller.showById(show.id, {
+        id: '',
+        email: '',
+        role: UserRole.USER,
+      });
 
       // then
-      expect(response).toStrictEqual({ show: dto });
+      expect(response).toStrictEqual({ show: detailDto });
     });
   });
 
   describe('PATCH /shows/:id', () => {
     it('쇼 정보를 성공적으로 수정해야 한다', async () => {
       // given
-      const dto: ShowDto = { id: '1', title: 'Updated Show', tags: ['tag1'] };
-      const show: Show = createShow(dto.id, dto.title, dto.tags);
-      jest.spyOn(service, 'update').mockResolvedValue({ show });
+
+      const { show, dto } = createShow();
+      const { show: updatedShow, detailDto: updatedDto } = createShow();
+      jest.spyOn(service, 'update').mockResolvedValue({ show: updatedShow });
 
       // when
-      const response = await controller.update(dto.id, { title: dto.title, tags: dto.tags });
+      const response = await controller.update(dto.id, {
+        title: updatedShow.title,
+        description: updatedShow.description,
+        tags: updatedShow.tags,
+      });
 
       // then
-      expect(response).toStrictEqual({ show: dto });
+      expect(response).toStrictEqual({ show: updatedDto });
     });
   });
 
@@ -109,12 +124,27 @@ describe('ShowController', () => {
   });
 });
 
-function createShow(id: string, title: string, tags: string[] = []): Show {
-  const show = new Show();
+function createShow() {
+  const show: Show = {
+    id: faker.string.uuid(),
+    title: faker.lorem.sentence(),
+    description: faker.lorem.paragraph(),
+    tags: faker.helpers.arrayElements(['tag1', 'tag2', 'tag3'], 2),
+    deleted: false,
+    createdAt: faker.date.past(),
+    updatedAt: faker.date.recent(),
+  };
 
-  show.id = id;
-  show.title = title;
-  show.tags = tags;
+  const dto: ShowDto = {
+    id: show.id,
+    title: show.title,
+    tags: show.tags,
+  };
 
-  return show;
+  const detailDto: ShowDetailDto = {
+    ...dto,
+    description: show.description,
+  };
+
+  return { show, dto, detailDto };
 }

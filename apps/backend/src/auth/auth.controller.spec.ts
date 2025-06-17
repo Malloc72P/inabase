@@ -3,19 +3,21 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserService } from '@src/user/user.service';
 import { ConfigService } from '@nestjs/config';
-import { User } from '@src/user/user.entity';
-import { UserRole } from '@src/user/user.role';
+import { User, UserRole } from '@prisma/client';
 
 const mockUserService = {
   create: () => true,
   findByIdOrThrow: () => {
-    const user: User = new User();
-
-    user.id = 'u01';
-    user.name = 'aaaa';
-    user.email = 'u01.email.com';
-    user.role = UserRole.NORMAL;
-    user.password = 'user-password';
+    const user: User = {
+      id: 'u01',
+      name: 'aaaa',
+      email: 'u01.email.com',
+      role: UserRole.USER,
+      password: 'user-password',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deleted: false,
+    };
 
     return { user };
   },
