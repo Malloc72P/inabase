@@ -19,7 +19,7 @@ import { transformTo } from '@src/util/transformer.util';
 import { ZodInput } from '@src/util/zod-validation.pipe';
 import { IRequester, Requester } from '@src/util/user-decorator';
 import { Request, Response } from 'express';
-import * as ms from 'ms';
+import ms from 'ms';
 import { JwtAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';

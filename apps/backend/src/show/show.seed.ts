@@ -1,20 +1,24 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
+import { DateUtil } from '@src/date-util';
 
 export async function seedShows(prisma: PrismaClient) {
   await prisma.show.deleteMany();
 
   const data = generateDummyData(100);
 
-  await prisma.show.createMany({
+  const result = await prisma.show.createMany({
     data,
   });
+
+  console.log('Shows seeded:', result.count, 'items created');
 }
 
 type Item = {
   title: string;
   description: string;
   tags: string[];
+  createdAt: Date;
 };
 
 const GENRES = [
@@ -36,6 +40,7 @@ const GENRES = [
 export function generateDummyData(count: number): Item[] {
   const titles = new Set<string>();
   const items: Item[] = [];
+  let day = DateUtil.Dayjs('2020-01-01');
 
   while (items.length < count) {
     // 제목 생성 (예: 영화/드라마 제목 같은 느낌)
@@ -55,7 +60,11 @@ export function generateDummyData(count: number): Item[] {
 
     const description = faker.lorem.paragraph({ min: 10, max: 20 });
 
-    items.push({ title, tags, description });
+    // 생성일은 2020년 1월 1일부터 현재까지, 하루씩 증가한다.
+    const createdAt = day.toDate();
+    day = day.add(1, 'day');
+
+    items.push({ title, tags, description, createdAt });
   }
 
   return items;

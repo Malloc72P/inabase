@@ -33,22 +33,19 @@ describe('ShowController', () => {
   describe('GET /shows', () => {
     it('모든 쇼 목록을 성공적으로 조회해야 한다', async () => {
       // given
-      const shows: Show[] = [];
-      const showDtos: ShowDto[] = [];
+      const datas = Array(3)
+        .fill(null)
+        .map(() => createShow());
 
-      for (let i = 0; i < 3; i++) {
-        const { show, dto } = createShow();
-        shows.push(show);
-        showDtos.push(dto);
-      }
-
-      jest.spyOn(service, 'findAll').mockResolvedValue({ shows });
+      jest
+        .spyOn(service, 'findAll')
+        .mockResolvedValue({ shows: datas.map((d) => d.show), hasNext: false, nextCursor: '' });
 
       //  when
       const response = await controller.shows();
 
       // then
-      expect(response).toStrictEqual({ shows: showDtos });
+      expect(response.shows).toStrictEqual(datas.map((d) => d.dto));
     });
   });
 

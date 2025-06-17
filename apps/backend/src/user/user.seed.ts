@@ -14,7 +14,9 @@ export async function seedUsers(prisma: PrismaClient) {
 
   await prisma.user.deleteMany();
 
-  await prisma.user.createMany({
+  const result = await prisma.user.createMany({
     data,
   });
+
+  console.log('Users seeded:', result.count, 'items created');
 }
