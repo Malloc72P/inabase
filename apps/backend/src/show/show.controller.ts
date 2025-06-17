@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   CreateShowInput,
   CreateShowInputSchema,
@@ -27,8 +37,8 @@ export class ShowController extends BaseController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async shows(): Promise<FindShowsOutput> {
-    const { shows } = await this.showService.findAll();
+  async shows(@Query('keyword') keyword?: string): Promise<FindShowsOutput> {
+    const { shows } = await this.showService.findAll({ keyword });
 
     return {
       shows: shows.map((show) => transformTo(ShowDtoSchema, show)),

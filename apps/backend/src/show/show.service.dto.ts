@@ -3,7 +3,9 @@ import { Show } from '@prisma/client';
 //-------------------------------------------------------------------------
 // findAll
 //-------------------------------------------------------------------------
-export interface ShowServiceFindAllInput {}
+export interface ShowServiceFindAllInput {
+  keyword?: string;
+}
 
 export interface ShowServiceFindAllOutput {
   shows: Show[];

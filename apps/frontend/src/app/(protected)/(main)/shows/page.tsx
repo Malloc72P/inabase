@@ -1,26 +1,40 @@
 'use client';
 
+import { IconButton } from '@components/buttons';
 import { useNavigator } from '@hooks/use-navigator';
-import { ActionIcon, Box, Button, Flex, TextInput } from '@mantine/core';
+import { Box, Button, Flex, TextInput } from '@mantine/core';
+import { FindShowsInput } from '@repo/dto';
 import { IconSearch } from '@tabler/icons-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { ShowList } from 'src/components/show';
 import { useShows } from 'src/hooks/use-shows';
 
 export default function MainPage() {
-  const { shows, isShowLoading } = useShows();
+  const form = useForm<FindShowsInput>({
+    defaultValues: {
+      keyword: '',
+    },
+  });
+  const [keyword, setKeyword] = useState('');
+  const { shows, isShowLoading } = useShows({ keyword });
   const navigator = useNavigator();
+
+  const onSearchSubmit = async () => {
+    console.log('Search submitted:', form.getValues());
+
+    setKeyword(form.getValues().keyword || '');
+  };
 
   return (
     <Box pb={300}>
       <Flex mb={32} gap="xl">
-        <TextInput
-          style={{ flexGrow: 1 }}
-          rightSection={
-            <ActionIcon variant="transparent" color="gray">
-              <IconSearch stroke={1.5}></IconSearch>
-            </ActionIcon>
-          }
-        />
+        <form style={{ flexGrow: 1 }} onSubmit={form.handleSubmit(onSearchSubmit)}>
+          <TextInput
+            {...form.register('keyword')}
+            rightSection={<IconButton type="submit" variant="transparent" icon={IconSearch} />}
+          />
+        </form>
         <Button
           onClick={() => {
             navigator.moveTo.protected.shows.create();

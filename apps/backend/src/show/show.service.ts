@@ -5,6 +5,7 @@ import { PrismaService } from '@src/prisma/prisma.service';
 import {
   ShowServiceCreateInput,
   ShowServiceCreateOutput,
+  ShowServiceFindAllInput,
   ShowServiceFindAllOutput,
   ShowServiceFindOneInput,
   ShowServiceFindOneOutput,
@@ -13,6 +14,7 @@ import {
   ShowServiceUpdateInput,
   ShowServiceUpdateOutput,
 } from './show.service.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ShowService extends BaseComponent {
@@ -20,9 +22,23 @@ export class ShowService extends BaseComponent {
     super();
   }
 
-  async findAll(): Promise<ShowServiceFindAllOutput> {
+  async findAll({ keyword }: ShowServiceFindAllInput): Promise<ShowServiceFindAllOutput> {
+    const where: Prisma.ShowWhereInput = {
+      deleted: false,
+    };
+
+    const safeKeyword = buildQuery(keyword);
+
+    if (keyword) {
+      where.OR = [
+        { title: { search: safeKeyword } },
+        { description: { search: safeKeyword } },
+        // { tags: { hasSome: keyword.split(' ') } },
+      ];
+    }
+
     const shows = await this.prisma.show.findMany({
-      where: { deleted: false },
+      where,
       orderBy: [{ createdAt: 'desc' }, { updatedAt: 'desc' }],
       take: 20,
     });
@@ -88,4 +104,16 @@ export class ShowService extends BaseComponent {
       data: { deleted: true },
     });
   }
+}
+
+function buildQuery(keyword: string) {
+  return keyword
+    ?.trim()
+    .split(/\s+/)
+    .map((w) => `${escapeTsquery(w)}:*`)
+    .join(' | ');
+}
+
+function escapeTsquery(word: string) {
+  return word.replace(/[&|!:()\\]/g, '\\$&');
 }

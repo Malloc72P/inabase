@@ -17,27 +17,15 @@ export class LoggingExceptionFilter extends BaseExceptionFilter {
     InvalidFieldException.name,
   ];
 
-  private readonly DEBUG_ONLY = [
-    UnauthorizedException.name,
-    NotFoundException.name,
-    AccessTokenExpiredException.name,
-    InvalidFieldException.name,
-  ];
-
   catch(exception: any, host: any) {
     super.catch(exception, host);
 
     if (this.isWhitelisted(exception)) {
-      this.logger.debug(`Whitelisted Exception: ${exception.message}`, exception.stack);
+      this.logger.debug(`Whitelisted Exception: ${exception.message}\n`, exception.stack);
       return;
     }
 
-    if (this.isDebugOnly(exception)) {
-      this.logger.debug(`Debugging Exception: ${exception.message}`, exception.stack);
-      return;
-    }
-
-    this.logger.error(`Exception: ${exception.message}`, exception.stack);
+    this.logger.error(`Unhandled Exception: ${exception.message}\n`, exception.stack);
 
     if (exception.origin) {
       this.logger.error('origin error: ', exception.origin?.message);
@@ -46,9 +34,5 @@ export class LoggingExceptionFilter extends BaseExceptionFilter {
 
   private isWhitelisted(exception: any) {
     return this.WHITELIST.some((white) => white === exception?.name);
-  }
-
-  private isDebugOnly(exception: any) {
-    return this.DEBUG_ONLY.some((debug) => debug === exception?.name);
   }
 }

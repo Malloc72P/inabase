@@ -1,4 +1,3 @@
-import { FieldError } from '@repo/exceptions';
 import { ApiException } from './exception';
 
 export class EntityNotFound extends ApiException {

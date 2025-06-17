@@ -1,5 +1,5 @@
 # AppConfig
-nodeEnv="dev"
+nodeEnv="DEVELOPMENT" // DEVELOPMENT | PRODUCTION
 appPort=42500
 clientUrl=http://localhost:42000
 

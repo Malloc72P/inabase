@@ -9,8 +9,10 @@ export const useQueryKey = () => {
       detail: (showId: string) => {
         return [ApiLinkMap.shows.detail(showId)];
       },
-      list: () => {
-        return [ApiLinkMap.shows.list()];
+      list: (keywords?: string) => {
+        console.log('queryKeyBuilder: keywords', keywords);
+
+        return [ApiLinkMap.shows.list(), keywords ? { keywords } : undefined].filter((v) => v);
       },
     },
   };
