@@ -38,3 +38,15 @@ export async function getServerSession(): Promise<SessionProps> {
     state: 'authenticated',
   };
 }
+
+export async function getTokens() {
+  const cookieStore = await cookies();
+
+  const accessToken = cookieStore.get(CommonConstants.token.accessTokenKey)?.value;
+  const refreshToken = cookieStore.get(CommonConstants.token.refreshTokenKey)?.value;
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+}

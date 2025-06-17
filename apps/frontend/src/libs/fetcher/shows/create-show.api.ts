@@ -1,10 +1,15 @@
 import { ApiLinkMap } from '@libs/link-map';
+import { CreateShowInput, CreateShowOutput } from '@repo/dto';
+import { ApiFetcher } from '../core/api-fetcher';
 import { fetcher } from '../core/fetcher';
-import { CreateShowInput, CreateShowOutput, FindShowsInput, FindShowsOutput } from '@repo/dto';
 
-export async function createShowApi(body: CreateShowInput): Promise<CreateShowOutput> {
-  return fetcher<CreateShowInput, CreateShowOutput>(ApiLinkMap.shows.create(), {
+export const createShowApi: ApiFetcher<CreateShowInput, CreateShowOutput> = async (
+  body: any,
+  option
+) => {
+  return fetcher(ApiLinkMap.shows.create(), {
     body,
     method: 'POST',
+    ...option,
   });
-}
+};

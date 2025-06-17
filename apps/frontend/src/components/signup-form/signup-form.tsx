@@ -1,9 +1,7 @@
 'use client';
 
-import { useAuth } from 'src/hooks/use-auth';
-import { useNavigator } from 'src/hooks/use-navigator';
-import { notifySuccess } from 'src/hooks/use-notification';
-import { ApiError } from 'src/libs/fetcher';
+import { Logo } from '@components/logo';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Anchor,
   Button,
@@ -14,14 +12,15 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { SignUpParam, SignUpParamSchema } from '@repo/dto';
-import { FormEvent, useState } from 'react';
+import { SignUpParamSchema } from '@repo/dto';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import classes from './signup-form.module.css';
-import { Logo } from '@components/logo';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from 'src/hooks/use-auth';
+import { useNavigator } from 'src/hooks/use-navigator';
+import { notifySuccess } from 'src/hooks/use-notification';
+import { handleApiError } from 'src/libs/fetcher';
 import z from 'zod';
-import { handleApiError } from '@libs/fetcher/fetcher-util';
+import classes from './signup-form.module.css';
 
 const ClientSignUpParamSchema = SignUpParamSchema.extend({
   passwordConfirm: z.string({ message: '비밀번호 확인을 입력해주세요.' }),

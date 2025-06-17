@@ -1,10 +1,9 @@
 'use client';
 
+import { HealthCheckOutput } from '@repo/dto';
+import { useQuery } from '@tanstack/react-query';
 import { fetcher } from 'src/libs/fetcher';
 import { ApiLinkMap } from 'src/libs/link-map/api-link-map';
-import { HealthCheckOutput } from '@repo/dto';
-import useSWR from 'swr';
-import { useQuery } from '@tanstack/react-query';
 import { useQueryKey } from './use-query-key';
 
 export function useHealthCheck() {

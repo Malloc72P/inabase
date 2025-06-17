@@ -1,4 +1,8 @@
-import { ShowDetailPage } from '../show-detail-page';
+import { findShowApi } from '@libs/fetcher/shows/find-show.api';
+import { LoadingOverlay } from '@mantine/core';
+import { Suspense } from 'react';
+import { getTokens } from 'src/app/get-server-session';
+import { ShowUpdatePage } from './show-update-page';
 
 export interface PageProps {
   params: Promise<{
@@ -11,8 +15,15 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <>
-      EDIT PAGE
-      <ShowDetailPage showId={showId} />
+      <Suspense fallback={<LoadingOverlay visible={true} />}>
+        <GetShowDetail showId={showId} />
+      </Suspense>
     </>
   );
+}
+
+export async function GetShowDetail({ showId }: { showId: string }) {
+  const { show } = await findShowApi({ showId }, await getTokens());
+
+  return <ShowUpdatePage show={show} />;
 }

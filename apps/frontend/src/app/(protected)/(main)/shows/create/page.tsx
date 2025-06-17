@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
-import { useShows } from '@hooks/use-shows';
+import { useShowMutation } from '@hooks/use-show-mutation';
 import { handleApiError } from '@libs/fetcher';
 import { Box, Button, Flex, TagsInput, Textarea, TextInput, Title } from '@mantine/core';
 import { CreateShowInput, CreateShowInputSchema } from '@repo/dto';
@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 
 export default function CreateShowPage() {
   const navigator = useNavigator();
-  const { createShow } = useShows();
+  const { createShow } = useShowMutation();
   const [loading, setLoading] = useState(false);
   const form = useForm<CreateShowInput>({
     resolver: zodResolver(CreateShowInputSchema),

@@ -1,7 +1,14 @@
 import { ApiLinkMap } from '@libs/link-map';
 import { fetcher } from '../core/fetcher';
 import { FindShowInput, FindShowOutput } from '@repo/dto';
+import { ApiFetcher } from '..';
 
-export async function findShowApi(showId: string): Promise<FindShowOutput> {
-  return fetcher<FindShowInput, FindShowOutput>(ApiLinkMap.shows.detail(showId));
-}
+export const findShowApi: ApiFetcher<FindShowInput & { showId: string }, FindShowOutput> = async (
+  { showId, ...param },
+  option
+) => {
+  return fetcher(ApiLinkMap.shows.detail(showId), {
+    method: 'GET',
+    ...option,
+  });
+};

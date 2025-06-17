@@ -23,7 +23,7 @@ export class ShowService extends BaseComponent {
   async findAll(): Promise<ShowServiceFindAllOutput> {
     const shows = await this.prisma.show.findMany({
       where: { deleted: false },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { updatedAt: 'desc' }],
       take: 20,
     });
 
@@ -56,19 +56,24 @@ export class ShowService extends BaseComponent {
     return { show };
   }
 
-  async update({ id, title, tags }: ShowServiceUpdateInput): Promise<ShowServiceUpdateOutput> {
+  async update({
+    id,
+    title,
+    description,
+    tags,
+  }: ShowServiceUpdateInput): Promise<ShowServiceUpdateOutput> {
     const { show } = await this.findOne({ id });
 
     if (!show || show.deleted) {
       throw new EntityNotFound('쇼를 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 쇼입니다.');
     }
 
-    this.prisma.show.update({
+    const updatedShow = await this.prisma.show.update({
       where: { id },
-      data: { title, tags },
+      data: { title, description, tags },
     });
 
-    return { show };
+    return { show: updatedShow };
   }
 
   async remove({ id }: ShowServiceRemoveInput): Promise<ShowServiceRemoveOutput> {

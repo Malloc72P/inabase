@@ -4,23 +4,25 @@ import { InaText } from '@components/custom-components';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useShow } from '@hooks/use-show';
+import { useShowMutation } from '@hooks/use-show-mutation';
 import { ApiError } from '@libs/fetcher';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';
-import { Badge, Box, Button, Divider, Flex, Skeleton, Space, Title } from '@mantine/core';
+import { Badge, Button, Divider, Flex, Skeleton, Space } from '@mantine/core';
 
 export interface ShowDetailPageProps {
   showId: string;
 }
 
 export function ShowDetailPage({ showId }: ShowDetailPageProps) {
-  const { show, isShowLoading, deleteShow } = useShow(showId);
+  const { show, isShowLoading } = useShow(showId);
+  const { deleteShow } = useShowMutation();
   const navigator = useNavigator();
   const { setGlobalLoading } = useGlobalLoadingStore();
 
   const onDeleteBtnClicked = async () => {
     try {
       setGlobalLoading(true);
-      await deleteShow();
+      await deleteShow(showId);
 
       notifySuccess({ message: `${show?.title} 이(가) 삭제되었습니다.` });
       navigator.moveTo.protected.shows.list();

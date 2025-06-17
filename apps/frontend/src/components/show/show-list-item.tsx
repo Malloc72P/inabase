@@ -1,17 +1,17 @@
 import { IconButton } from '@components/buttons';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
-import { useShows } from '@hooks/use-shows';
+import { useNavigator } from '@hooks/use-navigator';
+import { useShowMutation } from '@hooks/use-show-mutation';
 import { ApiError } from '@libs/fetcher';
+import { PageLinkMap } from '@libs/link-map';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/global-loading-store';
 import { Badge, Box, Flex, Group, Skeleton, Text } from '@mantine/core';
 import { ShowDto } from '@repo/dto';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { cn } from 'src/libs/ui';
 import classes from './show-list-item.module.css';
-import Link from 'next/link';
-import { PageLinkMap } from '@libs/link-map';
-import { useNavigator } from '@hooks/use-navigator';
 
 export interface ShowListItemProps {
   show: ShowDto;
@@ -35,7 +35,7 @@ export function ShowListItemLoading({ tagCount = 3 }: { tagCount?: number }) {
 
 export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
   const [hover, setHover] = useState<boolean>(false);
-  const { deleteShow } = useShows();
+  const { deleteShow } = useShowMutation();
   const { setGlobalLoading } = useGlobalLoadingStore();
   const navigator = useNavigator();
 

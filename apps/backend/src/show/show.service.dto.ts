@@ -42,6 +42,7 @@ export interface ShowServiceCreateOutput {
 export interface ShowServiceUpdateInput {
   id: string;
   title?: string;
+  description?: string;
   tags: string[];
 }
 
