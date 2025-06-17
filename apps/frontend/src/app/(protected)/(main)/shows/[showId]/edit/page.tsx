@@ -22,7 +22,7 @@ export default async function Page({ params }: PageProps) {
   );
 }
 
-export async function GetShowDetail({ showId }: { showId: string }) {
+async function GetShowDetail({ showId }: { showId: string }) {
   const { show } = await findShowApi({ showId }, await getTokens());
 
   return <ShowUpdatePage show={show} />;
