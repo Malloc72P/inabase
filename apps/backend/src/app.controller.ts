@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
+import { DateUtil } from '@repo/date-util';
 import { HealthCheckOutput, HealthCheckOutputSchema } from '@repo/dto';
-import { networkInterfaces } from 'os';
 import { BaseController } from './base/base.controller';
 import { transformTo } from './util/transformer.util';
 
@@ -13,22 +13,12 @@ export class AppController extends BaseController {
   @Get()
   healthCheck(): HealthCheckOutput {
     this.logger.log('health check');
+
+    const now = DateUtil.format(DateUtil.now(), 'long');
+
     return transformTo(HealthCheckOutputSchema, {
       statusCode: 200,
-      serverAddr: this.getServerIPAddress(),
+      dateTime: now,
     });
-  }
-
-  getServerIPAddress() {
-    const interfaces = networkInterfaces();
-    for (const name in interfaces) {
-      for (const iface of interfaces[name]) {
-        if (iface.family === 'IPv4' && !iface.internal) {
-          return iface.address;
-        }
-      }
-    }
-
-    return '127.0.0.1';
   }
 }

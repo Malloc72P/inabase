@@ -18,7 +18,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "tsx ./prisma/seed.ts",
     "generate": "prisma generate",
-    "sync": "prisma generate && prisma db push && pnpm seed"
+    "migrate": "prisma migrate deploy",
+    "migrate:new": "prisma migrate dev",
+    "migrate:reset": "prisma migrate reset",
+    "sync": "pnpm migrate:reset && pnpm seed"
   },
   "dependencies": {
     "@faker-js/faker": "^9.8.0",
@@ -32,7 +35,6 @@
     "@types/ms": "^2.1.0",
     "argon2": "^0.41.1",
     "cookie-parser": "^1.4.7",
-    "dayjs": "^1.11.13",
     "ms": "^2.1.3",
     "nodemon": "^3.1.10",
     "passport": "^0.7.0",
@@ -40,16 +42,17 @@
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@repo/exceptions": "workspace:*",
+    "@repo/date-util": "workspace:*",
+    "@repo/dto": "workspace:*"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/config": "^3.3.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
-    "@repo/dto": "workspace:*",
     "@repo/eslint-config": "workspace:*",
-    "@repo/exceptions": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",

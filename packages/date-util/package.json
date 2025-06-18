@@ -1,0 +1,19 @@
+{
+  "name": "@repo/date-util",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -watch"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13"
+  }
+}

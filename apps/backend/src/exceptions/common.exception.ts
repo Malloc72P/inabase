@@ -5,7 +5,7 @@ export class EntityNotFound extends ApiException {
     super({
       code: 'NotFound',
       status: 400,
-      message,
+      message: message || 'Entity not found',
     });
   }
 }

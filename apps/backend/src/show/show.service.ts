@@ -14,13 +14,16 @@ import {
   ShowServiceUpdateInput,
   ShowServiceUpdateOutput,
 } from './show.service.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, Show } from '@prisma/client';
 import { CursorService } from '@src/cursor/cursor.service';
 
-export type ShowCursor = { createdAt: string; id: string };
+export type ShowCursor = { keyword: string | undefined; createdAt: string; id: string };
 
 @Injectable()
 export class ShowService extends BaseComponent {
+  //-------------------------------------------------------------------------
+  // constructors
+  //-------------------------------------------------------------------------
   constructor(
     private prisma: PrismaService,
     private cursorService: CursorService
@@ -28,42 +31,25 @@ export class ShowService extends BaseComponent {
     super();
   }
 
+  //-------------------------------------------------------------------------
+  // methods
+  //-------------------------------------------------------------------------
   async findAll({ cursor, keyword }: ShowServiceFindAllInput): Promise<ShowServiceFindAllOutput> {
     const pageSize = 20;
-    this.logger.debug('ShowService.findAll', { cursor, keyword });
-
     const cursorObj = this.cursorService.decodeCursor<ShowCursor>(cursor);
+    const safeKeyword = this.buildQuery(keyword);
 
-    this.logger.debug('Decoded cursor', { cursorObj });
+    const shows = await this.search(keyword, cursorObj, pageSize);
 
-    const where: Prisma.ShowWhereInput = {
-      deleted: false,
-    };
-
-    const safeKeyword = buildQuery(keyword);
-
-    if (keyword) {
-      where.OR = [
-        { title: { search: safeKeyword } },
-        { description: { search: safeKeyword } },
-        // { tags: { hasSome: keyword.split(' ') } },
-      ];
-    }
-
-    const shows = await this.prisma.show.findMany({
-      where,
-      orderBy: [{ createdAt: 'desc' }, { updatedAt: 'desc' }],
-      take: pageSize + 1, // Fetch one extra to check for next page
-    });
-
+    const hasNext = shows.length === pageSize + 1;
     const nextCursor =
       shows.length > 0
         ? this.cursorService.encodeCursor<ShowCursor>({
+            keyword: safeKeyword,
             createdAt: shows[shows.length - 1].createdAt.toISOString(),
             id: shows[shows.length - 1].id,
           })
         : '';
-    const hasNext = shows.length === pageSize + 1;
 
     return {
       shows,
@@ -128,16 +114,49 @@ export class ShowService extends BaseComponent {
       data: { deleted: true },
     });
   }
-}
 
-function buildQuery(keyword: string) {
-  return keyword
-    ?.trim()
-    .split(/\s+/)
-    .map((w) => `${escapeTsquery(w)}:*`)
-    .join(' | ');
-}
+  //-------------------------------------------------------------------------
+  // internal members
+  //-------------------------------------------------------------------------
+  async search(query: string = '', cursor?: ShowCursor, take = 20) {
+    const q = this.prisma.buildOrQuery(query);
+    const sql = Prisma.sql;
+    const searchQuery = q && sql`"searchVector" @@ to_tsquery('simple', ${q})`;
+    const cursorQuery =
+      cursor && sql`("createdAt", id) < (${cursor.createdAt}::timestamp, ${cursor.id}::text)`;
 
-function escapeTsquery(word: string) {
-  return word.replace(/[&|!:()\\]/g, '\\$&');
+    const where = sql`
+        WHERE "deleted" = false
+        ${searchQuery ? sql`AND ${searchQuery}` : sql``}
+        ${cursorQuery ? sql`AND (${cursorQuery})` : sql``}
+    `;
+
+    const fullSql = sql`
+        SELECT "id", "title", "description", "tags", "createdAt", "updatedAt", "deleted"
+        FROM   "Show"
+        ${where}
+        ORDER BY "createdAt" DESC, "id" DESC
+        LIMIT  ${take + 1};
+    `;
+
+    this.logger.log('Executing SQL:', fullSql.text, fullSql.values);
+
+    const shows = this.prisma.$queryRaw<Show[]>(fullSql);
+
+    return shows;
+  }
+
+  private buildQuery(keyword?: string) {
+    if (!keyword) return undefined;
+
+    return keyword
+      ?.trim()
+      .split(/\s+/)
+      .map((w) => `${this.escapeTsquery(w)}`)
+      .join(' | ');
+  }
+
+  private escapeTsquery(word: string) {
+    return word.replace(/[&|!:()\\]/g, '\\$&');
+  }
 }

@@ -4,7 +4,8 @@ import { ShowCursor, ShowService } from './show.service';
 import { CursorService } from '@src/cursor/cursor.service';
 import { CursorModule } from '@src/cursor/cursor.module';
 import { ShowServiceFindAllOutput } from './show.service.dto';
-import { DateUtil } from '@src/date-util';
+import { DateUtil } from '@repo/date-util';
+import { SEARCH_TEST_FLAG } from './show.seed';
 
 describe('ShowService', () => {
   let service: ShowService;
@@ -39,7 +40,7 @@ describe('ShowService', () => {
 
     it('findShows extra 2', async () => {
       // when
-      const cursor = cursorService.decodeCursor<ShowCursor>(result.nextCursor);
+      const cursor = cursorService.decodeCursor<ShowCursor>(result.nextCursor) as ShowCursor;
       const lastShow = result.shows[result.shows.length - 1];
 
       // then
@@ -50,15 +51,26 @@ describe('ShowService', () => {
 
     it('findShows next cursor', async () => {
       // when
-      const nextRes = await service.findAll({ cursor: result.nextCursor, pageSize: 20 });
-      const lastShowOfNextRes = result.shows[result.shows.length - 1];
+      const nextResult = await service.findAll({ cursor: result.nextCursor, pageSize: 20 });
+
+      const lastShowOfNextRes = nextResult.shows[result.shows.length - 1];
       const lastShowOfFirstRes = result.shows[result.shows.length - 1];
 
       const currLastShowCreatedAt = DateUtil.Dayjs(lastShowOfNextRes.createdAt);
       const prevLastShowCreatedAt = DateUtil.Dayjs(lastShowOfFirstRes.createdAt);
 
       // then
-      expect(currLastShowCreatedAt.isAfter(prevLastShowCreatedAt)).toBeTruthy();
+      expect(currLastShowCreatedAt.isBefore(prevLastShowCreatedAt)).toBeTruthy();
+    });
+  });
+
+  describe('findAll with keyword', () => {
+    it('findShows keyword', async () => {
+      // when
+      const result = await service.findAll({ keyword: SEARCH_TEST_FLAG });
+
+      // then
+      expect(result.shows.length).toBeGreaterThan(1);
     });
   });
 });

@@ -56,7 +56,11 @@ model Show {
     description String
     tags        String[]
 
+    // Property ================================================
+    searchVector Unsupported("tsvector")? // Full-text search vector for the show
+
     // Relation ================================================
 
     // Index ===================================================
+    @@index([searchVector], type: Gin, map: "show_fts_idx")
 }

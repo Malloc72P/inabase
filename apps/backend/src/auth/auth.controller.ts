@@ -43,7 +43,7 @@ export class AuthController extends BaseController {
     const result: SignInResult = {
       profile: {
         id: user.id,
-        name: user.name,
+        name: user.name || user.email.split('@')[0],
         email: user.email,
       },
       accessToken,
