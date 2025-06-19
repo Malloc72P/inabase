@@ -5,8 +5,6 @@ import { PrismaService } from '@src/prisma/prisma.service';
 import {
   ShowServiceCreateInput,
   ShowServiceCreateOutput,
-  ShowServiceFindAllInput,
-  ShowServiceFindAllOutput,
   ShowServiceFindOneInput,
   ShowServiceFindOneOutput,
   ShowServiceRemoveInput,
@@ -14,49 +12,19 @@ import {
   ShowServiceUpdateInput,
   ShowServiceUpdateOutput,
 } from './show.service.dto';
-import { Prisma, Show } from '@prisma/client';
-import { CursorService } from '@src/cursor/cursor.service';
-
-export type ShowCursor = { keyword: string | undefined; createdAt: string; id: string };
 
 @Injectable()
 export class ShowService extends BaseComponent {
   //-------------------------------------------------------------------------
   // constructors
   //-------------------------------------------------------------------------
-  constructor(
-    private prisma: PrismaService,
-    private cursorService: CursorService
-  ) {
+  constructor(private prisma: PrismaService) {
     super();
   }
 
   //-------------------------------------------------------------------------
   // methods
   //-------------------------------------------------------------------------
-  async findAll({ cursor, keyword }: ShowServiceFindAllInput): Promise<ShowServiceFindAllOutput> {
-    const pageSize = 20;
-    const cursorObj = this.cursorService.decodeCursor<ShowCursor>(cursor);
-    const safeKeyword = this.buildQuery(keyword);
-
-    const shows = await this.search(keyword, cursorObj, pageSize);
-
-    const hasNext = shows.length === pageSize + 1;
-    const nextCursor =
-      shows.length > 0
-        ? this.cursorService.encodeCursor<ShowCursor>({
-            keyword: safeKeyword,
-            createdAt: shows[shows.length - 1].createdAt.toISOString(),
-            id: shows[shows.length - 1].id,
-          })
-        : '';
-
-    return {
-      shows,
-      nextCursor,
-      hasNext,
-    };
-  }
 
   async findOne({ id }: ShowServiceFindOneInput): Promise<ShowServiceFindOneOutput> {
     const show = await this.prisma.show.findUnique({ where: { id, deleted: false } });
@@ -113,50 +81,5 @@ export class ShowService extends BaseComponent {
       where: { id },
       data: { deleted: true },
     });
-  }
-
-  //-------------------------------------------------------------------------
-  // internal members
-  //-------------------------------------------------------------------------
-  async search(query: string = '', cursor?: ShowCursor, take = 20) {
-    const q = this.prisma.buildOrQuery(query);
-    const sql = Prisma.sql;
-    const searchQuery = q && sql`"searchVector" @@ to_tsquery('simple', ${q})`;
-    const cursorQuery =
-      cursor && sql`("createdAt", id) < (${cursor.createdAt}::timestamp, ${cursor.id}::text)`;
-
-    const where = sql`
-        WHERE "deleted" = false
-        ${searchQuery ? sql`AND ${searchQuery}` : sql``}
-        ${cursorQuery ? sql`AND (${cursorQuery})` : sql``}
-    `;
-
-    const fullSql = sql`
-        SELECT "id", "title", "description", "tags", "createdAt", "updatedAt", "deleted"
-        FROM   "Show"
-        ${where}
-        ORDER BY "createdAt" DESC, "id" DESC
-        LIMIT  ${take + 1};
-    `;
-
-    this.logger.log('Executing SQL:', fullSql.text, fullSql.values);
-
-    const shows = this.prisma.$queryRaw<Show[]>(fullSql);
-
-    return shows;
-  }
-
-  private buildQuery(keyword?: string) {
-    if (!keyword) return undefined;
-
-    return keyword
-      ?.trim()
-      .split(/\s+/)
-      .map((w) => `${this.escapeTsquery(w)}`)
-      .join(' | ');
-  }
-
-  private escapeTsquery(word: string) {
-    return word.replace(/[&|!:()\\]/g, '\\$&');
   }
 }

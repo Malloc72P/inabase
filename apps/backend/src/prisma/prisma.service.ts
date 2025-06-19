@@ -1,8 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Prisma, PrismaClient, Show } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { AppConfig, NodeEnv } from '@src/config/app.config';
-import { ShowCursor } from '@src/show/show.service';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -30,7 +29,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     await this.$connect();
   }
 
-  buildOrQuery(input: string): string {
+  /**
+   * 벡터 검색을 위한 키워드 생성.
+   * 검색어를 공백으로 분리하고, 각 단어에 대해 TSQUERY 형식으로 변환합니다.
+   */
+  buildSearchKeyword(input?: string): string | undefined {
+    if (!input) return;
+
     return input
       .trim()
       .split(/\s+/)

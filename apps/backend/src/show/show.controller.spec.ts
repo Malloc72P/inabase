@@ -1,33 +1,55 @@
-import { TestingModule, Test } from '@nestjs/testing';
+import { faker } from '@faker-js/faker/.';
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Show } from '@prisma/client';
+import { CreateShowOutput, FindShowsOutput, ShowDetailDto, ShowDto } from '@repo/dto';
+import { ApiExceptionPayload, ExceptionCode } from '@repo/exceptions';
+import { JwtAuthGuard } from '@src/auth/auth.guard';
+import { MockJwtGuard } from '@src/auth/mock-auth-guard';
+import { MockTokenModule } from '@src/token/mock-token.module';
+import request from 'supertest';
+import { ShowSearchService } from './show-search.service';
 import { ShowController } from './show.controller';
 import { ShowService } from './show.service';
-import { ShowDetailDto, ShowDto } from '@repo/dto';
-import { Show, UserRole } from '@prisma/client';
-import { faker } from '@faker-js/faker/.';
 
 describe('ShowController', () => {
+  let app: INestApplication;
   let controller: ShowController;
   let service: ShowService;
+  let searchService: ShowSearchService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [MockTokenModule],
       controllers: [ShowController],
       providers: [
         {
           provide: ShowService,
           useValue: {
-            findAll: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),
             remove: jest.fn(),
             findOne: jest.fn(),
           },
         },
+        {
+          provide: ShowSearchService,
+          useValue: {
+            findAll: jest.fn(),
+          },
+        },
       ],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useClass(MockJwtGuard)
+      .compile();
+
+    app = module.createNestApplication();
+    await app.init();
 
     controller = module.get<ShowController>(ShowController);
     service = module.get<ShowService>(ShowService);
+    searchService = module.get<ShowSearchService>(ShowSearchService);
   });
 
   describe('GET /shows', () => {
@@ -38,14 +60,18 @@ describe('ShowController', () => {
         .map(() => createShow());
 
       jest
-        .spyOn(service, 'findAll')
+        .spyOn(searchService, 'findAll')
         .mockResolvedValue({ shows: datas.map((d) => d.show), hasNext: false, nextCursor: '' });
 
       //  when
-      const response = await controller.shows();
+      const api = request(app.getHttpServer()).get('/api/v1/shows?keyword=test&cursor=dummyCursor');
 
       // then
-      expect(response.shows).toStrictEqual(datas.map((d) => d.dto));
+      await api.expect((res) => {
+        const output = res.body as FindShowsOutput;
+
+        expect(output.shows).toStrictEqual(datas.map((d) => d.dto));
+      });
     });
   });
 
@@ -56,14 +82,38 @@ describe('ShowController', () => {
       jest.spyOn(service, 'create').mockResolvedValue({ show });
 
       // when
-      const response = await controller.create({
+      const api = request(app.getHttpServer()).post('/api/v1/shows').send({
         title: show.title,
         description: show.description,
         tags: show.tags,
       });
 
       // then
-      expect(response).toStrictEqual({ show: dto });
+      await api.expect(201).expect((res) => {
+        const output = res.body as CreateShowOutput;
+
+        expect(output.show).toStrictEqual(dto);
+      });
+    });
+
+    it('잘못된 입력값으로 요청하면 400 에러가 발생해야 한다', async () => {
+      // given
+      const { show, dto } = createShow();
+      jest.spyOn(service, 'create').mockResolvedValue({ show });
+
+      // when
+      const api = request(app.getHttpServer()).post('/api/v1/shows').send({
+        title: '',
+        description: show.description,
+        tags: show.tags,
+      });
+
+      // then
+      await api.expect(400).expect((res) => {
+        const exception = res.body as ApiExceptionPayload;
+
+        expect(exception.code).toStrictEqual(ExceptionCode.InvalidField);
+      });
     });
   });
 
@@ -74,34 +124,33 @@ describe('ShowController', () => {
       jest.spyOn(service, 'findOne').mockResolvedValue({ show });
 
       // when
-      const response = await controller.showById(show.id, {
-        id: '',
-        email: '',
-        role: UserRole.USER,
-      });
+      const api = request(app.getHttpServer()).get(`/api/v1/shows/${encodeURIComponent(show.id)}`);
 
       // then
-      expect(response).toStrictEqual({ show: detailDto });
+      await api.expect(200).expect((res) => {
+        expect(res.body).toStrictEqual({ show: detailDto });
+      });
     });
   });
 
   describe('PATCH /shows/:id', () => {
     it('쇼 정보를 성공적으로 수정해야 한다', async () => {
       // given
-
-      const { show, dto } = createShow();
+      const { show: originalShow } = createShow();
       const { show: updatedShow, detailDto: updatedDto } = createShow();
       jest.spyOn(service, 'update').mockResolvedValue({ show: updatedShow });
 
       // when
-      const response = await controller.update(dto.id, {
+      const api = request(app.getHttpServer()).patch(`/api/v1/shows/${originalShow.id}`).send({
         title: updatedShow.title,
         description: updatedShow.description,
         tags: updatedShow.tags,
       });
 
       // then
-      expect(response).toStrictEqual({ show: updatedDto });
+      await api.expect(200).expect((res) => {
+        expect(res.body).toStrictEqual({ show: updatedDto });
+      });
     });
   });
 
@@ -112,19 +161,25 @@ describe('ShowController', () => {
       jest.spyOn(service, 'remove').mockResolvedValue(undefined);
 
       // when
-      const response = await controller.delete(showId);
+      const api = request(app.getHttpServer()).delete(`/api/v1/shows/${showId}`);
 
       // then
-      expect(response).toStrictEqual({ success: true });
-      expect(service.remove).toHaveBeenCalledWith({ id: showId });
+      await api.expect(200).expect((res) => {
+        expect(res.body).toStrictEqual({ success: true });
+        expect(service.remove).toHaveBeenCalledWith({ id: showId });
+      });
     });
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });
 
 function createShow() {
   const show: Show = {
     id: faker.string.uuid(),
-    title: faker.lorem.sentence(),
+    title: faker.lorem.sentence({ min: 3, max: 20 }), // 대략 200자 이내로 제한
     description: faker.lorem.paragraph(),
     tags: faker.helpers.arrayElements(['tag1', 'tag2', 'tag3'], 2),
     deleted: false,

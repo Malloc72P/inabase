@@ -1,17 +1,20 @@
-export type ExceptionCode =
-  | 'Unknown'
-  | 'EmailAlreadyInUse'
-  | 'LoginFailed'
-  | 'AccessTokenExpired'
-  | 'InvalidField'
-  | 'InvalidCredentials'
-  | 'UserNotFound'
-  | 'Unauthorized'
-  | 'Forbidden'
-  | 'InternalServerError'
-  | 'TransformFailed'
-  | 'ValidationError'
-  | 'NotFound';
+export const ExceptionCode = {
+  Unknown: 'Unknown',
+  EmailAlreadyInUse: 'EmailAlreadyInUse',
+  LoginFailed: 'LoginFailed',
+  AccessTokenExpired: 'AccessTokenExpired',
+  InvalidField: 'InvalidField',
+  InvalidCredentials: 'InvalidCredentials',
+  UserNotFound: 'UserNotFound',
+  Unauthorized: 'Unauthorized',
+  Forbidden: 'Forbidden',
+  InternalServerError: 'InternalServerError',
+  TransformFailed: 'TransformFailed',
+  ValidationError: 'ValidationError',
+  NotFound: 'NotFound',
+} as const;
+
+export type ExceptionCode = (typeof ExceptionCode)[keyof typeof ExceptionCode];
 
 export interface FieldError {
   field: string;

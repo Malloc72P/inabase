@@ -5,6 +5,11 @@ export type ApiExceptionProps = ApiExceptionPayload & {
   error?: Error;
 };
 
+/**
+ * API 예외 클래스
+ * 이 클래스는 API 요청 처리 중 발생하는 예외를 나타냅니다.
+ * 예외 코드, 상태 코드, 메시지 및 필드 오류를 포함할 수 있습니다
+ */
 export class ApiException extends HttpException {
   originError?: Error;
   fieldErrors: FieldError[];
@@ -30,7 +35,12 @@ export class ApiException extends HttpException {
     }
   }
 
-  toJson() {
+  /**
+   * 에러 객체를 직렬화하여 JSON 형태로 반환합니다.
+   * 이 메서드는 API 응답으로 사용될 수 있는 JSON 객체를 생성합니다
+   * @returns ApiExceptionPayload
+   */
+  toJson(): ApiExceptionPayload {
     const { code, message, status, fieldErrors } = this.getResponse() as ApiExceptionPayload;
 
     return {

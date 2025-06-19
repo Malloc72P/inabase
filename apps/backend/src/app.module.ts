@@ -5,13 +5,13 @@ import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { LoggingExceptionFilter } from './config/global-exception.filter';
 import { ValidationExceptionFilter } from './config/validation.filter';
+import { CursorModule } from './cursor/cursor.module';
 import { HasherModule } from './hasher/hasher.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ShowModule } from './show/show.module';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
-import { CursorModule } from './cursor/cursor.module';
 
 @Module({
   imports: [
