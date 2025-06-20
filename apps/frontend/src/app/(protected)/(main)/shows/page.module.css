@@ -1,0 +1,6 @@
+.scrollVisualizer {
+  height: 1px;
+  transition: 0.2s ease-in-out;
+  background-color: var(--mantine-color-gray-1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

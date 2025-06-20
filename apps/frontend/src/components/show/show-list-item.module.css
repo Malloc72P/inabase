@@ -1,6 +1,8 @@
 .show {
   width: 100%;
-  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  /* border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)); */
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-bottom: none;
   background-color: light-dark(white, var(--mantine-color-dark-7));
 
   a {
@@ -10,5 +12,5 @@
 }
 
 .show[data-last='true'] {
-  border-bottom: none;
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }

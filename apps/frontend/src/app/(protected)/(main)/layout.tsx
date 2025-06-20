@@ -16,9 +16,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <ProtectedHeader navbarModel={navbarModel} />
       </AppShell.Header>
 
-      <AppShell.Main className={classes.layout}>
-        <Container pt={32}>{children}</Container>
-      </AppShell.Main>
+      <AppShell.Main className={classes.layout}>{children}</AppShell.Main>
     </AppShell>
   );
 }
