@@ -6,7 +6,7 @@ import { useScrolled } from '@hooks/use-scrolled';
 import { Box, Button, Container, Divider, Flex, ScrollArea, Space, TextInput } from '@mantine/core';
 import { FindShowsInput } from '@repo/dto';
 import { IconSearch } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ShowList } from 'src/components/show';
 import { useShows } from 'src/hooks/use-shows';
@@ -18,10 +18,10 @@ export default function ShowListPage() {
       keyword: '',
     },
   });
-  const { isScrolled, watchScroll } = useScrolled();
+  const { scrollRef, isBottom, isScrolled, watchScroll } = useScrolled();
   const [keyword, setKeyword] = useState('');
-  const { shows, isShowLoading } = useShows({ keyword });
   const navigator = useNavigator();
+  const { shows, isShowLoading } = useShows({ keyword, isBottom });
 
   const onSearchSubmit = async () => {
     console.log('Search submitted:', form.getValues());
@@ -53,6 +53,7 @@ export default function ShowListPage() {
 
       {/* ------ Show 카드 목록 ------ */}
       <ScrollArea
+        viewportRef={scrollRef}
         pos={'relative'}
         style={{ overflowY: 'auto', flexGrow: 1, height: 0 }}
         onScrollPositionChange={watchScroll}

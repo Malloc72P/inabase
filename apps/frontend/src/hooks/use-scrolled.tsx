@@ -1,13 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function useScrolled() {
-  const [chatSessionScrollY, setChatSessionScrollY] = useState(0);
+  const [isBottom, setIsBottom] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollY, setScrollY] = useState(0);
 
   return {
-    isScrolled: chatSessionScrollY > 0,
+    scrollY,
+    isBottom,
+    scrollRef,
+    isScrolled: scrollY > 0,
     // onScrollPositionChange에서 사용할 것.
     watchScroll: (e: { x: number; y: number }) => {
-      setChatSessionScrollY(e.y);
+      if (!scrollRef.current) return;
+
+      const { clientHeight, scrollHeight } = scrollRef.current;
+      let nextIsBottom = e.y + clientHeight >= scrollHeight;
+
+      setIsBottom(nextIsBottom);
+      setScrollY(e.y);
     },
   };
 }

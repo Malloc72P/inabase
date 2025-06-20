@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { cn } from 'src/libs/ui';
 import classes from './show-list-item.module.css';
+import { DateUtil } from '@repo/date-util';
 
 export interface ShowListItemProps {
   show: ShowDto;
@@ -88,6 +89,12 @@ export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
               {tag}
             </Badge>
           ))}
+        </Flex>
+
+        <Flex>
+          <Text size="sm" color="dimmed">
+            생성일: {DateUtil.format(show.createdAt, 'postCard')}
+          </Text>
         </Flex>
       </Flex>
     </Box>

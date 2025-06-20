@@ -171,6 +171,15 @@ importers:
       '@mantine/notifications':
         specifier: ^7.16.1
         version: 7.16.1(@mantine/core@7.15.2(@mantine/hooks@7.15.2(react@19.0.0))(@types/react@18.3.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@mantine/hooks@7.15.2(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@repo/date-util':
+        specifier: workspace:*
+        version: link:../../packages/date-util
+      '@repo/dto':
+        specifier: workspace:*
+        version: link:../../packages/dto
+      '@repo/exceptions':
+        specifier: workspace:*
+        version: link:../../packages/exceptions
       '@tabler/icons-react':
         specifier: ^3.26.0
         version: 3.26.0(react@19.0.0)
@@ -214,15 +223,9 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5(@types/react@18.3.1)(react@19.0.0)(use-sync-external-store@1.4.0(react@19.0.0))
     devDependencies:
-      '@repo/dto':
-        specifier: workspace:*
-        version: link:../../packages/dto
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@repo/exceptions':
-        specifier: workspace:*
-        version: link:../../packages/exceptions
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
