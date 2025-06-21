@@ -3,7 +3,7 @@
 import { IconButton } from '@components/buttons';
 import { useNavigator } from '@hooks/use-navigator';
 import { useScrolled } from '@hooks/use-scrolled';
-import { Box, Button, Container, Divider, Flex, ScrollArea, Space, TextInput } from '@mantine/core';
+import { Box, Button, Container, Flex, ScrollArea, Space, TextInput } from '@mantine/core';
 import { FindShowsInput } from '@repo/dto';
 import { IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -21,13 +21,23 @@ export default function ShowListPage() {
   const { scrollRef, isBottom, isScrolled, watchScroll } = useScrolled();
   const [keyword, setKeyword] = useState('');
   const navigator = useNavigator();
-  const { shows, isShowLoading } = useShows({ keyword, isBottom });
+  const { shows, isShowLoading, isInitialLoading, isNextLoading, hasNextPage, fetchNextPage } =
+    useShows({
+      keyword,
+      isBottom,
+    });
 
   const onSearchSubmit = async () => {
-    console.log('Search submitted:', form.getValues());
-
     setKeyword(form.getValues().keyword || '');
   };
+
+  useEffect(() => {
+    if (!isBottom || isShowLoading || !hasNextPage) {
+      return;
+    }
+
+    fetchNextPage();
+  }, [isBottom]);
 
   return (
     <Flex w={'100%'} h={'calc(100vh - 109px)'} direction={'column'}>
@@ -69,8 +79,11 @@ export default function ShowListPage() {
           className={classes.scrollVisualizer}
         ></Box>
         <Container>
-          <ShowList shows={shows} isShowLoading={isShowLoading} />
-
+          <ShowList
+            shows={shows}
+            isInitialLoading={isInitialLoading}
+            isNextLoading={isNextLoading}
+          />
           <Space py={32} />
         </Container>
       </ScrollArea>

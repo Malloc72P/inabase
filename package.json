@@ -2,9 +2,9 @@
   "name": "simple-appserver",
   "private": true,
   "scripts": {
+    "dev": "pnpm db && turbo dev",
     "build": "turbo build",
     "build:packages": "turbo run build --filter=@repo/*",
-    "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "db": "docker compose -f ./apps/backend/docker-compose.yml up -d",

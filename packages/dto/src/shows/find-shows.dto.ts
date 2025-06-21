@@ -11,6 +11,7 @@ export type FindShowsInput = z.infer<typeof FindShowInputSchema>;
 export const FindShowsOutputSchema = z.object({
   shows: z.array(ShowDtoSchema),
   hasNext: z.boolean(),
+  keyword: z.string(),
   nextCursor: z.string(),
 });
 export type FindShowsOutput = z.infer<typeof FindShowsOutputSchema>;

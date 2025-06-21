@@ -13,25 +13,11 @@ import { useState } from 'react';
 import { cn } from 'src/libs/ui';
 import classes from './show-list-item.module.css';
 import { DateUtil } from '@repo/date-util';
+import { UiConstants } from '@libs/constants/ui.constant';
 
 export interface ShowListItemProps {
   show: ShowDto;
   isLast?: boolean;
-}
-
-export function ShowListItemLoading({ tagCount = 3 }: { tagCount?: number }) {
-  return (
-    <Box className={cn('show-list-item-skeleton', classes.show)} p="lg">
-      <Flex justify="space-between" direction="column" gap="xs">
-        <Skeleton w="70%" h={20} />
-        <Flex gap={'md'}>
-          {Array.from({ length: tagCount }).map((_, index) => (
-            <Skeleton key={index} w={50} h={20} />
-          ))}
-        </Flex>
-      </Flex>
-    </Box>
-  );
 }
 
 export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
@@ -41,8 +27,9 @@ export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
   const navigator = useNavigator();
 
   const onDeleteBtnClicked = async () => {
+    let timeoutId: NodeJS.Timeout | null = null;
     try {
-      setGlobalLoading(true);
+      timeoutId = setTimeout(() => setGlobalLoading(true), UiConstants.delay.globalLoading);
       await deleteShow(show.id);
 
       notifySuccess({ message: `${show.title} 이(가) 삭제되었습니다.` });
@@ -51,6 +38,7 @@ export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
       console.error('Failed to delete show:', error);
       notifyError({ message: apiError.message });
     } finally {
+      timeoutId && clearTimeout(timeoutId);
       setGlobalLoading(false);
     }
   };
@@ -92,9 +80,34 @@ export function ShowListItem({ show, isLast = false }: ShowListItemProps) {
         </Flex>
 
         <Flex>
-          <Text size="sm" color="dimmed">
-            생성일: {DateUtil.format(show.createdAt, 'postCard')}
+          <Text size="sm" c="dimmed">
+            {DateUtil.format(show.createdAt, 'short')} 작성됨
           </Text>
+        </Flex>
+      </Flex>
+    </Box>
+  );
+}
+
+export function ShowListItemLoading({
+  tagCount = 3,
+  isLast = false,
+}: {
+  tagCount?: number;
+  isLast?: boolean;
+}) {
+  return (
+    <Box
+      className={cn('show-list-item-skeleton', classes.show)}
+      p="lg"
+      data-last={isLast ? 'true' : 'false'}
+    >
+      <Flex justify="space-between" direction="column" gap="xs">
+        <Skeleton w="70%" h={20} />
+        <Flex gap={'md'}>
+          {Array.from({ length: tagCount }).map((_, index) => (
+            <Skeleton key={index} w={50} h={20} />
+          ))}
         </Flex>
       </Flex>
     </Box>

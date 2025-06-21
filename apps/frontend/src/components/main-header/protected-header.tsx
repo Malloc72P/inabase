@@ -8,7 +8,6 @@ import { Logo } from 'src/components/logo';
 import { INavbarItem, MAIN_NAVBAR_HEIGHT, MainNavbar } from 'src/components/main-navbar';
 import { ThemeToggler } from 'src/components/theme-toggler';
 import { UserMenu } from 'src/components/user-menu';
-import { CommonConstants } from 'src/libs/constants/common';
 import { ProtectedAuthGroup } from './header-group';
 import classes from './protected-header.module.css';
 import { useMemo } from 'react';

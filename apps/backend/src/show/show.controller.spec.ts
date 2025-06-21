@@ -191,11 +191,15 @@ function createShow() {
     id: show.id,
     title: show.title,
     tags: show.tags,
+    createdAt: show.createdAt.toISOString(),
+    updatedAt: show.updatedAt.toISOString(),
   };
 
   const detailDto: ShowDetailDto = {
     ...dto,
     description: show.description,
+    createdAt: show.createdAt.toISOString(),
+    updatedAt: show.updatedAt.toISOString(),
   };
 
   return { show, dto, detailDto };

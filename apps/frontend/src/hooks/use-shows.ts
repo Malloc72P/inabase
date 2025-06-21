@@ -1,59 +1,57 @@
 'use client';
 
+import { sleep } from '@libs/debug';
 import { findShowsApi } from '@libs/fetcher/shows';
-import { useQuery } from '@tanstack/react-query';
-import { useQueryKey } from './use-query-key';
-import { FindShowsInput, ShowDto } from '@repo/dto';
+import { FindShowsInput } from '@repo/dto';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 export type UseShowsProps = Omit<FindShowsInput, 'cursor'> & {
   isBottom: boolean;
 };
 
+export type ShowsPage = ReturnType<typeof useShows>['data'];
+
 export function useShows({ isBottom, ...params }: UseShowsProps) {
+  const qc = useQueryClient();
   const [keyword, setKeyword] = useState(params.keyword || '');
-  const [hasNext, setHasNext] = useState(false);
-  const [cursor, setCursor] = useState('');
-  const queryKey = useQueryKey();
-  const [shows, setShows] = useState<ShowDto[]>([]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: queryKey.show.list({ keyword, cursor }),
-    queryFn: async () => {
+  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: ['shows'],
+    queryFn: async (param) => {
       const result = await findShowsApi({
-        keyword,
-        cursor,
+        keyword: param.pageParam.keyword || '',
+        cursor: param.pageParam.cursor || '',
       });
-
-      setShows((prevShows) => {
-        const map = new Map([...prevShows, ...result.shows].map((show) => [show.id, show]));
-        const shows = Array.from(map.values());
-
-        return shows;
-      });
-      setHasNext(result.hasNext);
 
       return result;
     },
-    initialData: {
-      shows: [],
-      hasNext: false,
-      nextCursor: '',
+    initialPageParam: {
+      keyword: params.keyword || '',
+      cursor: '',
+    } as FindShowsInput,
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.hasNext
+        ? ({
+            keyword: lastPage.keyword,
+            cursor: lastPage.hasNext ? lastPage.nextCursor : '',
+          } as FindShowsInput)
+        : null;
     },
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
     setKeyword(params.keyword || '');
   }, [params]);
 
-  useEffect(() => {
-    if (!isBottom || !hasNext || isLoading) return;
-
-    setCursor(data.nextCursor);
-  }, [isBottom]);
-
   return {
-    shows,
-    isShowLoading: isLoading,
+    data,
+    shows: data?.pages.map((page) => page.shows).flat() || [],
+    isInitialLoading: !data && isFetching,
+    isShowLoading: isFetching,
+    isNextLoading: isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
   };
 }

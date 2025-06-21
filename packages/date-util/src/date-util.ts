@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/ko';
 import { DateFormat, IDateFormat } from './date-format';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(relativeTime);
 
 dayjs.locale('ko');
 
@@ -31,11 +33,16 @@ const format = (date: string | Date | dayjs.Dayjs, formatType: IDateFormat) => {
   return result;
 };
 
+const fromNow = (date: string | Date) => {
+  return dayjs(date).fromNow();
+};
+
 export const DateUtil = {
   toLocalTime,
   format,
   Dayjs: (date?: string | Date) => CustomDayJS.tz(date, DateUtil.tzString.seoul),
   now: () => DateUtil.Dayjs().tz(DateUtil.tzString.seoul),
+  fromNow,
   tzString: {
     seoul: 'Asia/Seoul',
     toronto: 'America/Toronto',

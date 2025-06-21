@@ -13,23 +13,20 @@ import {
   CreateShowInput,
   CreateShowInputSchema,
   CreateShowOutput,
-  FindShowsOutput,
-  ShowDtoSchema,
   DeleteShowOutput,
+  FindShowOutput,
+  FindShowsOutput,
+  UpdateShowInput,
   UpdateShowInputSchema,
   UpdateShowOutput,
-  UpdateShowInput,
-  FindShowOutput,
-  ShowDetailDtoSchema,
 } from '@repo/dto';
-import { BaseController } from '@src/base/base.controller';
-import { transformTo } from '@src/util/transformer.util';
-import { ShowService } from './show.service';
 import { JwtAuthGuard } from '@src/auth/auth.guard';
+import { BaseController } from '@src/base/base.controller';
+import { IRequester, Requester } from '@src/util/user-decorator';
 import { ZodInput } from '@src/util/zod-validation.pipe';
-import { Requester, IRequester } from '@src/util/user-decorator';
-import { CursorService } from '@src/cursor/cursor.service';
+import { toShowDetailDto, toShowDto } from './show-mapper';
 import { ShowSearchService } from './show-search.service';
+import { ShowService } from './show.service';
 
 @Controller('api/v1/shows')
 export class ShowController extends BaseController {
@@ -52,9 +49,10 @@ export class ShowController extends BaseController {
     });
 
     return {
-      shows: shows.map((show) => transformTo(ShowDtoSchema, show)),
+      shows: shows.map(toShowDto),
       hasNext,
       nextCursor,
+      keyword: keyword || '',
     };
   }
 
@@ -67,7 +65,7 @@ export class ShowController extends BaseController {
     const { show } = await this.showService.findOne({ id: showId });
 
     return {
-      show: transformTo(ShowDetailDtoSchema, show),
+      show: toShowDetailDto(show),
     };
   }
 
@@ -78,7 +76,7 @@ export class ShowController extends BaseController {
     const { show } = await this.showService.create(param);
 
     return {
-      show: transformTo(ShowDtoSchema, show),
+      show: toShowDto(show),
     };
   }
 
@@ -89,7 +87,7 @@ export class ShowController extends BaseController {
     const { show } = await this.showService.update({ id, ...param });
 
     return {
-      show: transformTo(ShowDetailDtoSchema, show),
+      show: toShowDetailDto(show),
     };
   }
 
