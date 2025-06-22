@@ -13,7 +13,6 @@ export type UseShowsProps = Omit<FindShowsInput, 'cursor'> & {
 export type ShowsPage = ReturnType<typeof useShows>['data'];
 
 export function useShows({ isBottom, ...params }: UseShowsProps) {
-  const qc = useQueryClient();
   const [keyword, setKeyword] = useState(params.keyword || '');
 
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({

@@ -5,7 +5,7 @@ import { DateUtil } from '@repo/date-util';
 export async function seedShows(prisma: PrismaClient) {
   await prisma.show.deleteMany();
 
-  const data = generateDummyData(100);
+  const data = generateDummyData(10000);
 
   const s: Show | null = null;
   const result = await prisma.show.createMany({
