@@ -5,24 +5,25 @@ import { useShowMutation } from '@hooks/use-show-mutation';
 import { ApiError } from '@libs/fetcher';
 import { PageLinkMap } from '@libs/link-map';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/global-loading-store';
-import { Badge, Box, BoxProps, Flex, Group, Skeleton, Text } from '@mantine/core';
+import { Badge, Box, BoxProps, Card, Flex, Group, Skeleton, Text } from '@mantine/core';
 import { ShowDto } from '@repo/dto';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconBoxOff, IconEdit, IconTrash } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { cn } from 'src/libs/ui';
 import classes from './show-list-item.module.css';
 import { DateUtil } from '@repo/date-util';
 import { UiConstants } from '@libs/constants/ui.constant';
+import { useShows } from '@hooks/use-shows';
 
 export interface ShowListItemProps extends BoxProps {
   show: ShowDto;
   isLast?: boolean;
+  deleteShow: ReturnType<typeof useShows>['deleteShow'];
 }
 
-export function ShowListItem({ show, isLast = false, ...props }: ShowListItemProps) {
+export function ShowListItem({ show, isLast = false, deleteShow, ...props }: ShowListItemProps) {
   const [hover, setHover] = useState<boolean>(false);
-  const { deleteShow } = useShowMutation();
   const { setGlobalLoading } = useGlobalLoadingStore();
   const navigator = useNavigator();
 
@@ -112,5 +113,18 @@ export function ShowListItemLoading({
         </Flex>
       </Flex>
     </Box>
+  );
+}
+
+export function ShowListItemEmptyView() {
+  return (
+    <Card p="xl" id="ina-show-list-empty" withBorder shadow="md" radius={'md'}>
+      <Flex direction="column" gap="md" justify={'center'} align="center" py={'xl'}>
+        <IconBoxOff size={64} stroke={1.5} color="gray" />
+        <Text size="xl" fs={'italic'}>
+          데이터가 없습니다. 다른 검색어로 검색해보세요.
+        </Text>
+      </Flex>
+    </Card>
   );
 }

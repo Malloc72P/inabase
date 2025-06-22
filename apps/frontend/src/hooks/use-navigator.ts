@@ -1,12 +1,12 @@
-import { PageLinkMap } from 'src/libs/link-map';
+import { PageLinkMap, ShowsListLinkParam } from 'src/libs/link-map';
 import { useRouter } from 'next-nprogress-bar';
-import { create } from 'domain';
 
 export const useNavigator = () => {
   const router = useRouter();
 
   return {
     moveTo: {
+      back: () => router.back(),
       auth: {
         login: () => router.push(PageLinkMap.auth.login()),
         signup: () => router.push(PageLinkMap.auth.signup()),
@@ -16,7 +16,8 @@ export const useNavigator = () => {
       },
       protected: {
         shows: {
-          list: () => router.push(PageLinkMap.protected.shows.list()),
+          list: (param?: ShowsListLinkParam) =>
+            router.push(PageLinkMap.protected.shows.list(param)),
           detail: (id: string) => router.push(PageLinkMap.protected.shows.detail(id)),
           create: () => router.push(PageLinkMap.protected.shows.create()),
           edit: (id: string) => router.push(PageLinkMap.protected.shows.edit(id)),

@@ -1,22 +1,22 @@
 'use client';
 
-import { sleep } from '@libs/debug';
-import { findShowsApi } from '@libs/fetcher/shows';
+import { deleteShowApi, findShowsApi } from '@libs/fetcher/shows';
 import { FindShowsInput } from '@repo/dto';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { useQueryKey } from './use-query-key';
 
-export type UseShowsProps = Omit<FindShowsInput, 'cursor'> & {
-  isBottom: boolean;
-};
+export type UseShowsProps = Omit<FindShowsInput, 'cursor'> & {};
 
-export type ShowsPage = ReturnType<typeof useShows>['data'];
-
-export function useShows({ isBottom, ...params }: UseShowsProps) {
-  const [keyword, setKeyword] = useState(params.keyword || '');
+export function useShows({ ...params }: UseShowsProps) {
+  const qc = useQueryClient();
+  const qKey = useQueryKey();
+  const showsKey = useMemo(() => {
+    return qKey.show.list(params);
+  }, [params]);
 
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ['shows'],
+    queryKey: showsKey,
     queryFn: async (param) => {
       const result = await findShowsApi({
         keyword: param.pageParam.keyword || '',
@@ -38,11 +38,38 @@ export function useShows({ isBottom, ...params }: UseShowsProps) {
         : null;
     },
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
-  useEffect(() => {
-    setKeyword(params.keyword || '');
-  }, [params]);
+  const { mutateAsync: deleteShow } = useMutation({
+    mutationFn: async (showId: string) => {
+      await qc.cancelQueries({ queryKey: showsKey });
+      const prev = qc.getQueryData<typeof data>;
+
+      qc.setQueryData<typeof data>(showsKey, (old) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            shows: page.shows.filter((show) => show.id !== showId),
+          })),
+        };
+      });
+
+      await deleteShowApi({ showId });
+
+      return { prev };
+    },
+    onError: (err, id, ctx) => {
+      const context = ctx as { prev: typeof data };
+
+      if (context?.prev) {
+        qc.setQueryData(showsKey, context.prev);
+      }
+    },
+  });
 
   return {
     data,
@@ -52,5 +79,6 @@ export function useShows({ isBottom, ...params }: UseShowsProps) {
     isNextLoading: isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
+    deleteShow,
   };
 }

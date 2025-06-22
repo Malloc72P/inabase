@@ -42,7 +42,7 @@ export const SEARCH_TEST_FLAG = 'search-test-flag';
 export function generateDummyData(count: number): Item[] {
   const titles = new Set<string>();
   const items: Item[] = [];
-  let day = DateUtil.Dayjs('2020-01-01');
+  let day = DateUtil.now();
 
   while (items.length < count) {
     // 제목 생성 (예: 영화/드라마 제목 같은 느낌)
@@ -62,9 +62,9 @@ export function generateDummyData(count: number): Item[] {
 
     const description = faker.lorem.paragraph({ min: 10, max: 20 });
 
-    // 생성일은 2020년 1월 1일부터 현재까지, 하루씩 증가한다.
+    // 생성일은 오늘부터 현재까지, 하루씩 감소한다.
     const createdAt = day.toDate();
-    day = day.add(1, 'day');
+    day = day.subtract(1, 'day');
 
     items.push({ title, tags, description, createdAt });
   }

@@ -2,41 +2,33 @@
 
 import { IconButton } from '@components/buttons';
 import { useNavigator } from '@hooks/use-navigator';
-import { useScrolled } from '@hooks/use-scrolled';
-import { Box, Button, Container, Flex, Loader, ScrollArea, Space, TextInput } from '@mantine/core';
-import { FindShowsInput } from '@repo/dto';
+import { Box, Button, Container, Flex, ScrollArea, Space, TextInput } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { ShowList, ShowListItem, ShowListLoading } from 'src/components/show';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { ShowList } from 'src/components/show';
 import { useShows } from 'src/hooks/use-shows';
 import classes from './page.module.css';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useShowScroll } from './use-show-scroll';
+import { useShowSearchForm } from './use-show-search-form';
 
 export default function ShowListPage() {
-  const form = useForm<FindShowsInput>({
-    defaultValues: {
-      keyword: '',
-    },
-  });
-  const { scrollRef, isBottom, isScrolled, watchScroll } = useScrolled();
-  const [keyword, setKeyword] = useState('');
   const navigator = useNavigator();
-  const { shows, isShowLoading, isInitialLoading, isNextLoading, hasNextPage, fetchNextPage } =
-    useShows({
-      keyword,
-      isBottom,
-    });
+  const param = useSearchParams();
+  const { form, onSearchSubmit } = useShowSearchForm();
+  const { scrollRef, isBottom, isScrolled, watchScroll } = useShowScroll();
 
-  const rowVirtualizer = useVirtualizer({
-    count: shows.length,
-    getScrollElement: () => scrollRef?.current,
-    estimateSize: () => 133.3,
+  const {
+    shows,
+    isShowLoading,
+    isInitialLoading,
+    isNextLoading,
+    hasNextPage,
+    fetchNextPage,
+    deleteShow,
+  } = useShows({
+    keyword: param.get('keyword') || '',
   });
-
-  const onSearchSubmit = async () => {
-    setKeyword(form.getValues().keyword || '');
-  };
 
   useEffect(() => {
     if (!isBottom || isShowLoading || !hasNextPage) {
@@ -50,7 +42,7 @@ export default function ShowListPage() {
     <Flex w={'100%'} h={'calc(100vh - 109px)'} direction={'column'}>
       {/* ------ 상단 검색기 ------ */}
       <Container w={'100%'}>
-        <Flex gap="xl" pos={'sticky'} top={0} bg="white" py={32}>
+        <Flex gap="xl" pos={'sticky'} top={0} py={32}>
           <form style={{ flexGrow: 1 }} onSubmit={form.handleSubmit(onSearchSubmit)}>
             <TextInput
               placeholder="검색어를 입력하세요"
@@ -93,6 +85,7 @@ export default function ShowListPage() {
             isInitialLoading={isInitialLoading}
             isNextLoading={isNextLoading}
             scrollRef={scrollRef}
+            deleteShow={deleteShow}
           />
           <Space py={32} />
         </Container>

@@ -10,13 +10,13 @@ export function useMainNavbarModel() {
       label: 'Shows',
       icon: IconMovie,
       value: 'shows',
-      onClick: navigator.moveTo.protected.shows.list,
+      onClick: () => navigator.moveTo.protected.shows.list(),
     },
     {
       label: 'Artists',
       icon: IconUserSquare,
       value: 'artists',
-      onClick: navigator.moveTo.protected.artists,
+      onClick: () => navigator.moveTo.protected.artists(),
     },
   ];
 }
