@@ -27,10 +27,10 @@ export default function CreateShowPage() {
   const onSubmit = async (data: CreateShowInput) => {
     try {
       setLoading(true);
-      await createShow(data);
+      const show = await createShow(data);
       form.reset();
       notifySuccess({ message: 'Show created successfully!' });
-      navigator.moveTo.protected.shows.list();
+      navigator.moveTo.protected.shows.detail(show.id);
     } catch (error) {
       const { errorMessage } = handleApiError(error, form);
       notifyError({ message: errorMessage });

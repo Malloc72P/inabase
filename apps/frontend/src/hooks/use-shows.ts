@@ -1,13 +1,15 @@
 'use client';
 
 import { findShowsApi } from '@libs/fetcher/shows';
-import { FindShowsInput } from '@repo/dto';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { FindShowsInput, FindShowsOutput } from '@repo/dto';
+import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useQueryKey } from './use-query-key';
+import { sleep } from '@libs/debug';
 
 export type UseShowsProps = Omit<FindShowsInput, 'cursor'> & {};
-export type ShowsPage = ReturnType<typeof useShows>['data'];
+export type ShowsQueryData = InfiniteData<FindShowsOutput>;
+export type ShowsQueryPage = ShowsQueryData['pages'];
 
 export function useShows({ ...params }: UseShowsProps) {
   const qKey = useQueryKey();
