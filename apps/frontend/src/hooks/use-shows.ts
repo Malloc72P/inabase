@@ -1,8 +1,8 @@
 'use client';
 
-import { deleteShowApi, findShowsApi } from '@libs/fetcher/shows';
+import { findShowsApi } from '@libs/fetcher/shows';
 import { FindShowsInput } from '@repo/dto';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { useQueryKey } from './use-query-key';
 
@@ -43,6 +43,7 @@ export function useShows({ ...params }: UseShowsProps) {
 
   return {
     data,
+    showsKey,
     shows: data?.pages.map((page) => page.shows).flat() || [],
     isInitialLoading: !data && isFetching,
     isShowLoading: isFetching,

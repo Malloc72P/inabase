@@ -1,25 +1,33 @@
 import { Box, Container, ScrollArea, Space } from '@mantine/core';
 import { ShowListItem, ShowListItemEmptyView, ShowListItemLoading } from './show-list-item';
 
-import { useShows } from '@hooks/use-shows';
-import { useEffect, useMemo, useRef } from 'react';
 import { useShowScroll } from '@components/show/use-show-scroll';
+import { ShowDto } from '@repo/dto';
+import { useEffect, useMemo } from 'react';
 import classes from './show-list.module.css';
 import { useShowsVirtualizer } from './use-shows-virtualizer';
 export interface ShowListProps {
   keyword: string;
+  shows: ShowDto[];
+  isShowLoading: boolean;
+  isInitialLoading: boolean;
+  isNextLoading: boolean;
+  hasNextPage: boolean;
+  fetchNextPage: () => void;
 }
 
-export function ShowList({ keyword }: ShowListProps) {
+export function ShowList({
+  keyword,
+  shows,
+  isShowLoading,
+  isInitialLoading,
+  isNextLoading,
+  hasNextPage,
+  fetchNextPage,
+}: ShowListProps) {
   //-------------------------------------------------------------------------
-  // Shows Query
+  // DataList State
   //-------------------------------------------------------------------------
-  const { shows, isShowLoading, isInitialLoading, isNextLoading, hasNextPage, fetchNextPage } =
-    useShows({
-      keyword,
-    });
-
-  // 데이터가 비어있는지 여부.
   const isEmpty = useMemo(
     () => shows.length === 0 && !isInitialLoading && !isNextLoading,
     [shows, isInitialLoading, isNextLoading]

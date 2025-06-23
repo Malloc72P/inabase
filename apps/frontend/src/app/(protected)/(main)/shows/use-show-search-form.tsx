@@ -3,13 +3,17 @@
 import { useNavigator } from '@hooks/use-navigator';
 import { UiConstants } from '@libs/constants/ui.constant';
 import { FindShowsInput } from '@repo/dto';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-export interface UseShowSearchProps {}
+export interface UseShowSearchProps {
+  showsKey: (string | undefined)[];
+}
 
-export function useShowSearchForm() {
+export function useShowSearchForm({ showsKey }: UseShowSearchProps) {
+  const queryClient = useQueryClient();
   const param = useSearchParams();
   const navigator = useNavigator();
 
@@ -29,6 +33,8 @@ export function useShowSearchForm() {
     if (scrollContainer) {
       scrollContainer.scrollTop = 0;
     }
+
+    queryClient.resetQueries({ queryKey: showsKey });
 
     navigator.moveTo.protected.shows.list(param);
   };
