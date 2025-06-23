@@ -24,6 +24,12 @@ export function useShowSearchForm() {
     let param = keyword ? { keyword } : undefined;
 
     sessionStorage.removeItem(UiConstants.sessionStorage.generateKey('shows'));
+    const scrollContainer = document.querySelector('#ina-show-list-scroll-area > .scroll-viewport');
+
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0;
+    }
+
     navigator.moveTo.protected.shows.list(param);
   };
 

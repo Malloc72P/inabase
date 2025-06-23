@@ -7,9 +7,9 @@ import { useMemo } from 'react';
 import { useQueryKey } from './use-query-key';
 
 export type UseShowsProps = Omit<FindShowsInput, 'cursor'> & {};
+export type ShowsPage = ReturnType<typeof useShows>['data'];
 
 export function useShows({ ...params }: UseShowsProps) {
-  const qc = useQueryClient();
   const qKey = useQueryKey();
   const showsKey = useMemo(() => {
     return qKey.show.list(params);
@@ -29,7 +29,7 @@ export function useShows({ ...params }: UseShowsProps) {
       keyword: params.keyword || '',
       cursor: '',
     } as FindShowsInput,
-    getNextPageParam: (lastPage, pages) => {
+    getNextPageParam: (lastPage) => {
       return lastPage.hasNext
         ? ({
             keyword: lastPage.keyword,
@@ -41,36 +41,6 @@ export function useShows({ ...params }: UseShowsProps) {
     refetchOnMount: false,
   });
 
-  const { mutateAsync: deleteShow } = useMutation({
-    mutationFn: async (showId: string) => {
-      await qc.cancelQueries({ queryKey: showsKey });
-      const prev = qc.getQueryData<typeof data>;
-
-      qc.setQueryData<typeof data>(showsKey, (old) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            shows: page.shows.filter((show) => show.id !== showId),
-          })),
-        };
-      });
-
-      await deleteShowApi({ showId });
-
-      return { prev };
-    },
-    onError: (err, id, ctx) => {
-      const context = ctx as { prev: typeof data };
-
-      if (context?.prev) {
-        qc.setQueryData(showsKey, context.prev);
-      }
-    },
-  });
-
   return {
     data,
     shows: data?.pages.map((page) => page.shows).flat() || [],
@@ -79,6 +49,5 @@ export function useShows({ ...params }: UseShowsProps) {
     isNextLoading: isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    deleteShow,
   };
 }

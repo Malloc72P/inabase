@@ -1,6 +1,7 @@
 'use client';
 
 import { InaText } from '@components/custom-components';
+import { ShowTagBadge } from '@components/show/show-badge';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useShow } from '@hooks/use-show';
@@ -65,11 +66,10 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
         {isShowLoading ? (
           <TagSkeletons />
         ) : (
-          show?.tags.map((tag) => (
-            <Badge variant="light" size="lg" key={tag}>
-              {tag}
-            </Badge>
-          ))
+          <>
+            {show && <ShowTagBadge size="lg" tag={show.id} />}
+            {show?.tags.map((tag) => <ShowTagBadge size="lg" key={tag} tag={tag} />)}
+          </>
         )}
       </Flex>
 

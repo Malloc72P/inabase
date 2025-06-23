@@ -17,7 +17,7 @@ export const useNavigator = () => {
       protected: {
         shows: {
           list: (param?: ShowsListLinkParam) =>
-            router.push(PageLinkMap.protected.shows.list(param)),
+            router.push(PageLinkMap.protected.shows.list(param), { scroll: false }),
           detail: (id: string) => router.push(PageLinkMap.protected.shows.detail(id)),
           create: () => router.push(PageLinkMap.protected.shows.create()),
           edit: (id: string) => router.push(PageLinkMap.protected.shows.edit(id)),

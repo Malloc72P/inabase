@@ -15,17 +15,18 @@ import classes from './show-list-item.module.css';
 import { DateUtil } from '@repo/date-util';
 import { UiConstants } from '@libs/constants/ui.constant';
 import { useShows } from '@hooks/use-shows';
+import { ShowTagBadge } from './show-badge';
 
 export interface ShowListItemProps extends BoxProps {
   show: ShowDto;
   isLast?: boolean;
-  deleteShow: ReturnType<typeof useShows>['deleteShow'];
 }
 
-export function ShowListItem({ show, isLast = false, deleteShow, ...props }: ShowListItemProps) {
+export function ShowListItem({ show, isLast = false, ...props }: ShowListItemProps) {
   const [hover, setHover] = useState<boolean>(false);
   const { setGlobalLoading } = useGlobalLoadingStore();
   const navigator = useNavigator();
+  const { deleteShow } = useShowMutation();
 
   const onDeleteBtnClicked = async () => {
     let timeoutId: NodeJS.Timeout | null = null;
@@ -49,6 +50,7 @@ export function ShowListItem({ show, isLast = false, deleteShow, ...props }: Sho
       {...props}
       className={cn('show-list-item', classes.show)}
       p="lg"
+      h={135}
       data-last={isLast ? 'true' : 'false'}
       onPointerEnter={() => setHover(true)}
       onPointerLeave={() => setHover(false)}
@@ -74,10 +76,9 @@ export function ShowListItem({ show, isLast = false, deleteShow, ...props }: Sho
 
         {/* Second Row */}
         <Flex gap={'md'} wrap={'wrap'} align="center">
+          <ShowTagBadge tag={show.id} />
           {show.tags.map((tag) => (
-            <Badge key={tag} variant="light" style={{ flexShrink: 0 }}>
-              {tag}
-            </Badge>
+            <ShowTagBadge key={tag} tag={tag} />
           ))}
         </Flex>
 
