@@ -10,11 +10,7 @@ export interface AppConfig {
 }
 
 export interface DatabaseConfig {
-  host: string;
-  dbPort: number;
-  username: string;
-  password: string;
-  database: string;
+  databaseURL: string;
 }
 
 export interface TokenConfig {

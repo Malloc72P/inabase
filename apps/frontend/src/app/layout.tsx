@@ -14,6 +14,8 @@ import { CommonConstants, ProfileResult } from '@repo/dto';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SessionProps } from '@libs/stores/session-store';
+import { getServerSession } from './get-server-session';
+import { ReactQueryProvider } from '@libs/query-client';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -41,15 +43,17 @@ export default async function RootLayout({
   return (
     <html lang="ko" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript defaultColorScheme="dark" />
+        <ColorSchemeScript defaultColorScheme="light" />
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MantineProvider theme={theme} defaultColorScheme="dark">
+        <MantineProvider theme={theme} defaultColorScheme="light">
           <GlobalLoadingContainer>
-            <SessionProvider {...session}>{children}</SessionProvider>
+            <ReactQueryProvider>
+              <SessionProvider {...session}>{children}</SessionProvider>
+            </ReactQueryProvider>
           </GlobalLoadingContainer>
           <Notifications />
           <PageProgressBar />
@@ -57,39 +61,4 @@ export default async function RootLayout({
       </body>
     </html>
   );
-}
-
-async function getServerSession(): Promise<SessionProps> {
-  const unauthenticatedState: SessionProps = {
-    state: 'unauthenticated',
-    user: null,
-  };
-
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get(CommonConstants.token.accessTokenKey)?.value;
-  const refreshToken = cookieStore.get(CommonConstants.token.refreshTokenKey)?.value;
-
-  if (!accessToken) {
-    return unauthenticatedState;
-  }
-
-  let profile: ProfileResult | null = null;
-
-  try {
-    profile = await fetcher<unknown, ProfileResult>(ApiLinkMap.auth.profile.get(), {
-      accessToken,
-      refreshToken,
-    });
-  } catch (error) {
-    return unauthenticatedState;
-  }
-
-  if (!profile) {
-    return unauthenticatedState;
-  }
-
-  return {
-    user: profile,
-    state: 'authenticated',
-  };
 }

@@ -20,6 +20,10 @@
     "seed": {
       "dependsOn": ["^seed"],
       "cache": false
+    },
+    "sync": {
+      "dependsOn": ["^sync"],
+      "cache": false
     }
   }
 }

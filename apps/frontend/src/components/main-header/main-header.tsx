@@ -3,7 +3,6 @@
 import { CustomLink, CustomLinkType } from 'src/components/custom-link';
 import { Logo } from 'src/components/logo';
 import { ThemeToggler } from 'src/components/theme-toggler';
-import { CommonConstants } from 'src/libs/constants/common';
 import { Box, Burger, Divider, Drawer, Flex, Group, ScrollArea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ProtectedAuthGroup, PublicAuthGroup } from './header-group';

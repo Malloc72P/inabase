@@ -1,28 +1,30 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_FILTER } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
-import { AppDataSource } from './database/database.provider';
+import { LoggingExceptionFilter } from './config/global-exception.filter';
+import { ValidationExceptionFilter } from './config/validation.filter';
+import { CursorModule } from './cursor/cursor.module';
 import { HasherModule } from './hasher/hasher.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { PrismaService } from './prisma/prisma.service';
 import { ShowModule } from './show/show.module';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
-import { APP_FILTER } from '@nestjs/core';
-import { LoggingExceptionFilter } from './config/global-exception.filter';
-import { ValidationExceptionFilter } from './config/validation.filter';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(AppDataSource.options),
+    PrismaModule,
     ShowModule,
     UserModule,
     AuthModule,
     HasherModule,
     TokenModule,
+    CursorModule,
   ],
   controllers: [AppController],
   providers: [
@@ -34,6 +36,7 @@ import { ValidationExceptionFilter } from './config/validation.filter';
       provide: APP_FILTER,
       useClass: LoggingExceptionFilter,
     },
+    PrismaService,
   ],
 })
 export class AppModule {}

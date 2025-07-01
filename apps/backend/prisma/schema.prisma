@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("databaseURL")
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
+
+/**
+ * 사용자 엔티티
+ */
+model User {
+    // Common ================================================
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deleted   Boolean  @default(false)
+
+    // Property ================================================
+    name     String? // 사용자 이름
+    email    String   @unique // 사용자 이메일
+    password String // 사용자 비밀번호
+    role     UserRole @default(USER) // 사용자 역할
+
+    // Relation ================================================
+
+    // Index ================================================
+    @@index([email], name: "idx_user_email")
+}
+
+/**
+ * 쇼 엔티티
+ */
+model Show {
+    // Common ==================================================
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deleted   Boolean  @default(false)
+
+    // Property ================================================
+    title       String
+    description String
+    tags        String[]
+
+    // Property ================================================
+    searchVector Unsupported("tsvector")? // Full-text search vector for the show
+
+    // Relation ================================================
+
+    // Index ===================================================
+    @@index([searchVector], type: Gin, map: "show_fts_idx")
+}

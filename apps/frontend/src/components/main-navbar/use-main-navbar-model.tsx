@@ -9,14 +9,14 @@ export function useMainNavbarModel() {
     {
       label: 'Shows',
       icon: IconMovie,
-      value: PageLinkMap.protected.main(),
-      onClick: navigator.moveTo.protected.main,
+      value: 'shows',
+      onClick: () => navigator.moveTo.protected.shows.list(),
     },
     {
       label: 'Artists',
       icon: IconUserSquare,
-      value: PageLinkMap.protected.artists(),
-      onClick: navigator.moveTo.protected.artists,
+      value: 'artists',
+      onClick: () => navigator.moveTo.protected.artists(),
     },
   ];
 }

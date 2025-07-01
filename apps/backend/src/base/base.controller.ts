@@ -1,4 +1,4 @@
-import * as ms from 'ms';
+import ms from 'ms';
 import { BaseComponent } from './base.component';
 
 export class BaseController extends BaseComponent {

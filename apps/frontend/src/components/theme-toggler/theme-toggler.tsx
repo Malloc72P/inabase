@@ -3,18 +3,24 @@
 import { ActionIcon, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import classes from './theme-toggler.module.css';
+import { IconButton } from '@components/buttons';
 
 export function ThemeToggler() {
-  const { toggleColorScheme } = useMantineColorScheme();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   const onTogglerClick = () => {
     toggleColorScheme();
   };
 
   return (
-    <ActionIcon variant="transparent" color="gray" size="lg" onClick={onTogglerClick}>
-      <IconSun className={classes.light} width="80%" height="80%" stroke={1.5} />
-      <IconMoon className={classes.dark} width="80%" height="80%" stroke={1.5} />
-    </ActionIcon>
+    <IconButton
+      variant="transparent"
+      tooltip={colorScheme === 'light' ? '다크모드 켜기' : '라이트모드 켜기'}
+      icon={IconSun}
+      secondIcon={IconMoon}
+      iconClass={classes.light}
+      secondIconClass={classes.dark}
+      onClick={onTogglerClick}
+    />
   );
 }

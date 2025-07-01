@@ -1,9 +1,7 @@
 'use client';
 
-import { useAuth } from 'src/hooks/use-auth';
-import { useNavigator } from 'src/hooks/use-navigator';
-import { notifySuccess } from 'src/hooks/use-notification';
-import { ApiError } from 'src/libs/fetcher';
+import { Logo } from '@components/logo';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Anchor,
   Button,
@@ -14,13 +12,15 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { SignUpParam, SignUpParamSchema } from '@repo/dto';
-import { FormEvent, useState } from 'react';
+import { SignUpParamSchema } from '@repo/dto';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import classes from './signup-form.module.css';
-import { Logo } from '@components/logo';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from 'src/hooks/use-auth';
+import { useNavigator } from 'src/hooks/use-navigator';
+import { notifySuccess } from 'src/hooks/use-notification';
+import { handleApiError } from 'src/libs/fetcher';
 import z from 'zod';
+import classes from './signup-form.module.css';
 
 const ClientSignUpParamSchema = SignUpParamSchema.extend({
   passwordConfirm: z.string({ message: '비밀번호 확인을 입력해주세요.' }),
@@ -61,20 +61,7 @@ export function SignupForm() {
 
       navigator.moveTo.auth.login();
     } catch (error) {
-      let errorMessage = '알 수 없는 에러가 발생했습니다. 관리자에게 문의해주세요.';
-
-      if (error instanceof ApiError) {
-        errorMessage = error.message;
-
-        if (error.fieldErrors) {
-          for (const fieldError of error.fieldErrors) {
-            form.setError(fieldError.field as keyof SignUpParam, {
-              type: 'manual',
-              message: fieldError.message,
-            });
-          }
-        }
-      }
+      const { errorMessage } = handleApiError(error, form);
 
       setErrorMsg(errorMessage);
     } finally {

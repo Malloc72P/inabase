@@ -9,7 +9,7 @@ export function usePublicHeaderLinkModel() {
   };
 
   const onMainClick = () => {
-    navigator.moveTo.protected.main();
+    navigator.moveTo.protected.shows.list();
   };
 
   const onProjectClick = () => {
@@ -22,7 +22,7 @@ export function usePublicHeaderLinkModel() {
 
   const links: CustomLinkModel[] = [
     { label: 'Home', onClick: onHomeClick },
-    { label: 'Main', onClick: onMainClick },
+    { label: 'Shows', onClick: onMainClick },
     { label: 'Project', onClick: onProjectClick },
     { label: 'Developer', onClick: onDeveloperClick },
   ];

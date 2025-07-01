@@ -2,12 +2,14 @@
   "name": "simple-appserver",
   "private": true,
   "scripts": {
+    "dev": "pnpm db && turbo dev",
     "build": "turbo build",
-    "dev": "turbo dev",
+    "build:packages": "turbo run build --filter=@repo/*",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "dev:db": "docker compose -f ./apps/backend/docker-compose.yml up -d",
-    "seed": "turbo seed"
+    "db": "docker compose -f ./apps/backend/docker-compose.yml up -d",
+    "seed": "turbo seed",
+    "sync": "pnpm build:packages && turbo sync"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

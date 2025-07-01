@@ -8,9 +8,9 @@ import { Logo } from 'src/components/logo';
 import { INavbarItem, MAIN_NAVBAR_HEIGHT, MainNavbar } from 'src/components/main-navbar';
 import { ThemeToggler } from 'src/components/theme-toggler';
 import { UserMenu } from 'src/components/user-menu';
-import { CommonConstants } from 'src/libs/constants/common';
 import { ProtectedAuthGroup } from './header-group';
 import classes from './protected-header.module.css';
+import { useMemo } from 'react';
 
 export interface ProtectedHeaderProps {
   navbarModel: INavbarItem[];
@@ -22,6 +22,13 @@ export function ProtectedHeader({ navbarModel }: ProtectedHeaderProps) {
   const { user } = useSession();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const pathname = usePathname();
+
+  const selected = useMemo(() => {
+    const splited = pathname.split('/');
+    if (splited.length < 2) return undefined;
+
+    return splited[1];
+  }, [pathname]);
 
   return (
     <Box className={classes.container}>
@@ -44,22 +51,24 @@ export function ProtectedHeader({ navbarModel }: ProtectedHeaderProps) {
       </header>
 
       {/* ------ Main Navbar ------ */}
-      <MainNavbar selected={pathname} items={navbarModel} />
+      <MainNavbar selected={selected} items={navbarModel} />
 
       {/* ------ Mobile Drawer ------ */}
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
         size="100%"
-        padding="md"
-        title={CommonConstants.appName}
+        title={<Logo clickEnabled={false} />}
         hiddenFrom="sm"
         zIndex={1000000}
       >
-        <ScrollArea h="calc(100vh - 80px" mx="-md">
-          <Divider my="sm" />
-          <UserMenu />
-        </ScrollArea>
+        <>
+          <Divider mb="sm" mx="-md" />
+
+          <ScrollArea mx="-md">
+            <UserMenu />
+          </ScrollArea>
+        </>
       </Drawer>
     </Box>
   );

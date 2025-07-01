@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { CommonConstants } from '@repo/dto';
 import { TokenConfig } from '@src/config/app.config';
+import { DecodedTokenInfo } from '@src/token/token.service.dto';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
@@ -20,11 +21,11 @@ export class JwtPassportStrategy extends PassportStrategy(Strategy) {
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       ignoreExpiration: false,
-      secretOrKey: configService.get('authSecret'),
+      secretOrKey: configService.get('authSecret') as string,
     });
   }
 
-  async validate(payload: any): Promise<any> {
+  async validate(payload: DecodedTokenInfo): Promise<DecodedTokenInfo> {
     return payload;
   }
 }

@@ -1,33 +1,22 @@
+import { PrismaClient, UserRole } from '@prisma/client';
 import * as argon2 from 'argon2';
-import { DataSource } from 'typeorm';
-import { Seeder } from 'typeorm-extension';
-import { User } from './user.entity';
-import { UserRole } from './user.role';
 
-const datas = [
-  { email: 'walter@inabase.com', name: 'walter', password: 'test', role: UserRole.NORMAL },
-  { email: 'saul@inabase.com', name: 'saul', password: 'test', role: UserRole.NORMAL },
-  { email: 'comet@inabase.com', name: 'comet', password: 'test', role: UserRole.NORMAL },
-  { email: 'admin@inabase.com', name: 'admin', password: 'test', role: UserRole.ADMIN },
-  { email: 'test@inabase.com', name: 'test', password: 'test', role: UserRole.ADMIN },
-];
+const p = async (pw: string) => await argon2.hash(pw);
 
-export default class UserSeeder implements Seeder {
-  async run(dataSource: DataSource): Promise<any> {
-    const userRepository = dataSource.getRepository(User);
-    await userRepository.clear();
+export async function seedUsers(prisma: PrismaClient) {
+  const data = [
+    { email: 'walter@inabase.com', name: 'walter', password: await p('test'), role: UserRole.USER },
+    { email: 'saul@inabase.com', name: 'saul', password: await p('test'), role: UserRole.USER },
+    { email: 'comet@inabase.com', name: 'comet', password: await p('test'), role: UserRole.USER },
+    { email: 'admin@inabase.com', name: 'admin', password: await p('test'), role: UserRole.ADMIN },
+    { email: 'test@inabase.com', name: 'test', password: await p('test'), role: UserRole.ADMIN },
+  ];
 
-    for (let i = 0; i < datas.length; i++) {
-      const data = datas[i];
-      const user = new User();
+  await prisma.user.deleteMany();
 
-      user.name = data.name;
-      user.email = data.email;
-      user.password = await argon2.hash(data.password);
-      user.deleted = false;
-      user.role = data.role;
+  const result = await prisma.user.createMany({
+    data,
+  });
 
-      await userRepository.save(user);
-    }
-  }
+  console.log('Users seeded:', result.count, 'items created');
 }

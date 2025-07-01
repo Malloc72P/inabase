@@ -1,12 +1,23 @@
-import { Show } from './show.entity';
+import { Show } from '@prisma/client';
+
+//-------------------------------------------------------------------------
+// Cursor
+//-------------------------------------------------------------------------
+export type ShowCursor = { keyword: string | undefined; createdAt: string; id: string };
 
 //-------------------------------------------------------------------------
 // findAll
 //-------------------------------------------------------------------------
-export interface ShowServiceFindAllInput {}
+export interface ShowServiceFindAllInput {
+  cursor?: string;
+  keyword?: string;
+  pageSize?: number;
+}
 
 export interface ShowServiceFindAllOutput {
   shows: Show[];
+  nextCursor: string;
+  hasNext: boolean;
 }
 
 //-------------------------------------------------------------------------
@@ -18,6 +29,35 @@ export interface ShowServiceFindOneInput {
 }
 
 export interface ShowServiceFindOneOutput {
+  show: Show;
+}
+
+//-------------------------------------------------------------------------
+// create
+//-------------------------------------------------------------------------
+
+export interface ShowServiceCreateInput {
+  title: string;
+  description: string;
+  tags: string[];
+}
+
+export interface ShowServiceCreateOutput {
+  show: Show;
+}
+
+//-------------------------------------------------------------------------
+// update
+//-------------------------------------------------------------------------
+
+export interface ShowServiceUpdateInput {
+  id: string;
+  title?: string;
+  description?: string;
+  tags: string[];
+}
+
+export interface ShowServiceUpdateOutput {
   show: Show;
 }
 

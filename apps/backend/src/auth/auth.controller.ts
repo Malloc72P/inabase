@@ -19,7 +19,7 @@ import { transformTo } from '@src/util/transformer.util';
 import { ZodInput } from '@src/util/zod-validation.pipe';
 import { IRequester, Requester } from '@src/util/user-decorator';
 import { Request, Response } from 'express';
-import * as ms from 'ms';
+import ms from 'ms';
 import { JwtAuthGuard, LocalAuthGuard, RefreshAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { AuthServiceValidateUserOutput } from './auth.service.dto';
@@ -43,7 +43,7 @@ export class AuthController extends BaseController {
     const result: SignInResult = {
       profile: {
         id: user.id,
-        name: user.name,
+        name: user.name || user.email.split('@')[0],
         email: user.email,
       },
       accessToken,
@@ -96,8 +96,6 @@ export class AuthController extends BaseController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async profile(@Requester() requester: IRequester): Promise<ProfileResult> {
-    this.logger.log('profile invoked');
-
     const { user } = await this.userService.findByIdOrThrow({ id: requester.id });
 
     return transformTo(ProfileResultSchema, user);

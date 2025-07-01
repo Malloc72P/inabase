@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ShowService } from './show.service';
+import { PrismaModule } from '@src/prisma/prisma.module';
 import { ShowController } from './show.controller';
-import { Show } from './show.entity';
+import { ShowService } from './show.service';
+import { CursorModule } from '@src/cursor/cursor.module';
+import { ShowSearchService } from './show-search.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Show])],
-  providers: [ShowService],
+  imports: [PrismaModule, CursorModule],
+  providers: [ShowService, ShowSearchService],
   controllers: [ShowController],
   exports: [],
 })

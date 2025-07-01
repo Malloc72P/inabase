@@ -1,17 +1,11 @@
+import { Container, SimpleGrid, Text, ThemeIcon, Title } from '@mantine/core';
 import {
   Icon3dCubeSphere,
   IconBuildingArch,
-  IconCapProjecting,
-  IconCookie,
   IconDatabase,
-  IconGauge,
-  IconLock,
-  IconMessage2,
   IconShieldHeart,
-  IconUser,
   IconUserScreen,
 } from '@tabler/icons-react';
-import { Container, SimpleGrid, Text, ThemeIcon, Title } from '@mantine/core';
 import classes from './feature.module.css';
 
 export const MOCKDATA = [
@@ -23,9 +17,9 @@ export const MOCKDATA = [
   },
   {
     icon: IconDatabase,
-    title: 'TypeORM 준비 완료',
+    title: 'Prisma 준비 완료',
     description:
-      'TypeORM 관련 설정이 준비되어 있습니다. 저장하고 싶은 엔티티를 정의하기만 하면 됩니다. 또한, 개발에 필요한 데이터베이스를 위한 docker-compose 파일을 함께 제공합니다.',
+      'Prisma 관련 설정이 준비되어 있습니다. 저장하고 싶은 엔티티를 정의하기만 하면 됩니다. 또한, 개발에 필요한 데이터베이스를 위한 docker-compose 파일을 함께 제공합니다.',
   },
   {
     icon: IconShieldHeart,

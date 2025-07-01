@@ -28,7 +28,7 @@ export class RefreshPassportStrategy extends PassportStrategy(Strategy, 'refresh
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       ignoreExpiration: false,
-      secretOrKey: configService.get('refresthSecret'),
+      secretOrKey: configService.get('refresthSecret') as string,
     });
   }
 

@@ -1,4 +1,4 @@
-import { PipeTransform, UsePipes } from '@nestjs/common';
+import { ArgumentMetadata, PipeTransform, UsePipes } from '@nestjs/common';
 import { ZodTypeAny } from 'zod';
 import { FieldError } from '@repo/exceptions';
 import { InvalidFieldException } from '@src/exceptions/invalid-field.exception';
@@ -27,7 +27,11 @@ import { InvalidFieldException } from '@src/exceptions/invalid-field.exception';
 class ZodValidationPipe implements PipeTransform {
   constructor(private readonly schema: ZodTypeAny) {}
 
-  transform(value: unknown) {
+  transform(value: unknown, metadata: ArgumentMetadata) {
+    if (metadata.type !== 'body') {
+      return value;
+    }
+
     const result = this.schema.safeParse(value);
 
     if (!result.success) {
