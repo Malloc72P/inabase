@@ -1,38 +1,29 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient, Show } from '@prisma/client';
 import { DateUtil } from '@repo/date-util';
+import { seedTags } from './tag.seed';
 
 export async function seedShows(prisma: PrismaClient) {
+  await prisma.showTag.deleteMany();
+  await prisma.tag.deleteMany();
   await prisma.show.deleteMany();
 
-  const data = generateDummyData(10000);
+  const data = generateDummyData(1000);
 
-  const s: Show | null = null;
   const result = await prisma.show.createMany({
     data,
   });
 
   console.log('Shows seeded:', result.count, 'items created');
+
+  await seedTags(prisma);
 }
 
 type Item = {
   title: string;
   description: string;
-  tags: string[];
   createdAt: Date;
 };
-
-const GENRES = [
-  'Drama',
-  'Comedy',
-  'Action',
-  'Thriller',
-  'Romance',
-  'Sci-Fi',
-  'Fantasy',
-  'Documentary',
-  'Animation',
-];
 
 export const SEARCH_TEST_FLAG = 'search-test-flag';
 /**
@@ -56,17 +47,13 @@ export function generateDummyData(count: number): Item[] {
 
     titles.add(title);
 
-    // 태그 1~3개 랜덤 선택
-    const tagCount = faker.number.int({ min: 1, max: 3 });
-    const tags = faker.helpers.arrayElements(GENRES, tagCount);
-
     const description = faker.lorem.paragraph({ min: 10, max: 20 });
 
     // 생성일은 오늘부터 현재까지, 하루씩 감소한다.
     const createdAt = day.toDate();
     day = day.subtract(1, 'day');
 
-    items.push({ title, tags, description, createdAt });
+    items.push({ title, description, createdAt });
   }
 
   for (let i = 0; i < items.length; i++) {

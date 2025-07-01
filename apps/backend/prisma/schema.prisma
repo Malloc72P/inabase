@@ -54,13 +54,47 @@ model Show {
     // Property ================================================
     title       String
     description String
-    tags        String[]
 
     // Property ================================================
     searchVector Unsupported("tsvector")? // Full-text search vector for the show
 
     // Relation ================================================
+    showTags ShowTag[]
 
     // Index ===================================================
     @@index([searchVector], type: Gin, map: "show_fts_idx")
+}
+
+model Tag {
+    // Common ==================================================
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deleted   Boolean  @default(false)
+
+    // Property ================================================
+    label String
+
+    // Relation ================================================
+    showTags ShowTag[]
+
+    // Index ===================================================
+}
+
+model ShowTag {
+    // Common ==================================================
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deleted   Boolean  @default(false)
+
+    // Property ================================================
+    showId String
+    tagId  String
+
+    // Relation ================================================
+    show Show @relation(fields: [showId], references: [id])
+    tag  Tag  @relation(fields: [tagId], references: [id])
+
+    // Index ===================================================
 }

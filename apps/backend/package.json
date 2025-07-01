@@ -19,7 +19,7 @@
     "seed": "tsx ./prisma/seed.ts",
     "generate": "prisma generate",
     "migrate": "prisma migrate deploy",
-    "migrate:new": "prisma migrate dev",
+    "migrate:dev": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset -f",
     "sync": "pnpm migrate:reset && pnpm seed"
   },
