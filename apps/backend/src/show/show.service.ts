@@ -27,7 +27,12 @@ export class ShowService extends BaseComponent {
   //-------------------------------------------------------------------------
 
   async findOne({ id }: ShowServiceFindOneInput): Promise<ShowServiceFindOneOutput> {
-    const show = await this.prisma.show.findUnique({ where: { id, deleted: false } });
+    const show = await this.prisma.show.findUnique({
+      where: { id, deleted: false },
+      include: {
+        showTags: { include: { tag: true } },
+      },
+    });
 
     if (!show) {
       throw new NotFoundException('이미 삭제되었거나 존재하지 않는 쇼 입니다.');
@@ -44,7 +49,10 @@ export class ShowService extends BaseComponent {
     tags,
   }: ShowServiceCreateInput): Promise<ShowServiceCreateOutput> {
     const show = await this.prisma.show.create({
-      data: { title, description, tags },
+      data: { title, description },
+      include: {
+        showTags: { include: { tag: true } },
+      },
     });
 
     return { show };
@@ -64,7 +72,10 @@ export class ShowService extends BaseComponent {
 
     const updatedShow = await this.prisma.show.update({
       where: { id },
-      data: { title, description, tags },
+      data: { title, description },
+      include: {
+        showTags: { include: { tag: true } },
+      },
     });
 
     return { show: updatedShow };

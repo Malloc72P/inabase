@@ -1,4 +1,5 @@
 import { Show } from '@prisma/client';
+import { ShowTagsWithTag, ShowWithTags } from './show.entity';
 
 //-------------------------------------------------------------------------
 // Cursor
@@ -29,7 +30,7 @@ export interface ShowServiceFindOneInput {
 }
 
 export interface ShowServiceFindOneOutput {
-  show: Show;
+  show: ShowWithTags;
 }
 
 //-------------------------------------------------------------------------
@@ -43,7 +44,7 @@ export interface ShowServiceCreateInput {
 }
 
 export interface ShowServiceCreateOutput {
-  show: Show;
+  show: ShowWithTags;
 }
 
 //-------------------------------------------------------------------------
@@ -58,7 +59,7 @@ export interface ShowServiceUpdateInput {
 }
 
 export interface ShowServiceUpdateOutput {
-  show: Show;
+  show: ShowWithTags;
 }
 
 //-------------------------------------------------------------------------

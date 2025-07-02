@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker/.';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Show } from '@prisma/client';
 import { CreateShowOutput, FindShowsOutput, ShowDetailDto, ShowDto } from '@repo/dto';
 import { ApiExceptionPayload, ExceptionCode } from '@repo/exceptions';
 import { JwtAuthGuard } from '@src/auth/auth.guard';
@@ -10,6 +9,7 @@ import { MockTokenModule } from '@src/token/mock-token.module';
 import request from 'supertest';
 import { ShowSearchService } from './show-search.service';
 import { ShowController } from './show.controller';
+import { ShowWithTags } from './show.entity';
 import { ShowService } from './show.service';
 
 describe('ShowController', () => {
@@ -85,7 +85,7 @@ describe('ShowController', () => {
       const api = request(app.getHttpServer()).post('/api/v1/shows').send({
         title: show.title,
         description: show.description,
-        tags: show.tags,
+        tags: show.showTags,
       });
 
       // then
@@ -105,7 +105,7 @@ describe('ShowController', () => {
       const api = request(app.getHttpServer()).post('/api/v1/shows').send({
         title: '',
         description: show.description,
-        tags: show.tags,
+        tags: show.showTags,
       });
 
       // then
@@ -144,7 +144,7 @@ describe('ShowController', () => {
       const api = request(app.getHttpServer()).patch(`/api/v1/shows/${originalShow.id}`).send({
         title: updatedShow.title,
         description: updatedShow.description,
-        tags: updatedShow.tags,
+        tags: updatedShow.showTags,
       });
 
       // then
@@ -177,20 +177,20 @@ describe('ShowController', () => {
 });
 
 function createShow() {
-  const show: Show = {
+  const show: ShowWithTags = {
     id: faker.string.uuid(),
     title: faker.lorem.sentence({ min: 3, max: 20 }), // 대략 200자 이내로 제한
     description: faker.lorem.paragraph(),
-    tags: faker.helpers.arrayElements(['tag1', 'tag2', 'tag3'], 2),
     deleted: false,
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),
+    showTags: [],
   };
 
   const dto: ShowDto = {
     id: show.id,
     title: show.title,
-    tags: show.tags,
+    tags: [],
     createdAt: show.createdAt.toISOString(),
     updatedAt: show.updatedAt.toISOString(),
   };
