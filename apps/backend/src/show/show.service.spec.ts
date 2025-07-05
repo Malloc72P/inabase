@@ -14,11 +14,9 @@ describe('ShowService', () => {
     }).compile();
 
     service = testingModule.get<ShowService>(ShowService);
-    cursorService = testingModule.get<CursorService>(CursorService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(cursorService).toBeDefined();
   });
 });

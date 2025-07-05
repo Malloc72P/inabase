@@ -61,7 +61,7 @@ describe('ShowController', () => {
 
       jest
         .spyOn(searchService, 'findAll')
-        .mockResolvedValue({ shows: datas.map((d) => d.show), hasNext: false, nextCursor: '' });
+        .mockResolvedValue({ shows: datas.map((d) => d.dto), hasNext: false, nextCursor: '' });
 
       //  when
       const api = request(app.getHttpServer()).get('/api/v1/shows?keyword=test&cursor=dummyCursor');

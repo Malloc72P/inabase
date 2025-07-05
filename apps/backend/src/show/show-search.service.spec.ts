@@ -71,6 +71,9 @@ describe('ShowSearchService', () => {
 
       // then
       expect(result.shows.length).toBeGreaterThan(1);
+      expect(result.shows.filter((s) => s.title.includes(SEARCH_TEST_FLAG)).length).toStrictEqual(
+        result.shows.length
+      );
     });
   });
 });

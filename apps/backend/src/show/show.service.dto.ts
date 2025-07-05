@@ -1,5 +1,6 @@
 import { Show } from '@prisma/client';
 import { ShowTagsWithTag, ShowWithTags } from './show.entity';
+import { ShowDto } from '@repo/dto';
 
 //-------------------------------------------------------------------------
 // Cursor
@@ -16,7 +17,7 @@ export interface ShowServiceFindAllInput {
 }
 
 export interface ShowServiceFindAllOutput {
-  shows: Show[];
+  shows: ShowDto[];
   nextCursor: string;
   hasNext: boolean;
 }

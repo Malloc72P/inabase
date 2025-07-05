@@ -4,6 +4,8 @@ import { BaseComponent } from '@src/base/base.component';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { ShowCursor, ShowServiceFindAllInput, ShowServiceFindAllOutput } from './show.service.dto';
 import { CursorService } from '@src/cursor/cursor.service';
+import { ShowWithTags } from './show.entity';
+import { ShowDetailDto, ShowDto } from '@repo/dto';
 
 @Injectable()
 export class ShowSearchService extends BaseComponent {
@@ -32,7 +34,7 @@ export class ShowSearchService extends BaseComponent {
       shows.length > 0
         ? this.cursorService.encodeCursor<ShowCursor>({
             keyword: safeKeyword,
-            createdAt: shows[shows.length - 1].createdAt.toISOString(),
+            createdAt: shows[shows.length - 1].createdAt,
             id: shows[shows.length - 1].id,
           })
         : '';
@@ -52,27 +54,30 @@ export class ShowSearchService extends BaseComponent {
 
     const conditions: Prisma.Sql[] = [];
 
-    conditions.push(sql`"deleted" = false`);
+    conditions.push(sql`s."deleted" = false`);
 
     if (query) {
-      const condition = sql`"searchVector" @@ to_tsquery('simple', ${query})`;
+      const condition = sql`s."searchVector" @@ to_tsquery('simple', ${query})`;
       conditions.push(condition);
     }
 
     if (cursor) {
-      const condition = sql`("createdAt", id) < (${cursor.createdAt}::timestamp, ${cursor.id}::text)`;
+      const condition = sql`(s."createdAt", s."id") < (${cursor.createdAt}::timestamp, ${cursor.id}::text)`;
       conditions.push(condition);
     }
 
     const fullSql = sql`
-        SELECT "id", "title", "description", "tags", "createdAt", "updatedAt", "deleted"
-        FROM   "Show"
+        SELECT s."id", s."title", string_agg(t.label, ',') as tags, s."createdAt", s."updatedAt"
+        FROM   "Show" s
+        LEFT JOIN "ShowTag" st ON st."showId" = s."id"
+        LEFT JOIN "Tag" t ON t."id" = st."tagId"
         WHERE ${join(conditions, ' AND ')}
+        GROUP BY s."id"
         ORDER BY "createdAt" DESC, "id" DESC
         LIMIT  ${take + 1};
     `;
 
-    const shows = this.prisma.$queryRaw<Show[]>(fullSql);
+    const shows = this.prisma.$queryRaw<ShowDto[]>(fullSql);
 
     return shows;
   }

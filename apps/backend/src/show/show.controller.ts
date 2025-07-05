@@ -49,7 +49,7 @@ export class ShowController extends BaseController {
     });
 
     return {
-      shows: shows.map(toShowDto),
+      shows,
       hasNext,
       nextCursor,
       keyword: keyword || '',
