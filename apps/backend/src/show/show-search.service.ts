@@ -77,7 +77,9 @@ export class ShowSearchService extends BaseComponent {
         LIMIT  ${take + 1};
     `;
 
-    const shows = this.prisma.$queryRaw<ShowDto[]>(fullSql);
+    const shows = await this.prisma.$queryRaw<any[]>(fullSql);
+
+    shows.forEach((s) => (s.tags = s.tags ? s.tags.split(',') : []));
 
     return shows;
   }

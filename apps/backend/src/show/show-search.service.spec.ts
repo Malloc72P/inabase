@@ -38,6 +38,10 @@ describe('ShowSearchService', () => {
       expect(result.nextCursor).toBeDefined();
     });
 
+    it('태그 정보를 정상적으로 가져올 수 있어야 함.', async () => {
+      expect(Array.isArray(result.shows[0].tags)).toBeTruthy();
+    });
+
     it('커서를 디코딩하면 필요한 정보가 나와야 함', async () => {
       // when
       const cursor = cursorService.decodeCursor<ShowCursor>(result.nextCursor) as ShowCursor;
