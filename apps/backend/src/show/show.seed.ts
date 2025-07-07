@@ -1,13 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient, Show } from '@prisma/client';
 import { DateUtil } from '@repo/date-util';
-import { seedTags } from './tag.seed';
 
 export async function seedShows(prisma: PrismaClient) {
-  await prisma.showTag.deleteMany();
-  await prisma.tag.deleteMany();
-  await prisma.show.deleteMany();
-
   const data = generateDummyData(1000);
 
   const result = await prisma.show.createMany({
@@ -15,8 +10,6 @@ export async function seedShows(prisma: PrismaClient) {
   });
 
   console.log('Shows seeded:', result.count, 'items created');
-
-  await seedTags(prisma);
 }
 
 type Item = {

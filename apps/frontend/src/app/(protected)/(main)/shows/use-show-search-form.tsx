@@ -36,14 +36,21 @@ export function useShowSearchForm({ showsKey }: UseShowSearchProps) {
       scrollContainer.scrollTop = 0;
     }
 
-    // 검색어가 변경되면 이전 캐시를 초기화합니다.
-    // 이전 검색어에 대한 캐시가 남아있으면, queryClient는 이전 검색어의 페이지 정보를 유지합니다.
-    // 해당 검색어로 재검색하는 경우, 이전에 가져왔던 페이지 개수만큼 데이터를 다시 가져오려고 시도합니다.
-    // 하지만 해당 데이터는 이미 stale상태가 되었기에, API를 다시 호출하여 서버에 큰 부하를 줄 수 있습니다.
-    // 따라서 재검색하는 경우 첫 페이지부터 다시 가져오도록 캐시를 초기화합니다.
+    /**
+     * 검색어가 변경되면 이전 캐시를 초기화합니다.
+     * 이전 검색어에 대한 캐시가 남아있으면, queryClient는 이전 검색어의 페이지 정보를 유지합니다.
+     * 해당 검색어로 재검색하는 경우, 이전에 가져왔던 페이지 개수만큼 데이터를 다시 가져오려고 시도합니다.
+     * 하지만 해당 데이터는 이미 stale상태가 되었기에, API를 다시 호출하여 서버에 큰 부하를 줄 수 있습니다.
+     * 따라서 재검색하는 경우 첫 페이지부터 다시 가져오도록 캐시를 초기화합니다.
+     */
     queryClient.resetQueries({ queryKey: showsKey });
 
     navigator.moveTo.protected.shows.list(param);
+  };
+
+  const clearSearch = () => {
+    form.setValue('keyword', '');
+    onSearchSubmit();
   };
 
   /**
@@ -55,5 +62,5 @@ export function useShowSearchForm({ showsKey }: UseShowSearchProps) {
     form.setValue('keyword', param.get('keyword') || '');
   }, [param]);
 
-  return { form, onSearchSubmit };
+  return { form, onSearchSubmit, clearSearch };
 }

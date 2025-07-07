@@ -1,5 +1,6 @@
 'use client';
 
+import { IconButton } from '@components/buttons';
 import { InaText } from '@components/custom-components';
 import { ShowTagBadge } from '@components/show/show-badge';
 import { useNavigator } from '@hooks/use-navigator';
@@ -8,7 +9,8 @@ import { useShow } from '@hooks/use-show';
 import { useShowMutation } from '@hooks/use-show-mutation';
 import { ApiError } from '@libs/fetcher';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';
-import { Badge, Button, Divider, Flex, Skeleton, Space } from '@mantine/core';
+import { Divider, Flex, Skeleton, Space } from '@mantine/core';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
 
 export interface ShowDetailPageProps {
   showId: string;
@@ -38,6 +40,7 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
 
   return (
     <div>
+      {/* ------ 제목, (삭제, 수정, 생성) 버튼 그룹 ------ */}
       <Flex align={'center'} mb={16}>
         <InaText
           bold
@@ -51,18 +54,18 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
 
         <Space style={{ flexGrow: 1 }} />
 
-        <Flex gap={'lg'}>
-          <Button variant="default" onClick={onDeleteBtnClicked}>
-            Delete
-          </Button>
-          <Button variant="default" onClick={() => navigator.moveTo.protected.shows.edit(showId)}>
-            Edit
-          </Button>
-          <Button onClick={() => navigator.moveTo.protected.shows.create()}>New show</Button>
+        <Flex gap={'xl'}>
+          <IconButton
+            icon={IconPencil}
+            variant="transparent"
+            onClick={() => navigator.moveTo.protected.shows.edit(showId)}
+          />
+          <IconButton icon={IconTrash} variant="transparent" onClick={onDeleteBtnClicked} />
         </Flex>
       </Flex>
 
-      <Flex gap={'md'} mb={32}>
+      {/* ------ 태그 컨테이너 ------ */}
+      <Flex gap={'md'} my={32}>
         {isShowLoading ? (
           <TagSkeletons />
         ) : (
@@ -75,6 +78,7 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
 
       <Divider my={32} />
 
+      {/* ------ 본문 ------ */}
       <InaText>{show?.description}</InaText>
     </div>
   );

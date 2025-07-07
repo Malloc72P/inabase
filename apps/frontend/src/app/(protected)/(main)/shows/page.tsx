@@ -4,7 +4,7 @@ import { IconButton } from '@components/buttons';
 import { useNavigator } from '@hooks/use-navigator';
 import { useShows } from '@hooks/use-shows';
 import { Button, Container, Flex, TextInput } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
+import { IconSearch, IconX } from '@tabler/icons-react';
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { ShowList } from 'src/components/show';
@@ -36,7 +36,7 @@ export default function ShowListPage() {
   //-------------------------------------------------------------------------
   // Search Form
   //-------------------------------------------------------------------------
-  const { form, onSearchSubmit } = useShowSearchForm({ showsKey });
+  const { form, onSearchSubmit, clearSearch } = useShowSearchForm({ showsKey });
 
   return (
     <Flex w={'100%'} h={'calc(100vh - 109px)'} direction={'column'}>
@@ -47,7 +47,13 @@ export default function ShowListPage() {
             <TextInput
               placeholder="검색어를 입력하세요"
               {...form.register('keyword')}
-              rightSection={<IconButton type="submit" variant="transparent" icon={IconSearch} />}
+              rightSection={
+                keyword ? (
+                  <IconButton variant="transparent" icon={IconX} onClick={clearSearch} />
+                ) : (
+                  <IconButton type="submit" variant="transparent" icon={IconSearch} />
+                )
+              }
             />
           </form>
           <Button
