@@ -38,6 +38,10 @@ describe('TagController', () => {
     service = module.get<TagService>(TagService);
   });
 
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
   afterAll(async () => {
     await app.close();
   });

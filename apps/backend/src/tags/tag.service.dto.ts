@@ -11,8 +11,8 @@ export interface TagServiceFindAllInput {
 
 export interface TagServiceFindAllOutput {
   tags: Tag[];
-  nextCursor: string;
-  hasNext: boolean;
+  pageIndex: number;
+  pageSize: number;
 }
 
 //-------------------------------------------------------------------------
@@ -60,4 +60,6 @@ export interface TagServiceRemoveInput {
   id: string;
 }
 
-export type TagServiceRemoveOutput = void;
+export interface TagServiceRemoveOutput {
+  success: boolean;
+}

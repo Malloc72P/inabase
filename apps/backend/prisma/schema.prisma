@@ -70,7 +70,6 @@ model Tag {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    deleted   Boolean  @default(false)
 
     // Property ================================================
     label String

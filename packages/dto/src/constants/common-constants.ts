@@ -1,6 +1,6 @@
 export const CommonConstants = {
   paging: {
-    show: {
+    tag: {
       pageSize: 20,
     },
   },

@@ -5,6 +5,8 @@ import { PrismaService } from '@src/prisma/prisma.service';
 import {
   TagServiceCreateInput,
   TagServiceCreateOutput,
+  TagServiceFindAllInput,
+  TagServiceFindAllOutput,
   TagServiceFindOneInput,
   TagServiceFindOneOutput,
   TagServiceRemoveInput,
@@ -25,9 +27,30 @@ export class TagService extends BaseComponent {
   //-------------------------------------------------------------------------
   // methods
   //-------------------------------------------------------------------------
+  async findAll({
+    keyword,
+    pageIndex = 0,
+    pageSize = 20,
+  }: TagServiceFindAllInput): Promise<TagServiceFindAllOutput> {
+    const tags = await this.prisma.tag.findMany({
+      /**
+       * @TODO 검색 기능 추가
+       */
+      orderBy: { label: 'asc' },
+      skip: pageIndex * pageSize,
+      take: pageSize,
+    });
+
+    return {
+      pageIndex,
+      pageSize,
+      tags,
+    };
+  }
+
   async findOne({ id }: TagServiceFindOneInput): Promise<TagServiceFindOneOutput> {
     const tag = await this.prisma.tag.findUnique({
-      where: { id, deleted: false },
+      where: { id },
     });
 
     if (!tag) {
@@ -50,7 +73,7 @@ export class TagService extends BaseComponent {
   async update({ id, label }: TagServiceUpdateInput): Promise<TagServiceUpdateOutput> {
     const { tag } = await this.findOne({ id });
 
-    if (!tag || tag.deleted) {
+    if (!tag) {
       throw new EntityNotFound(
         '태그를 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 태그입니다.'
       );
@@ -67,15 +90,16 @@ export class TagService extends BaseComponent {
   async remove({ id }: TagServiceRemoveInput): Promise<TagServiceRemoveOutput> {
     const { tag } = await this.findOne({ id });
 
-    if (!tag || tag.deleted) {
+    if (!tag) {
       throw new EntityNotFound(
         '태그를 찾을 수 없습니다. 이미 삭제되었거나 존재하지 않는 태그입니다.'
       );
     }
 
-    await this.prisma.tag.update({
+    await this.prisma.tag.delete({
       where: { id },
-      data: { deleted: true },
     });
+
+    return { success: true };
   }
 }
