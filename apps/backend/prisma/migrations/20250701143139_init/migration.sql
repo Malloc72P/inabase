@@ -60,6 +60,11 @@ CREATE INDEX "idx_user_email" ON "User"("email");
 -- CreateIndex
 CREATE INDEX "show_fts_idx" ON "Show" USING GIN ("searchVector");
 
+-- 검색 성능을 위한 인덱스 추가
+-- string_agg를 위한 JOIN이 커버링 인덱스로 끝날 수 있도록 개선
+CREATE INDEX showtag_showid_tagid_idx ON "ShowTag"("showId","tagId") WHERE deleted = false;
+
+
 -- AddForeignKey
 ALTER TABLE "ShowTag" ADD CONSTRAINT "ShowTag_showId_fkey" FOREIGN KEY ("showId") REFERENCES "Show"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -172,11 +177,14 @@ AFTER INSERT ON "Show"
 DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION trg_show_fts_refresh();
 
--- show 테이블의 title이나 description이 수정되면 search_vector를 갱신한다
+-- show 테이블의 title, description, deleted가 수정되면 search_vector를 갱신한다
+-- 삭제된 경우에도 갱신하는 이유는, 다시 복구되었을 때 searchVector의 정합성을 보장하기 위해서이다.
 CREATE CONSTRAINT TRIGGER show_fts_refresh_update
-AFTER UPDATE OF title, description ON "Show"
+AFTER UPDATE OF title, description, deleted ON "Show"
 DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION trg_show_fts_refresh();
+
+-- 참고로 Show에 대한 하드딜리트는 searchVector를 담은 레코드 자체가 제거되니까 걱정하지 않아도 된다.
 
 -- 중간테이블 showTag의 insert, update, delete에 대해 trg_showtag_idu 함수를 호출하여 
 -- Show의 "searchVector"를 갱신하는 트리거
@@ -189,3 +197,7 @@ FOR EACH ROW EXECUTE FUNCTION trg_showtag_idu();
 CREATE TRIGGER tag_label_refresh_u
 AFTER UPDATE OF label ON "Tag"
 FOR EACH ROW EXECUTE FUNCTION trg_tag_label_u();
+
+-- 태그도 마찬가지로 하드딜리트되면 showTag부터 삭제되니까 걱정할 필요 없다.
+-- soft delete도 마찬가지로, 태그가 제거되면 중간 테이블인 showTag도 soft delete할테니, 벡터 갱신이 중복해서 발생한다.
+-- 그래서 tag가 soft delete 되더라도 벡터를 재계산하지 않는다.
