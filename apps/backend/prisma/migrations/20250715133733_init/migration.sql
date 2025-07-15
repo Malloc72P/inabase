@@ -35,6 +35,7 @@ CREATE TABLE "Tag" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" BOOLEAN NOT NULL DEFAULT false,
     "label" TEXT NOT NULL,
+    -- "searchVector" tsvector,
 
     CONSTRAINT "Tag_pkey" PRIMARY KEY ("id")
 );
@@ -59,11 +60,6 @@ CREATE INDEX "idx_user_email" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "show_fts_idx" ON "Show" USING GIN ("searchVector");
-
--- 검색 성능을 위한 인덱스 추가
--- string_agg를 위한 JOIN이 커버링 인덱스로 끝날 수 있도록 개선
-CREATE INDEX showtag_showid_tagid_idx ON "ShowTag"("showId","tagId") WHERE deleted = false;
-
 
 -- AddForeignKey
 ALTER TABLE "ShowTag" ADD CONSTRAINT "ShowTag_showId_fkey" FOREIGN KEY ("showId") REFERENCES "Show"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -201,3 +197,15 @@ FOR EACH ROW EXECUTE FUNCTION trg_tag_label_u();
 -- 태그도 마찬가지로 하드딜리트되면 showTag부터 삭제되니까 걱정할 필요 없다.
 -- soft delete도 마찬가지로, 태그가 제거되면 중간 테이블인 showTag도 soft delete할테니, 벡터 갱신이 중복해서 발생한다.
 -- 그래서 tag가 soft delete 되더라도 벡터를 재계산하지 않는다.
+
+-- ==============================================================================
+-- 태그 테이블 검색을 위한 vector
+-- ==============================================================================
+ALTER TABLE "Tag" 
+ADD COLUMN "searchVector" tsvector
+GENERATED ALWAYS AS  (
+    to_tsvector('simple', coalesce(label, ''))
+) STORED;
+
+-- CreateIndex
+CREATE INDEX "Tag_searchVector_idx" ON "Tag" USING GIN ("searchVector");

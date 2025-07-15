@@ -56,7 +56,7 @@ model Show {
     description String
 
     // Property ================================================
-    searchVector Unsupported("tsvector")? // Full-text search vector for the show
+    searchVector Unsupported("tsvector")?
 
     // Relation ================================================
     showTags ShowTag[]
@@ -73,12 +73,14 @@ model Tag {
     deleted   Boolean  @default(false)
 
     // Property ================================================
-    label String
+    label        String
+    searchVector Unsupported("tsvector")?
 
     // Relation ================================================
     showTags ShowTag[]
 
     // Index ===================================================
+    @@index([searchVector], type: Gin)
 }
 
 model ShowTag {

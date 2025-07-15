@@ -33,9 +33,6 @@ export class TagService extends BaseComponent {
     pageSize = 20,
   }: TagServiceFindAllInput): Promise<TagServiceFindAllOutput> {
     const tags = await this.prisma.tag.findMany({
-      /**
-       * @TODO 검색 기능 추가
-       */
       orderBy: { label: 'asc' },
       skip: pageIndex * pageSize,
       take: pageSize,
