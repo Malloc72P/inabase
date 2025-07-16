@@ -101,5 +101,34 @@ describe('TagService', () => {
       // 다음 테스트를 위해 생성한 태그 제거
       await Promise.all(tags.map((tag) => service.remove({ id: tag.id })));
     });
+
+    it('페이지네이션 조회 테스트', async () => {
+      const keyword = 'find-all-keyword';
+
+      const tags = (
+        await Promise.all(
+          Array(5)
+            .fill('')
+            .map((_, i) => `${keyword}-${i + 1}`)
+            .map((label) => service.create({ label }))
+        )
+      ).map((result) => result.tag);
+
+      const result = await service.findAll({ keyword });
+
+      // 첫번째 페이지 결과 확인
+      expect(result).toBeDefined();
+      expect(result.tags.length).toBeGreaterThanOrEqual(5);
+      expect(result.pageIndex).toBe(0);
+      expect(result.pageSize).toBe(20);
+
+      // 키워드를 통해 앞서 생성한 태그를 찾을 수 있어야 함
+      tags.forEach((tag) => {
+        expect(result.tags.some((t) => t.id === tag.id && t.label === tag.label)).toBeTruthy();
+      });
+
+      // 다음 테스트를 위해 생성한 태그 제거
+      await Promise.all(tags.map((tag) => service.remove({ id: tag.id })));
+    });
   });
 });
