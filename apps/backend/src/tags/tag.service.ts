@@ -14,6 +14,7 @@ import {
   TagServiceUpdateInput,
   TagServiceUpdateOutput,
 } from './tag.service.dto';
+import { startWith } from 'rxjs';
 
 @Injectable()
 export class TagService extends BaseComponent {
@@ -35,7 +36,7 @@ export class TagService extends BaseComponent {
     const tags = await this.prisma.tag.findMany({
       where: {
         label: {
-          search: keyword ? keyword : undefined,
+          startsWith: keyword || '',
           mode: 'insensitive',
         },
       },

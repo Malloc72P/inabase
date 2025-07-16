@@ -61,7 +61,10 @@ CREATE INDEX "idx_user_email" ON "User"("email");
 CREATE INDEX "show_fts_idx" ON "Show" USING GIN ("searchVector");
 
 -- CreateIndex
-CREATE INDEX "Tag_label_idx" ON "Tag"("label");
+CREATE UNIQUE INDEX "Tag_label_key" ON "Tag"("label");
+
+-- CreateIndex
+CREATE INDEX "idx_tag_label" ON "Tag"("label");
 
 -- AddForeignKey
 ALTER TABLE "ShowTag" ADD CONSTRAINT "ShowTag_showId_fkey" FOREIGN KEY ("showId") REFERENCES "Show"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

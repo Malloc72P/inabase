@@ -102,7 +102,7 @@ describe('TagService', () => {
       await Promise.all(tags.map((tag) => service.remove({ id: tag.id })));
     });
 
-    it('페이지네이션 조회 테스트', async () => {
+    it('키워드 검색 테스트', async () => {
       const keyword = 'find-all-keyword';
 
       const tags = (

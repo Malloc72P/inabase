@@ -73,13 +73,13 @@ model Tag {
     deleted   Boolean  @default(false)
 
     // Property ================================================
-    label String
+    label String @unique
 
     // Relation ================================================
     showTags ShowTag[]
 
     // Index ===================================================
-    @@index([label])
+    @@index([label], name: "idx_tag_label")
 }
 
 model ShowTag {
