@@ -15,6 +15,7 @@ import {
   TagServiceUpdateOutput,
 } from './tag.service.dto';
 import { startWith } from 'rxjs';
+import { Show, Tag } from '@prisma/client';
 
 @Injectable()
 export class TagService extends BaseComponent {
@@ -52,6 +53,18 @@ export class TagService extends BaseComponent {
     };
   }
 
+  async findAllByIds({ ids }: { ids: string[] }) {
+    const tags = await this.prisma.tag.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
+
+    return {
+      tags,
+    };
+  }
+
   async findOne({ id }: TagServiceFindOneInput): Promise<TagServiceFindOneOutput> {
     const tag = await this.prisma.tag.findUnique({
       where: { id },
@@ -72,6 +85,22 @@ export class TagService extends BaseComponent {
     });
 
     return { tag };
+  }
+
+  async connect({ show, tags }: { show: Show; tags: Tag[] }) {
+    const showTags = await this.prisma.showTag.createMany({
+      data: tags.map((tag) => ({ showId: show.id, tagId: tag.id })),
+    });
+
+    return showTags;
+  }
+
+  async reconnect({ show, tags }: { show: Show; tags: Tag[] }) {
+    // 기존의 쇼와 연결된 태그를 모두 삭제합니다.
+    await this.prisma.showTag.deleteMany({ where: { showId: show.id } });
+
+    // 새로운 태그와 쇼를 연결합니다.
+    return await this.connect({ show, tags });
   }
 
   async update({ id, label }: TagServiceUpdateInput): Promise<TagServiceUpdateOutput> {
@@ -100,6 +129,12 @@ export class TagService extends BaseComponent {
       );
     }
 
+    // 쇼와 연결된 태그를 모두 삭제합니다.
+    await this.prisma.showTag.deleteMany({
+      where: { tagId: id },
+    });
+
+    // 태그를 삭제합니다.
     await this.prisma.tag.delete({
       where: { id },
     });

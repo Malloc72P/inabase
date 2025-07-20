@@ -41,7 +41,7 @@ export interface ShowServiceFindOneOutput {
 export interface ShowServiceCreateInput {
   title: string;
   description: string;
-  tags: string[];
+  tagIds: string[];
 }
 
 export interface ShowServiceCreateOutput {
@@ -56,7 +56,7 @@ export interface ShowServiceUpdateInput {
   id: string;
   title?: string;
   description?: string;
-  tags: string[];
+  tagIds: string[];
 }
 
 export interface ShowServiceUpdateOutput {

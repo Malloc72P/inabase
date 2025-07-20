@@ -85,7 +85,7 @@ describe('ShowController', () => {
       const api = request(app.getHttpServer()).post('/api/v1/shows').send({
         title: show.title,
         description: show.description,
-        tags: show.showTags,
+        tagIds: show.showTags,
       });
 
       // then
@@ -144,7 +144,7 @@ describe('ShowController', () => {
       const api = request(app.getHttpServer()).patch(`/api/v1/shows/${originalShow.id}`).send({
         title: updatedShow.title,
         description: updatedShow.description,
-        tags: updatedShow.showTags,
+        tagIds: updatedShow.showTags,
       });
 
       // then

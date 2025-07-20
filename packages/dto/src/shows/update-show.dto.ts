@@ -6,7 +6,7 @@ export const UpdateShowInputSchema = z
   .object({
     title: ShowTitleSchema,
     description: ShowDescriptionSchema,
-    tags: ShowTagsSchema,
+    tagIds: ShowTagsSchema,
   })
   .strict();
 export type UpdateShowInput = z.infer<typeof UpdateShowInputSchema>;

@@ -7,6 +7,6 @@ import { TagService } from './tag.service';
   imports: [PrismaModule],
   providers: [TagService],
   controllers: [TagController],
-  exports: [],
+  exports: [TagService],
 })
 export class TagModule {}

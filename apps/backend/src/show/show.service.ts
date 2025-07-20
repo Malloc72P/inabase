@@ -12,13 +12,17 @@ import {
   ShowServiceUpdateInput,
   ShowServiceUpdateOutput,
 } from './show.service.dto';
+import { TagService } from '@src/tags/tag.service';
 
 @Injectable()
 export class ShowService extends BaseComponent {
   //-------------------------------------------------------------------------
   // constructors
   //-------------------------------------------------------------------------
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private tagService: TagService
+  ) {
     super();
   }
 
@@ -46,14 +50,21 @@ export class ShowService extends BaseComponent {
   async create({
     title,
     description,
-    tags,
+    tagIds,
   }: ShowServiceCreateInput): Promise<ShowServiceCreateOutput> {
-    const show = await this.prisma.show.create({
+    // 먼저 쇼를 생성합니다.
+    const showPlain = await this.prisma.show.create({
       data: { title, description },
-      include: {
-        showTags: { include: { tag: true } },
-      },
     });
+
+    // 연결할 모든 태그를 조회
+    const { tags } = await this.tagService.findAllByIds({ ids: tagIds });
+
+    // 태그와 쇼를 연결합니다.
+    await this.tagService.connect({ show: showPlain, tags });
+
+    // 연결된 쇼를 다시 조회하여 반환합니다. 이 때 연관관계에 있는 엔티티까지 조회합니다.
+    const { show } = await this.findOne({ id: showPlain.id });
 
     return { show };
   }
@@ -62,7 +73,7 @@ export class ShowService extends BaseComponent {
     id,
     title,
     description,
-    tags,
+    tagIds,
   }: ShowServiceUpdateInput): Promise<ShowServiceUpdateOutput> {
     const { show } = await this.findOne({ id });
 
@@ -73,12 +84,18 @@ export class ShowService extends BaseComponent {
     const updatedShow = await this.prisma.show.update({
       where: { id },
       data: { title, description },
-      include: {
-        showTags: { include: { tag: true } },
-      },
     });
 
-    return { show: updatedShow };
+    const { tags } = await this.tagService.findAllByIds({ ids: tagIds });
+
+    await this.tagService.reconnect({
+      show: updatedShow,
+      tags,
+    });
+
+    const result = await this.findOne({ id: updatedShow.id });
+
+    return { show: result.show };
   }
 
   async remove({ id }: ShowServiceRemoveInput): Promise<ShowServiceRemoveOutput> {

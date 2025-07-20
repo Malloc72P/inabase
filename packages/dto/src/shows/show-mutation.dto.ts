@@ -10,8 +10,4 @@ export const ShowDescriptionSchema = z
   .min(1, '설명은 필수입니다.')
   .max(5000, '설명은 최대 5000자까지 입력할 수 있습니다.');
 
-export const ShowTagsSchema = z
-  .array(z.string())
-  .max(30, '태그는 최대 30개까지 등록할 수 있습니다.')
-  .optional()
-  .default([]);
+export const ShowTagsSchema = z.array(z.string()).optional().default([]);

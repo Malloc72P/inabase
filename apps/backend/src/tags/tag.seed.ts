@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-const GENRES = [
+export const TEST_TAG_LABELS = [
   'Drama',
   'Comedy',
   'Action',
@@ -14,7 +14,7 @@ const GENRES = [
 
 export async function seedTags(prisma: PrismaClient) {
   const result = await prisma.tag.createMany({
-    data: GENRES.map((genere) => ({
+    data: TEST_TAG_LABELS.map((genere) => ({
       label: genere,
     })),
   });
