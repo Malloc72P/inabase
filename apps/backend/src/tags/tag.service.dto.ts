@@ -4,9 +4,9 @@ import { Tag } from '@prisma/client';
 // findAll
 //-------------------------------------------------------------------------
 export interface TagServiceFindAllInput {
-  keyword?: string;
-  pageIndex?: number;
-  pageSize?: number;
+  keyword: string;
+  pageIndex: number;
+  pageSize: number;
 }
 
 export interface TagServiceFindAllOutput {

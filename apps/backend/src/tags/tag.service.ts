@@ -30,8 +30,8 @@ export class TagService extends BaseComponent {
   //-------------------------------------------------------------------------
   async findAll({
     keyword,
-    pageIndex = 0,
-    pageSize = 20,
+    pageIndex,
+    pageSize,
   }: TagServiceFindAllInput): Promise<TagServiceFindAllOutput> {
     const tags = await this.prisma.tag.findMany({
       where: {

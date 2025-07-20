@@ -4,6 +4,7 @@ import { CursorModule } from '@src/cursor/cursor.module';
 import { TagService } from './tag.service';
 import { NotFoundException } from '@nestjs/common';
 import exp from 'constants';
+import { CommonConstants } from '@repo/dto';
 
 describe('TagService', () => {
   let service: TagService;
@@ -72,7 +73,11 @@ describe('TagService', () => {
         )
       ).map((result) => result.tag);
 
-      const result = await service.findAll({});
+      const result = await service.findAll({
+        pageIndex: 0,
+        pageSize: CommonConstants.paging.tag.pageSize,
+        keyword: '',
+      });
 
       // 첫번째 페이지 결과 확인
       expect(result).toBeDefined();
@@ -86,7 +91,11 @@ describe('TagService', () => {
       });
 
       // 두번째 페이지 테스트
-      const result2 = await service.findAll({ pageIndex: 1 });
+      const result2 = await service.findAll({
+        pageIndex: 1,
+        pageSize: CommonConstants.paging.tag.pageSize,
+        keyword: '',
+      });
 
       // 두번째 페이지 결과 확인
       expect(result2).toBeDefined();
@@ -114,7 +123,11 @@ describe('TagService', () => {
         )
       ).map((result) => result.tag);
 
-      const result = await service.findAll({ keyword });
+      const result = await service.findAll({
+        pageIndex: 0,
+        pageSize: CommonConstants.paging.tag.pageSize,
+        keyword,
+      });
 
       // 첫번째 페이지 결과 확인
       expect(result).toBeDefined();
