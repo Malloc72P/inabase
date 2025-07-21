@@ -2,7 +2,7 @@
 
 import { IconButton } from '@components/buttons';
 import { useNavigator } from '@hooks/use-navigator';
-import { useShows } from '@hooks/use-shows';
+import { useShows } from '@libs/query-client/hooks/use-shows';
 import { Button, Container, Flex, TextInput } from '@mantine/core';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { useSearchParams } from 'next/navigation';

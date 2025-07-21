@@ -1,4 +1,4 @@
-import { FindShowInput } from '@repo/dto';
+import { FindShowInput, FindTagsInput } from '@repo/dto';
 import { Env } from 'src/libs/env';
 import { tail } from './link-map-util';
 
@@ -12,6 +12,9 @@ export const ApiLinkMap = {
     detail: (showId: string) => Env.beApiUrl + `/shows/${showId}`,
     update: (showId: string) => Env.beApiUrl + `/shows/${showId}`,
     delete: (showId: string) => Env.beApiUrl + `/shows/${showId}`,
+  },
+  tags: {
+    list: (param: FindTagsInput) => Env.beApiUrl + '/tags' + tail(param),
   },
   auth: {
     signin: () => Env.beApiUrl + '/auth/signin',

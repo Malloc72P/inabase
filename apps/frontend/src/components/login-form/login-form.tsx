@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from 'src/hooks/use-auth';
+import { useAuth } from '@libs/query-client/hooks/use-auth';
 import {
   Anchor,
   Button,

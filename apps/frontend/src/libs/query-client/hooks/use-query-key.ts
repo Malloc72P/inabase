@@ -1,7 +1,7 @@
 'use client';
 
 import { ApiLinkMap } from '@libs/link-map';
-import { FindShowsInput } from '@repo/dto';
+import { FindShowsInput, FindTagsInput } from '@repo/dto';
 
 export const useQueryKey = () => {
   return {
@@ -12,6 +12,11 @@ export const useQueryKey = () => {
       },
       list: (params: Pick<FindShowsInput, 'keyword'>) => {
         return ['shows', params.keyword].filter(Boolean);
+      },
+    },
+    tag: {
+      list: (params: FindTagsInput) => {
+        return ['tags', params.keyword, params.pageIndex, params.pageSize].filter(Boolean);
       },
     },
   };

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -39,9 +40,14 @@ export class TagController extends BaseController {
   @UseGuards(JwtAuthGuard)
   async tags(
     @Query('keyword') keyword: string = '',
-    @Query('pageIndex') pageIndex: number = 0,
-    @Query('pageSize') pageSize: number = CommonConstants.paging.tag.pageSize
+    @Query('pageIndex', ParseIntPipe) pageIndex: number = 0,
+    @Query('pageSize', ParseIntPipe) pageSize: number = CommonConstants.paging.tag.pageSize
   ): Promise<FindTagsOutput> {
+    console.log('Fetching tags with params:', {
+      pageIndex,
+      type: typeof pageIndex === 'string' ? 'string' : 'number',
+    });
+
     const { tags } = await this.tagService.findAll({
       pageIndex,
       pageSize,

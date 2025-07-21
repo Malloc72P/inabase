@@ -2,7 +2,7 @@
 
 import { FormCard } from 'src/components/form-card';
 import { notifySuccess } from 'src/hooks/use-notification';
-import { useProfile } from 'src/hooks/use-profile';
+import { useProfile } from '@libs/query-client/hooks/use-profile';
 import { ProfileResult, UpdateProfileInput, UpdateProfileOutput } from '@repo/dto';
 import { ProfileContext } from '@components/auth-session-provider';
 import { useContext } from 'react';

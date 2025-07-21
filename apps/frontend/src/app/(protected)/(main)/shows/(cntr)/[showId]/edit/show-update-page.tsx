@@ -4,7 +4,7 @@ import { InaText } from '@components/custom-components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
-import { useShowMutation } from '@hooks/use-show-mutation';
+import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 
 import { ApiError, handleApiError } from '@libs/fetcher';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';

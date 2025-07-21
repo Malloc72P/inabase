@@ -3,7 +3,8 @@ import { TagDtoSchema } from './tag.dto';
 
 const FindTagInputSchema = z.object({
   keyword: z.string().optional(),
-  cursor: z.string().optional(),
+  pageIndex: z.number(),
+  pageSize: z.number(),
 });
 
 export type FindTagsInput = z.infer<typeof FindTagInputSchema>;

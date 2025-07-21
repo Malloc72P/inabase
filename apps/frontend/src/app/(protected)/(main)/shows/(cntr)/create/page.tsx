@@ -3,23 +3,30 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
-import { useShowMutation } from '@hooks/use-show-mutation';
+import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 import { handleApiError } from '@libs/fetcher';
 import { Box, Button, Flex, TagsInput, Textarea, TextInput, Title } from '@mantine/core';
-import { CreateShowInput, CreateShowInputSchema } from '@repo/dto';
+import { CommonConstants, CreateShowInput, CreateShowInputSchema } from '@repo/dto';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTags } from '@libs/query-client/hooks/use-tag';
 
 export default function CreateShowPage() {
   const navigator = useNavigator();
   const { createShow } = useShowMutation();
   const [loading, setLoading] = useState(false);
+  const { tags } = useTags({
+    pageIndex: 0,
+    pageSize: CommonConstants.paging.tag.pageSize,
+    keyword: '',
+  });
+
   const form = useForm<CreateShowInput>({
     resolver: zodResolver(CreateShowInputSchema),
     disabled: loading,
     defaultValues: {
       title: '',
-      tags: [],
+      tagIds: [],
       description: '',
     },
   });
@@ -27,7 +34,12 @@ export default function CreateShowPage() {
   const onSubmit = async (data: CreateShowInput) => {
     try {
       setLoading(true);
-      const show = await createShow(data);
+      const { title, description, tagIds: tagLabels } = data;
+      const tagIds = tagLabels
+        .map((label) => tags.find((tag) => tag.label === label)?.id)
+        .filter(Boolean);
+
+      const show = await createShow({ title, description, tagIds });
       form.reset();
       notifySuccess({ message: 'Show created successfully!' });
       navigator.moveTo.protected.shows.detail(show.id);
@@ -65,10 +77,16 @@ export default function CreateShowPage() {
             label="Add tags"
             type="text"
             placeholder="Enter tags"
-            {...form.register('tags', { onChange: undefined })}
-            value={form.watch('tags') || []}
-            onChange={(value) => form.setValue('tags', value)}
-            error={form.formState.errors.tags?.message}
+            {...form.register('tagIds', { onChange: undefined })}
+            value={form.watch('tagIds') || []}
+            data={tags.map((tag) => ({ value: tag.id, label: tag.label }))}
+            onChange={(value) => {
+              console.log('Selected tags:', value);
+
+              const nextValues = value.filter((v) => tags.some((tag) => tag.label === v));
+              form.setValue('tagIds', nextValues);
+            }}
+            error={form.formState.errors.tagIds?.message}
           />
         </Box>
 

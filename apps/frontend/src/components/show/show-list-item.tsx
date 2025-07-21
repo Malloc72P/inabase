@@ -1,7 +1,7 @@
 import { IconButton } from '@components/buttons';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useNavigator } from '@hooks/use-navigator';
-import { useShowMutation } from '@hooks/use-show-mutation';
+import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 import { ApiError } from '@libs/fetcher';
 import { PageLinkMap } from '@libs/link-map';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/global-loading-store';
@@ -14,7 +14,7 @@ import { cn } from 'src/libs/ui';
 import classes from './show-list-item.module.css';
 import { DateUtil } from '@repo/date-util';
 import { UiConstants } from '@libs/constants/ui.constant';
-import { useShows } from '@hooks/use-shows';
+import { useShows } from '@libs/query-client/hooks/use-shows';
 import { ShowTagBadge } from './show-badge';
 
 export interface ShowListItemProps extends BoxProps {

@@ -1,4 +1,4 @@
-import { useAuth } from 'src/hooks/use-auth';
+import { useAuth } from '@libs/query-client/hooks/use-auth';
 import { useNavigator } from 'src/hooks/use-navigator';
 import { notifySuccess } from 'src/hooks/use-notification';
 import {
