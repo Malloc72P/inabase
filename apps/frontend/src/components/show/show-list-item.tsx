@@ -5,7 +5,7 @@ import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 import { ApiError } from '@libs/fetcher';
 import { PageLinkMap } from '@libs/link-map';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider/global-loading-store';
-import { Badge, Box, BoxProps, Card, Flex, Group, Skeleton, Text } from '@mantine/core';
+import { Badge, Box, BoxProps, Card, Flex, Group, ScrollArea, Skeleton, Text } from '@mantine/core';
 import { ShowDto } from '@repo/dto';
 import { IconBoxOff, IconEdit, IconTrash } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -51,17 +51,29 @@ export function ShowListItem({ show, isLast = false, ...props }: ShowListItemPro
       className={cn('show-list-item', classes.show)}
       p="lg"
       h={135}
+      mah={135}
       data-last={isLast ? 'true' : 'false'}
       onPointerEnter={() => setHover(true)}
       onPointerLeave={() => setHover(false)}
     >
-      <Flex justify="space-between" direction="column" gap={'sm'}>
+      <Flex justify="space-between" h={'100%'} direction="column" gap={'sm'}>
         {/* First Row */}
-        <Flex>
-          <Link href={PageLinkMap.protected.shows.detail(show.id)}>
-            <Text fw="bold">{show.title}</Text>
+        <Flex w={'100%'} gap={'xs'} style={{ minWidth: 0 }}>
+          {/* 제목 */}
+          <Link
+            href={PageLinkMap.protected.shows.detail(show.id)}
+            style={{
+              flex: 1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              fontWeight: 700,
+            }}
+          >
+            {show.title}
           </Link>
-          <span style={{ flexGrow: 1 }}></span>
+
+          {/* 우측 버튼 그룹 */}
           <Group style={{ opacity: hover ? 1 : 0, transition: 'opacity 0.2s' }}>
             <IconButton
               icon={IconEdit}
@@ -74,13 +86,14 @@ export function ShowListItem({ show, isLast = false, ...props }: ShowListItemPro
           </Group>
         </Flex>
 
-        {/* Second Row */}
-        <Flex gap={'md'} wrap={'wrap'} align="center">
-          <ShowTagBadge tag={show.id} />
-          {show.tags.map((tag) => (
-            <ShowTagBadge key={tag} tag={tag} />
-          ))}
-        </Flex>
+        {/* Second Row(태그 목록, 작성일) */}
+        <ScrollArea scrollbarSize={5} scrollHideDelay={0} scrollbars="x">
+          <Flex gap={'md'} wrap={'nowrap'} align="center" pb={5}>
+            {show.tags.map((tag) => (
+              <ShowTagBadge key={tag} tag={tag} />
+            ))}
+          </Flex>
+        </ScrollArea>
 
         <Flex>
           <Text size="sm" c="dimmed">
