@@ -43,11 +43,6 @@ export class TagController extends BaseController {
     @Query('pageIndex', ParseIntPipe) pageIndex: number = 0,
     @Query('pageSize', ParseIntPipe) pageSize: number = CommonConstants.paging.tag.pageSize
   ): Promise<FindTagsOutput> {
-    console.log('Fetching tags with params:', {
-      pageIndex,
-      type: typeof pageIndex === 'string' ? 'string' : 'number',
-    });
-
     const { tags } = await this.tagService.findAll({
       pageIndex,
       pageSize,

@@ -1,38 +1,33 @@
 'use client';
 
-import { InaText } from '@components/custom-components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 
-import { ApiError, handleApiError } from '@libs/fetcher';
+import { handleApiError } from '@libs/fetcher';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';
-import {
-  Badge,
-  Button,
-  Divider,
-  Flex,
-  Skeleton,
-  Space,
-  TagsInput,
-  Textarea,
-  TextInput,
-} from '@mantine/core';
-import { ShowDetailDto, UpdateShowInput, UpdateShowInputSchema } from '@repo/dto';
+import { Badge, Button, Divider, Flex, Space, TagsInput, Textarea, TextInput } from '@mantine/core';
+import { CommonConstants, ShowDetailDto, UpdateShowInput, UpdateShowInputSchema } from '@repo/dto';
 import { useForm } from 'react-hook-form';
+import { useTags } from '@libs/query-client/hooks/use-tag';
 
 export interface ShowDetailPageProps {
   show: ShowDetailDto;
 }
 
 export function ShowUpdatePage({ show }: ShowDetailPageProps) {
+  const { tags } = useTags({
+    pageIndex: 0,
+    pageSize: CommonConstants.paging.tag.pageSize,
+    keyword: '',
+  });
   const form = useForm<UpdateShowInput>({
     resolver: zodResolver(UpdateShowInputSchema),
     defaultValues: {
       title: show.title,
       description: show.description,
-      tags: show.tags,
+      tagIds: show.tags.map((tag) => tag.label),
     },
   });
   const { updateShow } = useShowMutation();
@@ -41,14 +36,17 @@ export function ShowUpdatePage({ show }: ShowDetailPageProps) {
   const { setGlobalLoading } = useGlobalLoadingStore();
 
   const onSubmit = async () => {
-    const data = form.getValues();
+    const { title, description, tagIds: tagLabels } = form.getValues();
+    const tagIds = tagLabels
+      .map((label) => tags.find((tag) => tag.label === label)?.id)
+      .filter((id): id is string => Boolean(id));
 
     try {
       setGlobalLoading(true);
 
-      await updateShow({ showId: show.id, ...data });
+      await updateShow({ showId: show.id, title, description, tagIds });
 
-      notifySuccess({ message: `${data.title} has been updated.` });
+      notifySuccess({ message: `${title} has been updated.` });
       navigator.moveTo.protected.shows.list();
     } catch (error) {
       const { errorMessage } = handleApiError(error, form);
@@ -72,9 +70,13 @@ export function ShowUpdatePage({ show }: ShowDetailPageProps) {
 
       <Flex gap={'md'} mb={32}>
         <TagsInput
-          value={form.watch('tags')}
-          onChange={(value) => form.setValue('tags', value)}
-          error={form.formState.errors.tags?.message}
+          value={form.watch('tagIds')}
+          onChange={(value) => {
+            const nextValue = value.filter((v) => tags.some((tag) => tag.label === v));
+            form.setValue('tagIds', nextValue);
+          }}
+          data={tags.map((tag) => tag.label)}
+          error={form.formState.errors.tagIds?.message}
         />
       </Flex>
 

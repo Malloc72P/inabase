@@ -24,7 +24,7 @@ import { JwtAuthGuard } from '@src/auth/auth.guard';
 import { BaseController } from '@src/base/base.controller';
 import { IRequester, Requester } from '@src/util/user-decorator';
 import { ZodInput } from '@src/util/zod-validation.pipe';
-import { toShowDetailDto, toShowDto } from './show-mapper';
+import { toShowDetailDto, toShowDto, toShowDtoFromRaw } from './show-mapper';
 import { ShowSearchService } from './show-search.service';
 import { ShowService } from './show.service';
 
@@ -49,7 +49,7 @@ export class ShowController extends BaseController {
     });
 
     return {
-      shows,
+      shows: shows.map(toShowDtoFromRaw),
       hasNext,
       nextCursor,
       keyword: keyword || '',

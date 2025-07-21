@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Show } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { BaseComponent } from '@src/base/base.component';
+import { CursorService } from '@src/cursor/cursor.service';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { ShowCursor, ShowServiceFindAllInput, ShowServiceFindAllOutput } from './show.service.dto';
-import { CursorService } from '@src/cursor/cursor.service';
-import { ShowWithTags } from './show.entity';
-import { ShowDetailDto, ShowDto } from '@repo/dto';
 
 @Injectable()
 export class ShowSearchService extends BaseComponent {

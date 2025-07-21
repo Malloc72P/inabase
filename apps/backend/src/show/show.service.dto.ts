@@ -16,8 +16,16 @@ export interface ShowServiceFindAllInput {
   pageSize?: number;
 }
 
+export interface ShowSearchRawResult {
+  id: string;
+  title: string;
+  tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface ShowServiceFindAllOutput {
-  shows: ShowDto[];
+  shows: ShowSearchRawResult[];
   nextCursor: string;
   hasNext: boolean;
 }

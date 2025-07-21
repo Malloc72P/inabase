@@ -32,12 +32,16 @@ export function useShowMutation() {
   const { mutateAsync: updateShow } = useMutation({
     mutationFn: async (input: UpdateShowInput & { showId: string }) => {
       const { show: updatedShow } = await updateShowApi(input);
+      const updateShowDto: ShowDto = {
+        ...updatedShow,
+        tags: updatedShow.tags.map((tag) => tag.label),
+      };
 
       updateCache((pages) =>
         pages.map((page) => ({
           ...page,
           shows: page.shows.map((prevShow) =>
-            prevShow.id === updatedShow.id ? updatedShow : prevShow
+            prevShow.id === updatedShow.id ? updateShowDto : prevShow
           ),
         }))
       );

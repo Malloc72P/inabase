@@ -41,20 +41,27 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
   return (
     <div>
       {/* ------ 제목, (삭제, 수정, 생성) 버튼 그룹 ------ */}
-      <Flex align={'center'} mb={16}>
+      <Flex align={'center'} mb={16} miw={0} gap={'md'}>
         <InaText
           bold
           fontSize={24}
           loading={isShowLoading}
           skeletonWidth={300}
           skeletonHeight={37.19}
+          title={show?.title}
+          style={{
+            flexGrow: 1,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
         >
           {show?.title}
         </InaText>
 
         <Space style={{ flexGrow: 1 }} />
 
-        <Flex gap={'xl'}>
+        <Flex gap={'md'}>
           <IconButton
             icon={IconPencil}
             variant="transparent"
@@ -69,10 +76,7 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
         {isShowLoading ? (
           <TagSkeletons />
         ) : (
-          <>
-            {show && <ShowTagBadge size="lg" tag={show.id} />}
-            {show?.tags.map((tag) => <ShowTagBadge size="lg" key={tag} tag={tag} />)}
-          </>
+          <>{show?.tags.map((tag) => <ShowTagBadge size="lg" key={tag.id} tag={tag.label} />)}</>
         )}
       </Flex>
 
