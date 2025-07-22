@@ -75,7 +75,7 @@ describe('TagService', () => {
 
       const result = await service.findAll({
         pageIndex: 0,
-        pageSize: CommonConstants.paging.tag.pageSize,
+        pageSize: 20,
         keyword: '',
       });
 
@@ -93,7 +93,7 @@ describe('TagService', () => {
       // 두번째 페이지 테스트
       const result2 = await service.findAll({
         pageIndex: 1,
-        pageSize: CommonConstants.paging.tag.pageSize,
+        pageSize: 20,
         keyword: '',
       });
 
@@ -125,7 +125,7 @@ describe('TagService', () => {
 
       const result = await service.findAll({
         pageIndex: 0,
-        pageSize: CommonConstants.paging.tag.pageSize,
+        pageSize: 5,
         keyword,
       });
 
@@ -133,7 +133,7 @@ describe('TagService', () => {
       expect(result).toBeDefined();
       expect(result.tags.length).toBeGreaterThanOrEqual(5);
       expect(result.pageIndex).toBe(0);
-      expect(result.pageSize).toBe(20);
+      expect(result.pageSize).toBe(5);
 
       // 키워드를 통해 앞서 생성한 태그를 찾을 수 있어야 함
       tags.forEach((tag) => {

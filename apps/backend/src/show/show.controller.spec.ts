@@ -11,6 +11,7 @@ import { ShowSearchService } from './show-search.service';
 import { ShowController } from './show.controller';
 import { ShowWithTags } from './show.entity';
 import { ShowService } from './show.service';
+import { ShowSearchRawResult } from './show.service.dto';
 
 describe('ShowController', () => {
   let app: INestApplication;
@@ -59,9 +60,11 @@ describe('ShowController', () => {
         .fill(null)
         .map(() => createShow());
 
-      jest
-        .spyOn(searchService, 'findAll')
-        .mockResolvedValue({ shows: datas.map((d) => d.dto), hasNext: false, nextCursor: '' });
+      jest.spyOn(searchService, 'findAll').mockResolvedValue({
+        shows: datas.map((d) => d.searchResult),
+        hasNext: false,
+        nextCursor: '',
+      });
 
       //  when
       const api = request(app.getHttpServer()).get('/api/v1/shows?keyword=test&cursor=dummyCursor');
@@ -187,6 +190,14 @@ function createShow() {
     showTags: [],
   };
 
+  const searchResult: ShowSearchRawResult = {
+    id: show.id,
+    title: show.title,
+    tags: [],
+    createdAt: show.createdAt,
+    updatedAt: show.updatedAt,
+  };
+
   const dto: ShowDto = {
     id: show.id,
     title: show.title,
@@ -197,10 +208,16 @@ function createShow() {
 
   const detailDto: ShowDetailDto = {
     ...dto,
+    tags: show.showTags.map(({ tag }) => ({
+      id: tag.id,
+      label: tag.label,
+      createdAt: tag.createdAt.toISOString(),
+      updatedAt: tag.updatedAt.toISOString(),
+    })),
     description: show.description,
     createdAt: show.createdAt.toISOString(),
     updatedAt: show.updatedAt.toISOString(),
   };
 
-  return { show, dto, detailDto };
+  return { show, dto, detailDto, searchResult };
 }

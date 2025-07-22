@@ -50,7 +50,7 @@ describe('TagController', () => {
   });
 
   describe('GET /tags', () => {
-    it('모든 태그 목록을 성공적으로 조회해야 한다', async () => {
+    it('모든 태그 목록을 성`공적으로 조회해야 한다', async () => {
       // given
       const datas = Array(3)
         .fill(null)
@@ -68,6 +68,8 @@ describe('TagController', () => {
       // then
       await api.expect((res) => {
         const output = res.body as FindTagsOutput;
+
+        console.log('output', output);
 
         expect(output.tags).toStrictEqual(datas.map((d) => d.dto));
         expect(output.pageIndex).toBe(0);
