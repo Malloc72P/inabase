@@ -1,4 +1,9 @@
 .tagListItem {
   align-items: center;
   padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+
+  &[data-last='true'] {
+    border-bottom: none;
+  }
 }

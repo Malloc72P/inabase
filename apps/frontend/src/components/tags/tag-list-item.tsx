@@ -2,19 +2,20 @@ import { Box, Flex, Menu, MenuDropdown } from '@mantine/core';
 import classes from './tag-list-item.module.css';
 import { ShowTagBadge } from './show-badge';
 import { IconButton } from '@components/buttons';
-import { IconDots, IconDotsVertical } from '@tabler/icons-react';
+import { IconDots } from '@tabler/icons-react';
 import { useNavigator } from '@hooks/use-navigator';
 
 export interface TagListItem {
   id: string;
   label: string;
+  isLast?: boolean;
 }
 
-export function TagListItem({ id, label }: TagListItem) {
+export function TagListItem({ id, label, isLast }: TagListItem) {
   const navigator = useNavigator();
 
   return (
-    <Flex className={classes.tagListItem}>
+    <Flex className={classes.tagListItem} data-last={isLast}>
       <ShowTagBadge tag={label} />
 
       <Box flex={1}></Box>

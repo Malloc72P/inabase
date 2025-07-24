@@ -40,7 +40,7 @@ export function TagListPage() {
         <ScrollArea>
           <TagListItem id={'a1'} label={'Tag01'} />
           <TagListItem id={'a2'} label={'Tag02'} />
-          <TagListItem id={'a3'} label={'Tag03'} />
+          <TagListItem id={'a3'} label={'Tag03'} isLast />
         </ScrollArea>
       </Box>
     </>
