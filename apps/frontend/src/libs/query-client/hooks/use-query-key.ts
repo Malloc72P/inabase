@@ -21,3 +21,12 @@ export const useQueryKey = () => {
     },
   };
 };
+
+export const QueryKeyConstants = {
+  show: {
+    list: 'shows',
+  },
+  tag: {
+    list: 'tags',
+  },
+};

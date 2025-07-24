@@ -6,9 +6,16 @@ import classes from './tag-list-page.module.css';
 import { useNavigator } from '@hooks/use-navigator';
 import { IconButton } from '@components/buttons';
 import { IconSearch } from '@tabler/icons-react';
+import { useTags } from '@libs/query-client/hooks/use-tags';
+import { CommonConstants } from '@repo/dto';
 
 export function TagListPage() {
   const navigator = useNavigator();
+  const { tags } = useTags({
+    pageIndex: 0,
+    pageSize: CommonConstants.paging.tag.pageSizeMd,
+    keyword: '',
+  });
 
   return (
     <>
@@ -38,9 +45,14 @@ export function TagListPage() {
 
       <Box className={classes.tagList}>
         <ScrollArea>
-          <TagListItem id={'a1'} label={'Tag01'} />
-          <TagListItem id={'a2'} label={'Tag02'} />
-          <TagListItem id={'a3'} label={'Tag03'} isLast />
+          {tags.map((tag, i) => (
+            <TagListItem
+              key={tag.id}
+              id={tag.id}
+              label={tag.label}
+              isLast={i === tags.length - 1}
+            />
+          ))}
         </ScrollArea>
       </Box>
     </>

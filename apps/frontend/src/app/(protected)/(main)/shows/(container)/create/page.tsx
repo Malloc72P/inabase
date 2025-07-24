@@ -9,7 +9,7 @@ import { Box, Button, Flex, TagsInput, Textarea, TextInput, Title } from '@manti
 import { CommonConstants, CreateShowInput, CreateShowInputSchema } from '@repo/dto';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTags } from '@libs/query-client/hooks/use-tag';
+import { useTags } from '@libs/query-client/hooks/use-tags';
 
 export default function CreateShowPage() {
   const navigator = useNavigator();
@@ -17,7 +17,7 @@ export default function CreateShowPage() {
   const [loading, setLoading] = useState(false);
   const { tags } = useTags({
     pageIndex: 0,
-    pageSize: CommonConstants.paging.tag.pageSize,
+    pageSize: CommonConstants.paging.tag.pageSizeXl,
     keyword: '',
   });
 

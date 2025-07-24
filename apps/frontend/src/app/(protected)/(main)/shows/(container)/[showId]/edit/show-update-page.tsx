@@ -10,7 +10,7 @@ import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';
 import { Badge, Button, Divider, Flex, Space, TagsInput, Textarea, TextInput } from '@mantine/core';
 import { CommonConstants, ShowDetailDto, UpdateShowInput, UpdateShowInputSchema } from '@repo/dto';
 import { useForm } from 'react-hook-form';
-import { useTags } from '@libs/query-client/hooks/use-tag';
+import { useTags } from '@libs/query-client/hooks/use-tags';
 
 export interface ShowDetailPageProps {
   show: ShowDetailDto;
@@ -19,7 +19,7 @@ export interface ShowDetailPageProps {
 export function ShowUpdatePage({ show }: ShowDetailPageProps) {
   const { tags } = useTags({
     pageIndex: 0,
-    pageSize: CommonConstants.paging.tag.pageSize,
+    pageSize: CommonConstants.paging.tag.pageSizeXl,
     keyword: '',
   });
   const form = useForm<UpdateShowInput>({

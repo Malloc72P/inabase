@@ -59,7 +59,7 @@ describe('TagController', () => {
       jest.spyOn(service, 'findAll').mockResolvedValue({
         tags: datas.map((d) => d.tag),
         pageIndex: 0,
-        pageSize: CommonConstants.paging.tag.pageSize,
+        pageSize: CommonConstants.paging.tag.pageSizeXl,
       });
 
       //  when
@@ -73,7 +73,7 @@ describe('TagController', () => {
 
         expect(output.tags).toStrictEqual(datas.map((d) => d.dto));
         expect(output.pageIndex).toBe(0);
-        expect(output.pageSize).toBe(CommonConstants.paging.tag.pageSize);
+        expect(output.pageSize).toBe(CommonConstants.paging.tag.pageSizeXl);
       });
     });
   });

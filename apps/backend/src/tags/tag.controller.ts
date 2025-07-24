@@ -42,7 +42,7 @@ export class TagController extends BaseController {
   async tags(
     @Query('keyword') keyword: string = '',
     @Query('pageIndex') pageIndex: number = 0,
-    @Query('pageSize') pageSize: number = CommonConstants.paging.tag.pageSize
+    @Query('pageSize') pageSize: number = CommonConstants.paging.tag.pageSizeXl
   ): Promise<FindTagsOutput> {
     pageIndex = +pageIndex;
     pageSize = +pageSize;

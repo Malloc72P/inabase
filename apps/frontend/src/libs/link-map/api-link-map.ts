@@ -15,6 +15,9 @@ export const ApiLinkMap = {
   },
   tags: {
     list: (param: FindTagsInput) => Env.beApiUrl + '/tags' + tail(param),
+    create: () => Env.beApiUrl + '/tags',
+    update: (tagId: string) => Env.beApiUrl + `/tags/${tagId}`,
+    delete: (tagId: string) => Env.beApiUrl + `/tags/${tagId}`,
   },
   auth: {
     signin: () => Env.beApiUrl + '/auth/signin',
