@@ -14,8 +14,7 @@ import { cn } from 'src/libs/ui';
 import classes from './show-list-item.module.css';
 import { DateUtil } from '@repo/date-util';
 import { UiConstants } from '@libs/constants/ui.constant';
-import { useShows } from '@libs/query-client/hooks/use-shows';
-import { ShowTagBadge } from './show-badge';
+import { ShowTagBadge } from '@components/tags';
 
 export interface ShowListItemProps extends BoxProps {
   show: ShowDto;

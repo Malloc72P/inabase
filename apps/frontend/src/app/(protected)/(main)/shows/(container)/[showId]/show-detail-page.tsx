@@ -2,7 +2,6 @@
 
 import { IconButton } from '@components/buttons';
 import { InaText } from '@components/custom-components';
-import { ShowTagBadge } from '@components/show/show-badge';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useShow } from '@libs/query-client/hooks/use-show';
@@ -11,6 +10,7 @@ import { ApiError } from '@libs/fetcher';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';
 import { Divider, Flex, Skeleton, Space } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { ShowTagBadge } from '@components/tags';
 
 export interface ShowDetailPageProps {
   showId: string;

@@ -37,7 +37,7 @@ export default function CreateShowPage() {
       const { title, description, tagIds: tagLabels } = data;
       const tagIds = tagLabels
         .map((label) => tags.find((tag) => tag.label === label)?.id)
-        .filter(Boolean);
+        .filter((v): v is string => Boolean(v));
 
       const show = await createShow({ title, description, tagIds });
       form.reset();

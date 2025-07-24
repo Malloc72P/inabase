@@ -75,6 +75,7 @@ export function ShowUpdatePage({ show }: ShowDetailPageProps) {
             const nextValue = value.filter((v) => tags.some((tag) => tag.label === v));
             form.setValue('tagIds', nextValue);
           }}
+          placeholder="태그를 입력해주세요"
           data={tags.map((tag) => tag.label)}
           error={form.formState.errors.tagIds?.message}
         />

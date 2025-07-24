@@ -15,6 +15,12 @@ export const PageLinkMap = {
       create: () => '/shows/create',
       edit: (id: string) => `/shows/${id}/edit`,
     },
+    tags: {
+      list: (param?: any) => '/tags' + tail(param),
+      detail: (id: string) => `/tags/${id}`,
+      create: () => '/tags/create',
+      edit: (id: string) => `/tags/${id}/edit`,
+    },
     artists: () => '/artists',
     account: () => '/account',
   },

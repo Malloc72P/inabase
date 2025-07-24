@@ -22,6 +22,11 @@ export const useNavigator = () => {
           create: () => router.push(PageLinkMap.protected.shows.create()),
           edit: (id: string) => router.push(PageLinkMap.protected.shows.edit(id)),
         },
+        tags: {
+          list: () => router.push(PageLinkMap.protected.tags.list()),
+          create: () => router.push(PageLinkMap.protected.tags.create()),
+          edit: (tagId: string) => router.push(PageLinkMap.protected.tags.edit(tagId)),
+        },
         artists: () => router.push(PageLinkMap.protected.artists()),
         account: () => router.push(PageLinkMap.protected.account()),
       },
