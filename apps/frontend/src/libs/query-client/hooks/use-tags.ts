@@ -3,15 +3,13 @@
 import { findTagsApi } from '@libs/fetcher/tags';
 import { FindTagsInput } from '@repo/dto';
 import { useQuery } from '@tanstack/react-query';
-import { useQueryKey } from './use-query-key';
+import { QueryKey } from './query-key';
 
 export function useTags(param: FindTagsInput) {
-  const queryKey = useQueryKey();
-
   const { data, isLoading } = useQuery({
-    queryKey: [queryKey.tag.list(param)],
+    queryKey: QueryKey.tag.list(param),
     queryFn: () => findTagsApi(param),
-    initialData: null,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   return {

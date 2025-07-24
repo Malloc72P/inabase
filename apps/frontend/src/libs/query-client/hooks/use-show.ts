@@ -3,13 +3,11 @@
 import { findShowApi } from '@libs/fetcher/shows/find-show.api';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryKey } from './use-query-key';
+import { QueryKey } from './query-key';
 
 export function useShow(showId: string) {
-  const queryKey = useQueryKey();
-
   const { data, isLoading } = useQuery({
-    queryKey: [queryKey.show.detail(showId)],
+    queryKey: [QueryKey.show.detail(showId)],
     queryFn: () => findShowApi({ showId }),
     initialData: null,
   });

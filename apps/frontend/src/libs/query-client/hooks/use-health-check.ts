@@ -4,10 +4,10 @@ import { HealthCheckOutput } from '@repo/dto';
 import { useQuery } from '@tanstack/react-query';
 import { fetcher } from 'src/libs/fetcher';
 import { ApiLinkMap } from 'src/libs/link-map/api-link-map';
-import { useQueryKey } from './use-query-key';
+import { QueryKey } from './query-key';
 
 export function useHealthCheck() {
-  const queryKey = useQueryKey();
+  const queryKey = QueryKey();
 
   const { data, isLoading } = useQuery({
     queryKey: queryKey.health(),

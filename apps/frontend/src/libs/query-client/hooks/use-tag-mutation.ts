@@ -1,20 +1,37 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useQueryKey } from './use-query-key';
-import { createTagApi } from '@libs/fetcher/tags';
-import { CreateTagInput } from '@repo/dto';
+import { QueryKey } from './query-key';
+import { createTagApi, deleteTagApi, updateTagApi } from '@libs/fetcher/tags';
+import { CommonConstants, CreateTagInput, DeleteTagInput, UpdateTagInput } from '@repo/dto';
 
 export const useTagMutation = () => {
-  const queryKey = useQueryKey();
   const queryClient = useQueryClient();
 
   const createTagMutation = useMutation({
     mutationFn: (param: CreateTagInput) => createTagApi(param),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKey.tag.list()] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.tag.listKey] });
+    },
+  });
+
+  const updateTagMutation = useMutation({
+    mutationFn: (param: UpdateTagInput & { tagId: string }) => updateTagApi(param),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.tag.listKey] });
+    },
+  });
+
+  const deleteTagMutation = useMutation({
+    mutationFn: (param: DeleteTagInput & { tagId: string }) => deleteTagApi(param),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.tag.listKey],
+      });
     },
   });
 
   return {
-    createTag: createTagMutation.mutate,
+    createTag: createTagMutation.mutateAsync,
+    updateTag: updateTagMutation.mutateAsync,
+    deleteTag: deleteTagMutation.mutateAsync,
   };
 };

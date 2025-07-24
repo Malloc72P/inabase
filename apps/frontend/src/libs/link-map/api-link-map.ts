@@ -15,6 +15,7 @@ export const ApiLinkMap = {
   },
   tags: {
     list: (param: FindTagsInput) => Env.beApiUrl + '/tags' + tail(param),
+    detail: (tagId: string) => Env.beApiUrl + `/tags/${tagId}`,
     create: () => Env.beApiUrl + '/tags',
     update: (tagId: string) => Env.beApiUrl + `/tags/${tagId}`,
     delete: (tagId: string) => Env.beApiUrl + `/tags/${tagId}`,

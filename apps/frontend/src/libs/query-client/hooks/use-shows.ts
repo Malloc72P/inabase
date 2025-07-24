@@ -4,7 +4,7 @@ import { findShowsApi } from '@libs/fetcher/shows';
 import { FindShowsInput, FindShowsOutput } from '@repo/dto';
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { useQueryKey } from './use-query-key';
+import { QueryKey } from './query-key';
 import { sleep } from '@libs/debug';
 
 export type UseShowsProps = Omit<FindShowsInput, 'cursor'> & {};
@@ -12,9 +12,8 @@ export type ShowsQueryData = InfiniteData<FindShowsOutput>;
 export type ShowsQueryPage = ShowsQueryData['pages'];
 
 export function useShows({ ...params }: UseShowsProps) {
-  const qKey = useQueryKey();
   const showsKey = useMemo(() => {
-    return qKey.show.list(params);
+    return QueryKey.show.list(params);
   }, [params]);
 
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({

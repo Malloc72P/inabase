@@ -12,7 +12,7 @@ export async function refreshToken(token?: string) {
   });
 
   if (!response.ok) {
-    console.error('################## REFRESH FAILED !!!');
+    console.error('REFRESH FAILED !!!');
     throw await toApiError(response);
   }
 

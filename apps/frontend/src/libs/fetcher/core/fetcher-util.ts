@@ -17,11 +17,9 @@ export function resolveFetchOption(options: FetchApiOptions | undefined): Reques
 
   if (accessToken) {
     Reflect.set(processedHeaders, 'Authorization', `bearer ${accessToken}`);
+  } else if (refreshToken) {
+    Reflect.set(processedHeaders, 'Authorization', `bearer ${refreshToken}`);
   }
-
-  //   if (refreshToken) {
-  //     Reflect.set(processedHeaders, 'Authorization', `bearer ${refreshToken}`);
-  //   }
 
   return {
     ...rest,

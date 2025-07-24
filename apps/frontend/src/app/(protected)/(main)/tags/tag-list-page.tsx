@@ -8,12 +8,13 @@ import { IconButton } from '@components/buttons';
 import { IconSearch } from '@tabler/icons-react';
 import { useTags } from '@libs/query-client/hooks/use-tags';
 import { CommonConstants } from '@repo/dto';
+import { useTagMutation } from '@libs/query-client/hooks/use-tag-mutation';
 
 export function TagListPage() {
   const navigator = useNavigator();
   const { tags } = useTags({
     pageIndex: 0,
-    pageSize: CommonConstants.paging.tag.pageSizeMd,
+    pageSize: CommonConstants.paging.tag.pageSizeXl,
     keyword: '',
   });
 

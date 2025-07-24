@@ -4,10 +4,9 @@ import { createShowApi, deleteShowApi, updateShowApi } from '@libs/fetcher/shows
 import { CreateShowInput, ShowDto, UpdateShowInput } from '@repo/dto';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ShowsQueryData, ShowsQueryPage } from './use-shows';
-import { QueryKeyConstants, useQueryKey } from './use-query-key';
+import { QueryKey } from './query-key';
 
 export function useShowMutation() {
-  const queryKey = useQueryKey();
   const queryClient = useQueryClient();
 
   const { mutateAsync: createShow } = useMutation({
@@ -66,7 +65,7 @@ export function useShowMutation() {
   function updateCache(nextPagesFn: (prevPages: ShowsQueryPage) => ShowsQueryPage) {
     const queries = queryClient
       .getQueryCache()
-      .findAll({ queryKey: QueryKeyConstants.show.list, exact: false });
+      .findAll({ queryKey: QueryKey.show.listKey, exact: false });
 
     queries.forEach(({ queryKey }) => {
       queryClient.setQueriesData({ queryKey }, (oldData: ShowsQueryData) => {
