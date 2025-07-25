@@ -6,22 +6,18 @@ import { notifyError, notifySuccess } from '@hooks/use-notification';
 import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 
 import { handleApiError } from '@libs/fetcher';
+import { useAllTags } from '@libs/query-client/hooks/use-all-tags';
 import { useGlobalLoadingStore } from '@libs/stores/loading-overlay-provider';
 import { Badge, Button, Divider, Flex, Space, TagsInput, Textarea, TextInput } from '@mantine/core';
-import { CommonConstants, ShowDetailDto, UpdateShowInput, UpdateShowInputSchema } from '@repo/dto';
+import { ShowDetailDto, UpdateShowInput, UpdateShowInputSchema } from '@repo/dto';
 import { useForm } from 'react-hook-form';
-import { useTags } from '@libs/query-client/hooks/use-tags';
 
 export interface ShowDetailPageProps {
   show: ShowDetailDto;
 }
 
 export function ShowUpdatePage({ show }: ShowDetailPageProps) {
-  const { tags } = useTags({
-    pageIndex: 0,
-    pageSize: CommonConstants.paging.tag.pageSizeXl,
-    keyword: '',
-  });
+  const { tags } = useAllTags();
   const form = useForm<UpdateShowInput>({
     resolver: zodResolver(UpdateShowInputSchema),
     defaultValues: {

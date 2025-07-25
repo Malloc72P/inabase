@@ -22,6 +22,8 @@ const TagQueryKey = {
   list: (params: FindTagsInput) => {
     return [TagQueryKey.listKey, ...Object.values(params)].filter(Boolean);
   },
+  allKey: 'tag-all',
+  all: () => [TagQueryKey.allKey],
 } as const;
 
 export const QueryKey = {

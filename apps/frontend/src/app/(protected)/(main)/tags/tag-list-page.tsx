@@ -1,25 +1,25 @@
 'use client';
 
-import { TagListItem } from '@components/tags';
-import { Box, Button, Container, Flex, ScrollArea, TextInput, Title } from '@mantine/core';
-import classes from './tag-list-page.module.css';
-import { useNavigator } from '@hooks/use-navigator';
 import { IconButton } from '@components/buttons';
+import { TagListItem } from '@components/tags';
+import { useNavigator } from '@hooks/use-navigator';
+import { useAllTags } from '@libs/query-client/hooks/use-all-tags';
+import { Box, Button, Flex, ScrollArea, TextInput, Title } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
+import classes from './tag-list-page.module.css';
 import { useTags } from '@libs/query-client/hooks/use-tags';
 import { CommonConstants } from '@repo/dto';
-import { useTagMutation } from '@libs/query-client/hooks/use-tag-mutation';
 
 export function TagListPage() {
   const navigator = useNavigator();
   const { tags } = useTags({
     pageIndex: 0,
-    pageSize: CommonConstants.paging.tag.pageSizeXl,
+    pageSize: CommonConstants.paging.tag.pageSizeMd,
     keyword: '',
   });
 
   return (
-    <>
+    <Box pb={200}>
       {/* 헤더, 태그 생성 버튼 */}
       <Flex pb={16} justify={'space-between'} align={'center'}>
         <Title>Tags</Title>
@@ -56,6 +56,6 @@ export function TagListPage() {
           ))}
         </ScrollArea>
       </Box>
-    </>
+    </Box>
   );
 }

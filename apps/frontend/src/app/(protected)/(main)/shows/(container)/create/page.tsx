@@ -3,23 +3,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigator } from '@hooks/use-navigator';
 import { notifyError, notifySuccess } from '@hooks/use-notification';
-import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 import { handleApiError } from '@libs/fetcher';
+import { useAllTags } from '@libs/query-client/hooks/use-all-tags';
+import { useShowMutation } from '@libs/query-client/hooks/use-show-mutation';
 import { Box, Button, Flex, TagsInput, Textarea, TextInput, Title } from '@mantine/core';
-import { CommonConstants, CreateShowInput, CreateShowInputSchema } from '@repo/dto';
+import { CreateShowInput, CreateShowInputSchema } from '@repo/dto';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTags } from '@libs/query-client/hooks/use-tags';
 
 export default function CreateShowPage() {
   const navigator = useNavigator();
   const { createShow } = useShowMutation();
   const [loading, setLoading] = useState(false);
-  const { tags } = useTags({
-    pageIndex: 0,
-    pageSize: CommonConstants.paging.tag.pageSizeXl,
-    keyword: '',
-  });
+  const { tags } = useAllTags();
 
   const form = useForm<CreateShowInput>({
     resolver: zodResolver(CreateShowInputSchema),
