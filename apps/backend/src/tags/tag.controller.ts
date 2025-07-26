@@ -47,7 +47,7 @@ export class TagController extends BaseController {
     pageIndex = +pageIndex;
     pageSize = +pageSize;
 
-    const { tags } = await this.tagService.findAll({
+    const { tags, total } = await this.tagService.findAll({
       pageIndex,
       pageSize,
       keyword,
@@ -58,6 +58,7 @@ export class TagController extends BaseController {
       pageSize,
       keyword,
       tags: tags.map((tag) => toTagDto(tag)),
+      total,
     };
   }
 

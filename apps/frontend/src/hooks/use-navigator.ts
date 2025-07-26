@@ -1,6 +1,7 @@
-import { PageLinkMap, ShowsListLinkParam } from 'src/libs/link-map';
+import { PageLinkMap } from 'src/libs/link-map';
 import { useRouter } from 'next-nprogress-bar';
 import { useMemo } from 'react';
+import { FindShowsInput, FindTagsInput } from '@repo/dto';
 
 export const useNavigator = () => {
   const router = useRouter();
@@ -18,14 +19,14 @@ export const useNavigator = () => {
         },
         protected: {
           shows: {
-            list: (param?: ShowsListLinkParam) =>
+            list: (param?: FindShowsInput) =>
               router.push(PageLinkMap.protected.shows.list(param), { scroll: false }),
             detail: (id: string) => router.push(PageLinkMap.protected.shows.detail(id)),
             create: () => router.push(PageLinkMap.protected.shows.create()),
             edit: (id: string) => router.push(PageLinkMap.protected.shows.edit(id)),
           },
           tags: {
-            list: () => router.push(PageLinkMap.protected.tags.list()),
+            list: (param: FindTagsInput) => router.push(PageLinkMap.protected.tags.list(param)),
             create: () => router.push(PageLinkMap.protected.tags.create()),
             edit: (tagId: string) => router.push(PageLinkMap.protected.tags.edit(tagId)),
           },

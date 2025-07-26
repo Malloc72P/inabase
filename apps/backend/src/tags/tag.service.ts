@@ -34,22 +34,32 @@ export class TagService extends BaseComponent {
     pageIndex,
     pageSize,
   }: TagServiceFindAllInput): Promise<TagServiceFindAllOutput> {
-    const tags = await this.prisma.tag.findMany({
-      where: {
-        label: {
-          startsWith: keyword || '',
-          mode: 'insensitive',
-        },
+    const where = {
+      label: {
+        startsWith: keyword || '',
+        mode: 'insensitive',
       },
+    } as const;
+
+    const tags = await this.prisma.tag.findMany({
+      where,
       orderBy: { label: 'asc' },
       skip: pageIndex * pageSize,
       take: pageSize,
+    });
+
+    const pageCount = await this.prisma.tag.aggregate({
+      _count: {
+        id: true,
+      },
+      where,
     });
 
     return {
       pageIndex,
       pageSize,
       tags,
+      total: pageCount._count.id,
     };
   }
 

@@ -13,7 +13,7 @@ export function useTags(param: FindTagsInput) {
   });
 
   return {
-    tags: data?.tags || [],
+    data,
     isTagsLoading: isLoading,
   };
 }

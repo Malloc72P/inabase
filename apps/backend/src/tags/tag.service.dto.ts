@@ -13,6 +13,7 @@ export interface TagServiceFindAllOutput {
   tags: Tag[];
   pageIndex: number;
   pageSize: number;
+  total: number;
 }
 
 //-------------------------------------------------------------------------

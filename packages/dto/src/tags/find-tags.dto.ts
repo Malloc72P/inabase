@@ -14,5 +14,6 @@ export const FindTagsOutputSchema = z.object({
   keyword: z.string(),
   pageIndex: z.number(),
   pageSize: z.number(),
+  total: z.number(),
 });
 export type FindTagsOutput = z.infer<typeof FindTagsOutputSchema>;
