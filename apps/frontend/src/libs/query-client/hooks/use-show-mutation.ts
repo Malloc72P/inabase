@@ -67,7 +67,9 @@ export function useShowMutation() {
       .getQueryCache()
       .findAll({ queryKey: QueryKey.show.listKey, exact: false });
 
-    queries.forEach(({ queryKey }) => {
+    for (const query of queries) {
+      const { queryKey } = query;
+
       queryClient.setQueriesData({ queryKey }, (oldData: ShowsQueryData) => {
         if (!oldData) return oldData;
 
@@ -79,7 +81,7 @@ export function useShowMutation() {
 
         return nextData;
       });
-    });
+    }
   }
 
   return {

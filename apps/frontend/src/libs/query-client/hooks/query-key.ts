@@ -3,27 +3,27 @@
 import { FindShowsInput, FindTagsInput } from '@repo/dto';
 
 const ShowQueryKey = {
-  detailKey: 'show-detail',
+  detailKey: ['show-detail'],
   detail: (showId: string) => {
-    return [ShowQueryKey.detail, showId];
+    return [...ShowQueryKey.detailKey, showId];
   },
-  listKey: 'show-list',
+  listKey: ['show-list'],
   list: (params: Pick<FindShowsInput, 'keyword'>) => {
-    return [ShowQueryKey.list, params.keyword].filter(Boolean);
+    return [...ShowQueryKey.listKey, params.keyword].filter(Boolean);
   },
 } as const;
 
 const TagQueryKey = {
-  detailKey: 'tag-detail',
+  detailKey: ['tag-detail'],
   detail: (showId: string) => {
-    return [TagQueryKey.detail, showId];
+    return [...TagQueryKey.detailKey, showId];
   },
-  listKey: 'tag-list',
+  listKey: ['tag-list'],
   list: (params: FindTagsInput) => {
-    return [TagQueryKey.listKey, ...Object.values(params)].filter(Boolean);
+    return [...TagQueryKey.listKey, ...Object.values(params)].filter(Boolean);
   },
-  allKey: 'tag-all',
-  all: () => [TagQueryKey.allKey],
+  allKey: ['tag-all'],
+  all: () => [...TagQueryKey.allKey],
 } as const;
 
 export const QueryKey = {
