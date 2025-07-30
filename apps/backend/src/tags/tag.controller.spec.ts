@@ -60,6 +60,7 @@ describe('TagController', () => {
         tags: datas.map((d) => d.tag),
         pageIndex: 0,
         pageSize: CommonConstants.paging.tag.pageSizeXl,
+        total: datas.length,
       });
 
       //  when
