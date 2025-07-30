@@ -72,7 +72,7 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
       </Flex>
 
       {/* ------ 태그 컨테이너 ------ */}
-      <Flex gap={'md'} my={32}>
+      <Flex gap={'md'} my={'md'}>
         {isShowLoading ? (
           <TagSkeletons />
         ) : (
@@ -80,7 +80,7 @@ export function ShowDetailPage({ showId }: ShowDetailPageProps) {
         )}
       </Flex>
 
-      <Divider my={32} />
+      <Divider my={'md'} />
 
       {/* ------ 본문 ------ */}
       <InaText>{show?.description}</InaText>
